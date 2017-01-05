@@ -21,6 +21,7 @@ class Display(opts: js.Object) extends js.Object {
 
   def eventToPosition(event: Event): (Int, Int) = js.native
 
-  def draw(x: Int, y: Int, ch: Char, fg: String, bg: String): Unit = js.native
-  def drawText(x: Int, y: Int, text: String, maxWidth: Option[Int]): Unit = js.native
+  def draw(x: Int, y: Int, ch: String, fg: String = "", bg: String = ""): Unit = js.native
+
+  def drawText(x: Int, y: Int, text: String, maxWidth: Int = 0): Unit = js.native
 }
