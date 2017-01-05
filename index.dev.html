@@ -3,12 +3,24 @@
     <head>
         <meta charset="utf-8">
         <title>Knave</title>
-    </head>
-    <body>
+        <style type="text/css">
+            .display {
+                padding: 4px;
+                float: left;
+            }
+        </style>
+
+
         <script type="text/javascript" src="./target/scala-2.12/knave-jsdeps.js"></script>
         <script type="text/javascript" src="./target/scala-2.12/knave-fastopt.js"></script>
         <script type="text/javascript">
-            com.avaglir.knave.Main().main();
+            window.onload = function() { com.avaglir.knave.Knave().main(); };
         </script>
+
+    </head>
+    <body>
+        <div id="knave-status" class="display" style="padding-top: 8px; padding-left: 8px"></div>
+        <div id="knave-main" class="display" style="padding-top: 8px"></div>
+        <div id="knave-messages" class="display" style="clear: both; margin-top: -4px; padding-left: 8px"></div>
     </body>
 </html>

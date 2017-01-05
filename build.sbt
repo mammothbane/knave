@@ -7,6 +7,8 @@ libraryDependencies ++= Seq(
   "org.scala-js" %%% "scalajs-dom" % "0.9.1"
 )
 
-jsDependencies += "org.webjars.npm" % "rot-js" % "0.6.2" / "rot.js"
-
 skip in packageJSDependencies := false
+jsDependencies += ProvidedJS / "rot.min.js"
+persistLauncher := true
+
+mainClass in Compile := Some("com.avaglir.knave.Knave")
