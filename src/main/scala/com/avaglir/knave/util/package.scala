@@ -43,4 +43,6 @@ package object util {
     out.toList
   }
 
+  def maxOf[T: Ordering](args: T*): T = args.max
+  def minOf[T: Ordering](args: T*): T = args.min
 }

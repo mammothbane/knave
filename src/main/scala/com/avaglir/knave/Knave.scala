@@ -21,36 +21,16 @@ object Knave extends JSApp {
         document.getElementById(s"knave-${sym.name}").appendChild(disp.container)
     }
 
-    midpoint(Vector2(40, 12), 5).foreach((vec) => {
-      displays('main).draw(vec, 'a')
-    })
+    val colorList = List(Color.GREEN, Color.RED, Color.BLUE)
+    val max = 15
 
-    midpoint(Vector2(40, 12), 4).foreach((vec) => {
-      displays('main).draw(vec, 'a', Color.BLUE)
-    })
+    for (i <- 1 to max) {
+      midpoint(Vector2(40, 12), i).foreach((vec) => {
+        val color = colorList(i % colorList.length)
+        val hsl = HSL(i.toFloat / max, color.saturation, color.luminance * (max - i)/max)
 
-    midpoint(Vector2(40, 12), 3).foreach((vec) => {
-      displays('main).draw(vec, 'a', Color.RED)
-    })
-
-    midpoint(Vector2(40, 12), 6).foreach((vec) => {
-      displays('main).draw(vec, 'a', Color.GREEN)
-    })
-
-    midpoint(Vector2(40, 12), 2).foreach((vec) => {
-      displays('main).draw(vec, 'a', Color.GREEN)
-    })
-
-    midpoint(Vector2(40, 12), 1).foreach((vec) => {
-      displays('main).draw(vec, 'a', Color.BLUE)
-    })
-
-    midpoint(Vector2(40, 12), 8).foreach((vec) => {
-      displays('main).draw(vec, 'a', Color.RED)
-    })
-
-    midpoint(Vector2(40, 12), 7).foreach((vec) => {
-      displays('main).draw(vec, 'a', Color.BLUE)
-    })
+        displays('main).draw(vec, 'a', hsl)
+      })
+    }
   }
 }
