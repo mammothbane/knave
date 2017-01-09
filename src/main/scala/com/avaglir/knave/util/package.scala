@@ -3,7 +3,7 @@ package com.avaglir.knave
 import scala.collection.mutable
 
 package object util {
-  def circle_simple(center: Vector2, radius: Int): Seq[Vector2] = {
+  def circle_simple(center: Vector2, radius: Int): List[Vector2] = {
     val sorted = midpoint(center, radius).groupBy { _.x }.values.map { xls => (xls.minBy { _.y }, xls.maxBy { _.y } ) }
 
     val out = new mutable.ListBuffer[Vector2]
@@ -55,6 +55,27 @@ package object util {
       out += Vector2(center.x - y, center.y - x)
     }
     out.toList
+  }
+
+  def bresenhamLine(from: Vector2, to: Vector2): List[Vector2] = {
+    val out = mutable.ListBuffer[Vector2]()
+
+    val delta = from - to
+    var dErr = math.abs(delta.y.toFloat / delta.x)
+    var err = dErr - 0.5
+    var y = from.y
+
+    for (x <- from.x to to.x) {
+      out += Vector2(x, y)
+
+      err += dErr
+      if (err >= 0.5) {
+        y += 1
+        err -= 1
+      }
+    }
+
+    out
   }
 
   def maxOf[T: Ordering](args: T*): T = args.max

@@ -21,11 +21,9 @@ object Knave extends JSApp {
         document.getElementById(s"knave-${sym.name}").appendChild(disp.container)
     }
 
-    val colorList = List(Color.GREEN, Color.RED, Color.BLUE)
     val max = 15
     val center = Vector2(40, 12)
 
-    println(Color.GREEN.hsl)
     circle_simple(center, max).foreach(vec => {
       val color = HSL((vec - center).magnitude / max, 1f, 0.5f)
       displays('main).draw(vec, 'a', color)

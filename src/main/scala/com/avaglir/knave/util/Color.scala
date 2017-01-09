@@ -9,9 +9,7 @@ abstract class Color {
   def saturation: UnitClampedFloat
   def luminance: UnitClampedFloat
 
-  def hex: String = {
-    f"#$red%02x$green%02x$blue%02x"
-  }
+  def hex: String = f"#$red%02x$green%02x$blue%02x"
 
   def hsl = HSL(hue, saturation, luminance)
   def rgb = RGB(red, green, blue)
