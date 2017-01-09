@@ -24,13 +24,10 @@ object Knave extends JSApp {
     val colorList = List(Color.GREEN, Color.RED, Color.BLUE)
     val max = 15
 
-    for (i <- 1 to max) {
-      midpoint(Vector2(40, 12), i).foreach((vec) => {
-        val color = colorList(i % colorList.length)
-        val hsl = HSL(i.toFloat / max, color.saturation, color.luminance * (max - i)/max)
+    circle_simple(Vector2(40, 12), max).foreach(vec => {
+        displays('main).draw(vec, 'a', Color.WHITE)
+      }
+    )
 
-        displays('main).draw(vec, 'a', hsl)
-      })
-    }
   }
 }
