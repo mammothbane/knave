@@ -6,16 +6,9 @@ package object util {
   def circle_simple(center: Vector2, radius: Int): List[Vector2] = {
     val sorted = midpoint(center, radius).groupBy { _.x }.values.map { xls => (xls.minBy { _.y }, xls.maxBy { _.y } ) }
 
-    val out = new mutable.ListBuffer[Vector2]
-
-    sorted.foreach {
-      case (min, max) =>
-        for (i <- min.y to max.y) {
-          out += Vector2(min.x, i)
-        }
-    }
-
-    out.toList
+    sorted.flatMap {
+      case (min, max) => (min.y to max.y).map { Vector2(min.x, _) }
+    }.toList
   }
 
   // midpoint algorithm, borrowed from rosetta code:
@@ -34,8 +27,8 @@ package object util {
     out += Vector2(center.x + radius, center.y)
     out += Vector2(center.x - radius, center.y)
 
-    while(x < y) {
-      if(f >= 0) {
+    while (x < y) {
+      if (f >= 0) {
         y -= 1
         ddF_y += 2
         f += ddF_y
@@ -60,12 +53,9 @@ package object util {
   def bresenhamLine(from: Vector2, to: Vector2): List[Vector2] = {
     val out = mutable.ListBuffer[Vector2]()
 
-    println(s"from: $from, to: $to")
-
     val tDelta = to - from
     var delta = tDelta.map(math.abs)
     if (delta.x < delta.y) delta = delta.transpose
-    println(s"calcDelta: $delta")
 
     var dErr = math.abs(delta.y.toFloat / delta.x)
     var err = dErr - 0.5
@@ -82,10 +72,8 @@ package object util {
       }
     }
 
-    println(s"delta: $tDelta, octant: ${tDelta.octant}")
-
-    val a = (tDelta.octant match {
-      case 1 => out
+    (tDelta.octant match {
+      case 1 | 0 => out
       case 2 => out.map { _.transpose }
       case 3 => out.reverse.map { elem => Vector2(-elem.y, elem.x) }
       case 4 => out.reverse.map { elem => Vector2(-elem.x, elem.y) }
@@ -94,10 +82,6 @@ package object util {
       case 7 => out.map { _.transpose * -1 }
       case 8 => out.map { elem => Vector2(elem.x, -elem.y) }
     }).map{ elem => elem + from }.toList
-
-    println(a)
-
-    a
   }
 
   def maxOf[T: Ordering](args: T*): T = args.max
