@@ -10,7 +10,7 @@ import scala.scalajs.js
   * @param height The height of the display.
   * @param spacing Spacing factor between tiles.
   */
-class Display(width: Int, height: Int, spacing: Float = 1) {
+class Display(val width: Int, val height: Int, val spacing: Float = 1) {
   private val display = new rot.Display(js.Dynamic.literal(width = width, height = height, spacing = spacing))
 
   def clear() = display.clear()

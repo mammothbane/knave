@@ -24,9 +24,11 @@ object Knave extends JSApp {
     val max = 15
     val center = Vector2(40, 12)
 
-    circle_simple(center, max).foreach(vec => {
-      val color = HSL((vec - center).magnitude / max, 1f, 0.5f)
-      displays('main).draw(vec, 'a', color)
-    })
+//    circle_simple(center, max).foreach(vec => {
+//      val color = HSL((vec - center).magnitude / max, 1f, 0.5f)
+//      displays('main).draw(vec, 'a', color)
+//    })
+
+    bresenhamLine(Vector2.ZERO, Vector2(displays('main).))
   }
 }
