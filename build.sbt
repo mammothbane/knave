@@ -12,7 +12,10 @@ libraryDependencies ++= Seq(
 resolvers += "Sonatype OSS Snapshots" at "https://oss.sonatype.org/content/repositories/snapshots"
 
 skip in packageJSDependencies := false
-jsDependencies += ProvidedJS / "rot.min.js"
+jsDependencies ++= Seq(
+  ProvidedJS / "rot.min.js"
+)
+
 persistLauncher := true
 
 mainClass in Compile := Some("com.avaglir.knave.Knave")

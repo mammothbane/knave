@@ -1,6 +1,5 @@
 package com.avaglir.knave.util
 
-import com.avaglir.knave.Knave
 import org.scalajs.dom.window
 
 import scala.util.{Success, Try}
@@ -19,15 +18,10 @@ object Storage {
   def persistAll(): Unit = {
     if (!ok) return
 
-    import scala.pickling._
-    import scala.pickling.json._
-
-    import scala.pickling.Defaults.{pickleOps, unpickleOps}
-
-    Knave.random.pickle
+    // Knave.random.pickle
 
 
-    Knave.random
+    //Knave.random
   }
 
 }

@@ -25,18 +25,14 @@ object Knave extends JSApp {
     }
 
     val center = Vector2(40, 12)
-    val fov = 7
+    val fov = 15
 
     var i = 0
 
     js.timers.setInterval(500f) {
-      val newVec = Vector2(center.x + (i % (2*fov)) - fov, center.y)
-      println(newVec)
-
+      val newVec = Vector2(center.x + (i % (2 * fov)) - fov, center.y)
       val visible = ShadowRaycast.calculate(center, fov, v => !v.equals(newVec)).toSet
       val nonVisible = circle_simple(center, fov).toSet diff visible
-
-      println(s"${nonVisible.size} occluded squares, ${visible.size} visible squares")
 
       visible.foreach { vec =>
         displays('main).draw(vec, 'a')
@@ -46,10 +42,5 @@ object Knave extends JSApp {
       nonVisible.foreach { vec => displays('main).draw(vec, 'a', dimmed) }
       i += 1
     }
-
-  }
-
-  def store(): Unit = {
-    Storage.set()
   }
 }
