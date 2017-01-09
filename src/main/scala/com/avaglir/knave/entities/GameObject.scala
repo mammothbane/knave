@@ -1,6 +1,6 @@
 package com.avaglir.knave.entities
 
-import com.avaglir.knave.util.{Display, _}
+import com.avaglir.knave.util._
 
 trait GameObject {
   def char: Char = ' '

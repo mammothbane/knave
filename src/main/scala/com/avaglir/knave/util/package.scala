@@ -60,12 +60,19 @@ package object util {
   def bresenhamLine(from: Vector2, to: Vector2): List[Vector2] = {
     val out = mutable.ListBuffer[Vector2]()
 
-    val delta = from - to
+    println(s"from: $from, to: $to")
+
+    val tDelta = to - from
+    var delta = tDelta.map(math.abs)
+    if (delta.x < delta.y) delta = delta.transpose
+    println(s"calcDelta: $delta")
+
     var dErr = math.abs(delta.y.toFloat / delta.x)
     var err = dErr - 0.5
-    var y = from.y
 
-    for (x <- from.x to to.x) {
+    var y = 0
+
+    for (x <- 0 to delta.x) {
       out += Vector2(x, y)
 
       err += dErr
@@ -75,7 +82,22 @@ package object util {
       }
     }
 
-    out.toList
+    println(s"delta: $tDelta, octant: ${tDelta.octant}")
+
+    val a = (tDelta.octant match {
+      case 1 => out
+      case 2 => out.map { _.transpose }
+      case 3 => out.reverse.map { elem => Vector2(-elem.y, elem.x) }
+      case 4 => out.reverse.map { elem => Vector2(-elem.x, elem.y) }
+      case 5 => out.reverse.map { -_ }
+      case 6 => out.reverse.map { _.transpose * -1 }
+      case 7 => out.map { _.transpose * -1 }
+      case 8 => out.map { elem => Vector2(elem.x, -elem.y) }
+    }).map{ elem => elem + from }.toList
+
+    println(a)
+
+    a
   }
 
   def maxOf[T: Ordering](args: T*): T = args.max
