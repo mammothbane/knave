@@ -6,6 +6,7 @@ import org.scalajs.dom.document
 
 import scala.scalajs.js
 import scala.scalajs.js.JSApp
+import scala.util.Random
 
 object Knave extends JSApp {
   val displays = Map(
@@ -13,6 +14,8 @@ object Knave extends JSApp {
     'status -> new Display(20, 24),
     'messages -> new Display(101, 6)
   )
+
+  val random = new Random()
 
   private var currentMode: GameMode = new Start()
 
@@ -44,5 +47,9 @@ object Knave extends JSApp {
       i += 1
     }
 
+  }
+
+  def store(): Unit = {
+    Storage.set()
   }
 }
