@@ -15,3 +15,5 @@ jsDependencies += ProvidedJS / "rot.min.js"
 persistLauncher := true
 
 mainClass in Compile := Some("com.avaglir.knave.Knave")
+
+scalacOptions += "-language:implicitConversions"

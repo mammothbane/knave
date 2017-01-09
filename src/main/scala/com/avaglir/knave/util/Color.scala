@@ -5,9 +5,9 @@ abstract class Color {
   def green: Int
   def blue: Int
 
-  def hue: Float
-  def saturation: Float
-  def luminance: Float
+  def hue: UnitClampedFloat
+  def saturation: UnitClampedFloat
+  def luminance: UnitClampedFloat
 
   def hex: String = {
     f"#$red%02x$green%02x$blue%02x"
@@ -19,9 +19,9 @@ abstract class Color {
 
 case class RGB(red: Int, green: Int, blue: Int) extends Color {
   lazy val (hue, saturation, luminance) = {
-    val r = red.toFloat / 255
-    val g = green.toFloat / 255
-    val b = blue.toFloat / 255
+    val r = (red.toFloat / 255).clamp
+    val g = (green.toFloat / 255).clamp
+    val b = (blue.toFloat / 255).clamp
 
     val max = maxOf(r, g, b)
     val min = minOf(r, g, b)
@@ -45,11 +45,11 @@ case class RGB(red: Int, green: Int, blue: Int) extends Color {
   }
 }
 
-case class HSL(hue: Float, saturation: Float, luminance: Float) extends Color {
+case class HSL(hue: UnitClampedFloat, saturation: UnitClampedFloat, luminance: UnitClampedFloat) extends Color {
   lazy val (red, green, blue) = {
     val lumT = (luminance * 255).toInt
 
-    if (saturation == 0) (lumT, lumT, lumT) else {
+    if (saturation.value == 0) (lumT, lumT, lumT) else {
       val q = if (luminance < 0.5) luminance * (1 + saturation) else (luminance + saturation) - luminance * saturation
       val p = 2 * luminance - q
 
