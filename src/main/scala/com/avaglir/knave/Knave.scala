@@ -21,14 +21,12 @@ object Knave extends JSApp {
         document.getElementById(s"knave-${sym.name}").appendChild(disp.container)
     }
 
-    val max = 15
-    val center = Vector2(40, 12)
+    var last = Vector2.ZERO
+    bresenhamLine(Vector2.ZERO, Vector2(displays('main).width, displays('main).height) - Vector2.UNIT).foreach(vec => {
+      displays('main).draw(vec, 'a', Color.WHITE)
+      last = vec
+    })
 
-//    circle_simple(center, max).foreach(vec => {
-//      val color = HSL((vec - center).magnitude / max, 1f, 0.5f)
-//      displays('main).draw(vec, 'a', color)
-//    })
-
-    bresenhamLine(Vector2.ZERO, Vector2(displays('main).))
+    println(last)
   }
 }

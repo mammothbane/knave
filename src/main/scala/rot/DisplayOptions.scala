@@ -2,6 +2,7 @@ package rot
 
 import scala.scalajs.js
 
+@js.native
 trait DisplayOptions extends js.Object {
   val width: Int = js.native
   val height: Int = js.native

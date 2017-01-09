@@ -15,7 +15,7 @@ package object util {
         }
     }
 
-    out
+    out.toList
   }
 
   // midpoint algorithm, borrowed from rosetta code:
@@ -75,7 +75,7 @@ package object util {
       }
     }
 
-    out
+    out.toList
   }
 
   def maxOf[T: Ordering](args: T*): T = args.max
