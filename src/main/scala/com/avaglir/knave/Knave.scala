@@ -2,11 +2,11 @@ package com.avaglir.knave
 
 import com.avaglir.knave.gamemode.{GameMode, Start}
 import com.avaglir.knave.util._
+import com.avaglir.knave.util.random.Alea
 import org.scalajs.dom.document
 
 import scala.scalajs.js
 import scala.scalajs.js.JSApp
-import scala.util.Random
 
 object Knave extends JSApp {
   val displays = Map(
@@ -15,7 +15,7 @@ object Knave extends JSApp {
     'messages -> new Display(101, 6)
   )
 
-  val random = new Random()
+  val random = Alea()
 
   private var currentMode: GameMode = new Start()
 
@@ -28,6 +28,8 @@ object Knave extends JSApp {
     val fov = 15
 
     var i = 0
+
+    Storage.persistAll()
 
     js.timers.setInterval(500f) {
       val newVec = Vector2(center.x + (i % (2 * fov)) - fov, center.y)

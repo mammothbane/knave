@@ -1,5 +1,6 @@
 package com.avaglir.knave.util
 
+import com.avaglir.knave.Knave
 import org.scalajs.dom.window
 
 import scala.util.{Success, Try}
@@ -16,12 +17,9 @@ object Storage {
   }
 
   def persistAll(): Unit = {
+    import upickle.default._
+    println(write(Knave.random.state))
     if (!ok) return
-
-    // Knave.random.pickle
-
-
-    //Knave.random
   }
 
 }

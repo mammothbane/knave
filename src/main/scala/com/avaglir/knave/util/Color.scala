@@ -16,7 +16,7 @@ abstract class Color {
 }
 
 case class RGB(red: Int, green: Int, blue: Int) extends Color {
-  lazy val (hue, saturation, luminance) = {
+  override lazy val (hue, saturation, luminance) = {
     val r = (red.toFloat / 255).clamp
     val g = (green.toFloat / 255).clamp
     val b = (blue.toFloat / 255).clamp
@@ -27,7 +27,7 @@ case class RGB(red: Int, green: Int, blue: Int) extends Color {
     val lum = (max + min) / 2
 
     if (max == min) {
-      (lum, 0f, 0f)
+      (lum.unitClamped, 0f.unitClamped, 0f.unitClamped)
     } else {
       val d = max - min
       val sat = if (lum > 0.5) d / (2 - max - min) else d / (max + min)
@@ -38,7 +38,7 @@ case class RGB(red: Int, green: Int, blue: Int) extends Color {
         case x if x == b => (r - g) / d + 4
       })/6
 
-      (hue, sat, lum)
+      (hue.unitClamped, sat.unitClamped, lum.unitClamped)
     }
   }
 }
