@@ -1,11 +1,11 @@
 enablePlugins(ScalaJSPlugin)
 
 name := "Knave"
-scalaVersion := "2.11.8"
+scalaVersion := "2.12.1"
 
 libraryDependencies ++= Seq(
   "org.scala-js" %%% "scalajs-dom" % "0.9.1",
-  "com.lihaoyi" %%% "upickle" % "0.4.3"
+  "com.github.benhutchison" %%% "prickle" % "1.1.13"
 )
 
 resolvers += "Sonatype OSS Snapshots" at "https://oss.sonatype.org/content/repositories/snapshots"

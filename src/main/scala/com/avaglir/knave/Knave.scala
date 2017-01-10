@@ -2,7 +2,6 @@ package com.avaglir.knave
 
 import com.avaglir.knave.gamemode.{GameMode, Start}
 import com.avaglir.knave.util._
-import com.avaglir.knave.util.random.Alea
 import org.scalajs.dom.{KeyboardEvent, document, window}
 
 import scala.scalajs.js.JSApp
@@ -14,7 +13,7 @@ object Knave extends JSApp {
     'messages -> new Display(101, 6)
   )
 
-  val random = Alea()
+  val random = rot.RNG
   private var currentMode: GameMode = new Start()
   private var inFrame = false
 

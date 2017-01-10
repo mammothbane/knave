@@ -26,14 +26,13 @@ class Start extends GameMode {
     if (evt.`type` != "keydown") return None
 
     evt.key.toLowerCase match {
-      case "e" =>
+//      case "e" => Some(MapMode())
       case "w" | "s" =>
         println("got change key")
         load = !load
-      case _ =>
+        None
+      case _ => None
     }
-
-    None
   }
 
   override def render(): Unit = {

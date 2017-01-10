@@ -14,7 +14,7 @@ class Display(opts: js.Object) extends js.Object {
   def options(): DisplayOptions = js.native
 
   @JSName("setOptions")
-  def options_=:(opts: js.Object): Unit = js.native
+  def options_= (opts: js.Object): Unit = js.native
 
   @JSName("getContainer")
   def container(): Node = js.native
