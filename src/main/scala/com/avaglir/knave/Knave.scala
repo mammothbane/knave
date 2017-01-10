@@ -3,9 +3,8 @@ package com.avaglir.knave
 import com.avaglir.knave.gamemode.{GameMode, Start}
 import com.avaglir.knave.util._
 import com.avaglir.knave.util.random.Alea
-import org.scalajs.dom.document
+import org.scalajs.dom.{KeyboardEvent, document, window}
 
-import scala.scalajs.js
 import scala.scalajs.js.JSApp
 
 object Knave extends JSApp {
@@ -16,33 +15,30 @@ object Knave extends JSApp {
   )
 
   val random = Alea()
-
   private var currentMode: GameMode = new Start()
+  private var inFrame = false
 
   def main(): Unit = {
     displays.foreach {
       case (sym: Symbol, disp: Display) => document.getElementById(s"knave-${sym.name}").appendChild(disp.container)
     }
 
-    val center = Vector2(40, 12)
-    val fov = 15
+    window.addEventListener("keydown", handleInput _)
+    window.addEventListener("keypress", handleInput _)
+    currentMode.render()
+  }
 
-    var i = 0
-
-    Storage.persistAll()
-
-    js.timers.setInterval(500f) {
-      val newVec = Vector2(center.x + (i % (2 * fov)) - fov, center.y)
-      val visible = ShadowRaycast.calculate(center, fov, v => !v.equals(newVec)).toSet
-      val nonVisible = circle_simple(center, fov).toSet diff visible
-
-      visible.foreach { vec =>
-        displays('main).draw(vec, 'a')
+  def handleInput(evt: KeyboardEvent): Unit = {
+    if (evt.keyCode == 0) return // ignore modifier-only keypresses
+    currentMode frame evt match {
+      case Some(newMode) => {
+        currentMode.exit()
+        currentMode = newMode
       }
-
-      val dimmed = HSL(0f, 0f, 0.5f)
-      nonVisible.foreach { vec => displays('main).draw(vec, 'a', dimmed) }
-      i += 1
+      case None =>
     }
+
+    displays.values.foreach { _.clear() }
+    currentMode.render()
   }
 }

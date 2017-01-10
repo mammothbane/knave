@@ -81,6 +81,7 @@ object Color {
 
   def apply(s: String): RGB = {
     val matchRegex(r, g, b) = s
-    RGB(Integer.parseInt(r, 16).toByte, Integer.parseInt(g, 16).toByte, Integer.parseInt(b, 16).toByte)
+    val (red :: green :: blue :: _) = List(r, g, b).map(Integer.parseInt(_, 16) % 255)
+    RGB(red, green, blue)
   }
 }

@@ -8,7 +8,7 @@ case class Vector2(x: Int, y: Int) {
   def unary_- = this.map(elem => -elem)
 
   def *(factor: Float) = map { (elem) => (elem * factor).toInt }
-  def /(factor: Float) = map { (elem) => (elem * factor).toInt }
+  def /(factor: Float) = map { (elem) => (elem / factor).toInt }
 
   def half = this / 2
   def magnitude: Float = math.sqrt(x*x + y*y).toFloat

@@ -94,6 +94,10 @@ package object util {
     def unitClamped = new UnitClampedFloat(f)
   }
 
+  implicit class strExt(s: String) {
+    def colorize(fg: Color = Color.WHITE, bg: Color = Color.BLACK): String = s"%c{${fg.hex}}%b{${bg.hex}}$s"
+  }
+
   implicit def clamped2Float(c: ClampedFloat): Float = c.value
   implicit def float2UnitClamped(f: Float): UnitClampedFloat = new UnitClampedFloat(f)
 }
