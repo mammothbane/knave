@@ -22,6 +22,8 @@ object Knave extends JSApp {
       case (sym: Symbol, disp: Display) => document.getElementById(s"knave-${sym.name}").appendChild(disp.container)
     }
 
+    storage.loadAll()
+
     window.addEventListener("keydown", handleInput _)
     window.addEventListener("keypress", handleInput _)
     currentMode.render()
