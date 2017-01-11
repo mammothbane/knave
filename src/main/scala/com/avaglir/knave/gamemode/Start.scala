@@ -28,7 +28,6 @@ class Start extends GameMode {
     evt.key.toLowerCase match {
 //      case "e" => Some(MapMode())
       case "w" | "s" =>
-        println("got change key")
         load = !load
         None
       case _ => None
@@ -45,7 +44,7 @@ class Start extends GameMode {
     main.drawText(menuOffset + Vector2(-3, if (load) 1 else 0), "=>".colorize(Color("#1b58d3")))
   }
 
-  override def exit(): Unit = {
+  override def exit(): Unit = {}
 
-  }
+  override def persist(): Map[Symbol, String] = Map()
 }
