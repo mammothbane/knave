@@ -5,9 +5,11 @@ import com.avaglir.knave.util._
 
 import scala.collection.mutable
 
-object Cellular {
+object Cellular extends TileGenerator {
   private val birth = List(5, 6, 7, 8)
   private val survive = List(4, 5, 6, 7, 8)
+
+  def generate(width: Int, height: Int): Array[Array[Tile]] = generate(width, height, 0.6f)
 
   def generate(width: Int, height: Int, aliveProbability: UnitClampedFloat, generations: Int = 4): Array[Array[Tile]] = {
     var cur = mutable.ArrayBuffer.fill(width, height) { 0 }

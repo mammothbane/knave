@@ -1,7 +1,7 @@
 package com.avaglir.knave
 
 import com.avaglir.knave.gamemode.{GameMode, Start}
-import com.avaglir.knave.map.{Cellular, GameMap}
+import com.avaglir.knave.map.{GameMap, Simplex}
 import com.avaglir.knave.util._
 import org.scalajs.dom.{KeyboardEvent, document, window}
 
@@ -30,7 +30,7 @@ object Knave extends JSApp {
     displays.values.foreach { _.clear() }
     currentMode.render()
 
-    val tiles = Cellular.generate(50, 50, 0.6f)
+    val tiles = Simplex.generate(50, 50)
     val map = GameMap(tiles)
     map.log()
   }
