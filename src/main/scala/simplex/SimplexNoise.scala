@@ -1,5 +1,7 @@
 package simplex
 
+import com.avaglir.knave.util.{Guid, Vector2}
+
 /**
   * Found here https://gist.githubusercontent.com/KdotJPG/b1270127455a94ac5d19/raw/df72ca5e708ebcb1d3c401a0617e1e288c76da82/OpenSimplexNoise.java
   */
@@ -14,6 +16,9 @@ object SimplexNoise {
   private val NORM_CONSTANT_3D: Double = 103
   private val NORM_CONSTANT_4D: Double = 30
   private val DEFAULT_SEED: Long = 0
+
+  private val GRAD_STR = "GRAD"
+  private val PERM_STR = "PERM"
 
   def fastFloor(x: Double): Int = {
     val xi: Int = x.toInt
@@ -33,17 +38,12 @@ object SimplexNoise {
   //skewed so that the tetrahedral and cubic facets can be inscribed inside
   //spheres of the same radius.
   val gradients4D: Array[Byte] = Array[Byte](3, 1, 1, 1, 1, 3, 1, 1, 1, 1, 3, 1, 1, 1, 1, 3, -3, 1, 1, 1, -1, 3, 1, 1, -1, 1, 3, 1, -1, 1, 1, 3, 3, -1, 1, 1, 1, -3, 1, 1, 1, -1, 3, 1, 1, -1, 1, 3, -3, -1, 1, 1, -1, -3, 1, 1, -1, -1, 3, 1, -1, -1, 1, 3, 3, 1, -1, 1, 1, 3, -1, 1, 1, 1, -3, 1, 1, 1, -1, 3, -3, 1, -1, 1, -1, 3, -1, 1, -1, 1, -3, 1, -1, 1, -1, 3, 3, -1, -1, 1, 1, -3, -1, 1, 1, -1, -3, 1, 1, -1, -1, 3, -3, -1, -1, 1, -1, -3, -1, 1, -1, -1, -3, 1, -1, -1, -1, 3, 3, 1, 1, -1, 1, 3, 1, -1, 1, 1, 3, -1, 1, 1, 1, -3, -3, 1, 1, -1, -1, 3, 1, -1, -1, 1, 3, -1, -1, 1, 1, -3, 3, -1, 1, -1, 1, -3, 1, -1, 1, -1, 3, -1, 1, -1, 1, -3, -3, -1, 1, -1, -1, -3, 1, -1, -1, -1, 3, -1, -1, -1, 1, -3, 3, 1, -1, -1, 1, 3, -1, -1, 1, 1, -3, -1, 1, 1, -1, -3, -3, 1, -1, -1, -1, 3, -1, -1, -1, 1, -3, -1, -1, 1, -1, -3, 3, -1, -1, -1, 1, -3, -1, -1, 1, -1, -3, -1, 1, -1, -1, -3, -3, -1, -1, -1, -1, -3, -1, -1, -1, -1, -3, -1, -1, -1, -1, -3)
-}
 
-class SimplexNoise(s: Long = SimplexNoise.DEFAULT_SEED) {
-  private var permGradIndex3D = new Array[Short](256)
-  private var perm = new Array[Short](256)
-
-  {
+  def apply(s: Long = SimplexNoise.DEFAULT_SEED): SimplexNoise = {
     var seed: Long = s
 
-    perm = new Array[Short](256)
-    permGradIndex3D = new Array[Short](256)
+    val perm = new Array[Short](256)
+    val permGradIndex3D = new Array[Short](256)
     val source: Array[Short] = (0 until 256).map{ _.toShort }.toArray
 
     seed = seed * 6364136223846793005L + 1442695040888963407L
@@ -59,7 +59,13 @@ class SimplexNoise(s: Long = SimplexNoise.DEFAULT_SEED) {
       source(r) = source(i)
       i -= 1
     }
+
+    SimplexNoise(perm, permGradIndex3D)
   }
+}
+
+case class SimplexNoise(private val perm: Array[Short], private val permGradIndex3D: Array[Short]) extends Guid {
+  def eval(v: Vector2): Double = eval(v.x, v.y)
 
   //2D OpenSimplex Noise.
   def eval(x: Double, y: Double): Double = {
