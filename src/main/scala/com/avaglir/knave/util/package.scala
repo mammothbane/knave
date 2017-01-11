@@ -94,8 +94,10 @@ package object util {
     def unitClamped = new UnitClampedFloat(f)
   }
 
+  private final val colorRegex = "%c{#[0-9a-f]{6}}%b{#[0-9a-f]{6}}".r
   implicit class strExt(s: String) {
     def colorize(fg: Color = Color.WHITE, bg: Color = Color.BLACK): String = s"%c{${fg.hex}}%b{${bg.hex}}$s"
+    def decolorize: String = colorRegex.replaceAllIn(s, "")
   }
 
   implicit def clamped2Float(c: ClampedFloat): Float = c.value

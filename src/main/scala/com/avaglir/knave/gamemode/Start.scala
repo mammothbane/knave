@@ -1,7 +1,11 @@
 package com.avaglir.knave.gamemode
 import com.avaglir.knave.Knave
+import com.avaglir.knave.input.Action
 import com.avaglir.knave.util._
+import com.avaglir.knave.util.menu.Menu
 import org.scalajs.dom.KeyboardEvent
+
+import scala.collection.mutable
 
 class Start extends GameMode {
   private val KNAVE =
@@ -21,17 +25,20 @@ class Start extends GameMode {
   val offset = (Knave.displays('main).center - kCenter) + Vector2.UP * 2
 
   var load = false
+  val menu = Menu(mutable.ListBuffer(
+    ("New", 'new),
+    ("Load", 'load)
+  ), "=>".colorize(Color("#1b58d3")))
 
   override def frame(evt: KeyboardEvent): Option[GameMode] = {
     if (evt.`type` != "keydown") return None
 
-    evt.key.toLowerCase match {
-//      case "e" => Some(MapMode())
-      case "w" | "s" =>
-        load = !load
-        None
-      case _ => None
+    menu.input(evt).getOrElse(Action.SKIP) match {
+      case Action.UP | Action.DOWN => load = !load
+      case Action.INTERACT =>
+      case _ =>
     }
+    None
   }
 
   override def render(): Unit = {
@@ -39,9 +46,7 @@ class Start extends GameMode {
     main.drawText(offset, KNAVE, fg = mainColor, trim = false)
 
     val menuOffset = main.center + Vector2(-2, kCenter.y + 1)
-    main.drawText(menuOffset, "New")
-    main.drawText(menuOffset + Vector2.DOWN, "Load")
-    main.drawText(menuOffset + Vector2(-3, if (load) 1 else 0), "=>".colorize(Color("#1b58d3")))
+    menu.draw(main, menuOffset)
   }
 
   override def exit(): Unit = {}
