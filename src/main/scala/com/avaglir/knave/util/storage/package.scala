@@ -9,7 +9,6 @@ import scala.scalajs.js.JSON
 import scala.util.{Failure, Success, Try}
 
 package object storage {
-  private val KNAVE_NAMESPACE = "KNAVE"
   private val STORAGE_TEST = "__TEST"
   lazy val ok = Try {
     window.localStorage.setItem(STORAGE_TEST, STORAGE_TEST)
@@ -21,6 +20,8 @@ package object storage {
       false
   }
 
+  private val HAS_SAVE = 'save_present
+
   val RAND_STATE = 'rand_state
   val RAND_SEED = 'rand_seed
 
@@ -31,7 +32,6 @@ package object storage {
     if (!ok) return
     persistJs(RAND_STATE, Knave.random.getState())
     persistJs(RAND_SEED, Knave.random.getSeed())
-
   }
 
   def loadAll(): Unit = {
@@ -39,8 +39,7 @@ package object storage {
     Knave.random.setSeed(loadJs(RAND_SEED))
   }
 
-  def clearAll(): Unit = {
-    println("deleting local storage")
-    window.localStorage.clear()
-  }
+  def clearAll(): Unit = window.localStorage.clear()
+
+  def hasSave: Boolean = load[Boolean](HAS_SAVE).getOrElse(false)
 }

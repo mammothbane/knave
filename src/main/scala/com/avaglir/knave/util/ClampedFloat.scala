@@ -5,4 +5,4 @@ class ClampedFloat(v: Float, min: Float = 0, max: Float = 1) {
   override def toString: String = s"$value"
 }
 
-final class UnitClampedFloat(v: Float) extends ClampedFloat(v)
+final case class UnitClampedFloat(v: Float) extends ClampedFloat(v)

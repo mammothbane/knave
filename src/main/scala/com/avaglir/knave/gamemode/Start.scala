@@ -2,7 +2,7 @@ package com.avaglir.knave.gamemode
 import com.avaglir.knave.Knave
 import com.avaglir.knave.input.Action
 import com.avaglir.knave.util._
-import com.avaglir.knave.util.menu.Menu
+import com.avaglir.knave.util.menu.{Entry, Menu}
 import org.scalajs.dom.KeyboardEvent
 
 import scala.collection.mutable
@@ -25,10 +25,7 @@ class Start extends GameMode {
   val offset = (Knave.displays('main).center - kCenter) + Vector2.UP * 2
 
   var load = false
-  val menu = Menu(mutable.ListBuffer(
-    ("New", 'new),
-    ("Load", 'load)
-  ), "=>".colorize(Color("#1b58d3")))
+  val menu = Menu(mutable.ListBuffer(Entry("New", 'new), Entry("Load", 'load, enabled = storage.hasSave)), "=>".colorize(Color("#1b58d3")))
 
   override def frame(evt: KeyboardEvent): Option[GameMode] = {
     if (evt.`type` != "keydown") return None

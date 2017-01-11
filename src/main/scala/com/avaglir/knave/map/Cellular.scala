@@ -3,8 +3,6 @@ package com.avaglir.knave.map
 import com.avaglir.knave.Knave
 import com.avaglir.knave.util._
 
-import scala.collection.mutable
-
 object Cellular extends TileGenerator {
   private val birth = List(5, 6, 7, 8)
   private val survive = List(4, 5, 6, 7, 8)
@@ -12,8 +10,8 @@ object Cellular extends TileGenerator {
   def generate(width: Int, height: Int): Array[Array[Tile]] = generate(width, height, 0.6f)
 
   def generate(width: Int, height: Int, aliveProbability: UnitClampedFloat, generations: Int = 4): Array[Array[Tile]] = {
-    var cur = mutable.ArrayBuffer.fill(width, height) { 0 }
-    var next = mutable.ArrayBuffer.fill(width, height){ if (Knave.random.uniform() > aliveProbability) 0 else 1 }
+    var cur = Array.ofDim[Int](width, height)
+    var next = Array.fill(width, height) { if (Knave.random.uniform() > aliveProbability) 0 else 1 }
 
     def locValue(x: Int, y: Int): Int = {
       if (x < 0 || x >= width) return 0
@@ -47,6 +45,6 @@ object Cellular extends TileGenerator {
     next.map { _.map {
       case 1 => Tile.FLOOR
       case 0 => Tile.WALL
-    }.toArray }.toArray
+    }.toArray }
   }
 }

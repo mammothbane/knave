@@ -6,13 +6,26 @@ import org.scalajs.dom.KeyboardEvent
 
 import scala.collection.mutable
 
-case class Menu(items: mutable.ListBuffer[(String, Symbol)], pointer: String, private var index: Int = 0) {
+case class Menu(entries: mutable.ListBuffer[Entry], pointer: String, private var index: Int = 0) {
   def input(evt: KeyboardEvent): Option[Symbol] = {
     translate(evt) match {
       case Some(a) => a match {
-        case Action.DOWN => index = (index - 1) % items.length
-        case Action.UP => index = (index + 1) % items.length
-        case Action.INTERACT => return Some(items(indexValue)._2)
+        case Action.DOWN =>
+          if (!entries.exists(_.enabled)) return None
+
+          var done = false
+          while (!done) {
+            index = (index + 1) % entries.length
+            if (entries(indexValue).enabled) done = true
+          }
+        case Action.UP =>
+          if (!entries.exists(_.enabled)) return None
+          var done = false
+          while (!done) {
+            index = (index - 1) % entries.length
+            if (entries(indexValue).enabled) done = true
+          }
+        case Action.INTERACT => return Some(entries(indexValue).result)
         case _ =>
       }
       case None =>
@@ -20,15 +33,21 @@ case class Menu(items: mutable.ListBuffer[(String, Symbol)], pointer: String, pr
     None
   }
 
-  private def indexValue = (index + items.length) % items.length
+  def disable(key: Symbol) = entries.filter { _.result == key }.foreach { _.enabled = false }
+  def enable(key: Symbol) = entries.filter { _.result == key }.foreach { _.enabled = true }
+
+  private def indexValue = (index + entries.length) % entries.length
   private lazy val ptrLength = pointer.trim.decolorize.length
 
   def draw(d: Display, v: Vector2): Unit = {
-    val longestStr = items.map{ case (str, _) => str.decolorize }.maxBy { _.length }
+    val longestStr = entries.map{ _.name.decolorize }.maxBy { _.length }
     if (v.x + ptrLength + 1 + longestStr.length > d.width) throw new IllegalArgumentException(s"Cannot draw menu at $v: too wide.")
 
-    items.zipWithIndex.foreach {
-      case ((str, _), idx) => d.drawText(v + Vector2.DOWN * idx, str)
+    entries.zipWithIndex.foreach {
+      case (entry, idx) =>
+        val draw = if (entry.enabled) entry.name else entry.name.colorize(entry.disabledColor)
+        println(draw)
+        d.drawText(v + Vector2.DOWN * idx, draw)
     }
 
     d.drawText(v + (Vector2.DOWN * indexValue) + Vector2.LEFT * (ptrLength + 1), pointer.trim)

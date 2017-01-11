@@ -101,5 +101,5 @@ package object util {
   }
 
   implicit def clamped2Float(c: ClampedFloat): Float = c.value
-  implicit def float2UnitClamped(f: Float): UnitClampedFloat = new UnitClampedFloat(f)
+  implicit def float2UnitClamped(f: Float): UnitClampedFloat = UnitClampedFloat(f)
 }

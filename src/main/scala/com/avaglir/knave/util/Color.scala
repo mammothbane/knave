@@ -13,6 +13,9 @@ abstract class Color {
 
   def hsl = HSL(hue, saturation, luminance)
   def rgb = RGB(red, green, blue)
+
+  def darker = HSL(hue, saturation, UnitClampedFloat(luminance.value/2))
+  def lighter = HSL(hue, saturation, UnitClampedFloat((luminance.value + 1f)/2))
 }
 
 case class RGB(red: Int, green: Int, blue: Int) extends Color {
@@ -27,7 +30,7 @@ case class RGB(red: Int, green: Int, blue: Int) extends Color {
     val lum = (max + min) / 2
 
     if (max == min) {
-      (lum.unitClamped, 0f.unitClamped, 0f.unitClamped)
+      (0f.unitClamped, 0f.unitClamped, lum.unitClamped)
     } else {
       val d = max - min
       val sat = if (lum > 0.5) d / (2 - max - min) else d / (max + min)

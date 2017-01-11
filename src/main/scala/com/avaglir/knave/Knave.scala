@@ -2,7 +2,7 @@ package com.avaglir.knave
 
 import com.avaglir.knave.gamemode.{GameMode, Start}
 import com.avaglir.knave.util._
-import org.scalajs.dom.ext._
+import org.scalajs.dom.ext.KeyCode
 import org.scalajs.dom.{KeyboardEvent, document, window}
 
 import scala.scalajs.js.JSApp
