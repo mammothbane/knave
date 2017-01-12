@@ -1,6 +1,6 @@
 package simplex
 
-import com.avaglir.knave.util.{Guid, Vector2}
+import com.avaglir.knave.util.Vector2
 
 /**
   * Found here https://gist.githubusercontent.com/KdotJPG/b1270127455a94ac5d19/raw/df72ca5e708ebcb1d3c401a0617e1e288c76da82/OpenSimplexNoise.java
@@ -64,7 +64,7 @@ object SimplexNoise {
   }
 }
 
-case class SimplexNoise(private val perm: Array[Short], private val permGradIndex3D: Array[Short]) extends Guid {
+case class SimplexNoise(perm: Array[Short], permGradIndex3D: Array[Short]) {
   def eval(v: Vector2): Double = eval(v.x, v.y)
 
   //2D OpenSimplex Noise.
@@ -178,7 +178,10 @@ case class SimplexNoise(private val perm: Array[Short], private val permGradInde
       attn_ext *= attn_ext
       value += attn_ext * attn_ext * extrapolate(xsv_ext, ysv_ext, dx_ext, dy_ext)
     }
-    value / SimplexNoise.NORM_CONSTANT_2D
+
+    val out = value / SimplexNoise.NORM_CONSTANT_2D
+
+    (out + 1) / 2 // range 0 to 1
   }
 
   //3D OpenSimplex Noise.
@@ -2261,16 +2264,16 @@ case class SimplexNoise(private val perm: Array[Short], private val permGradInde
 
   private def extrapolate(xsb: Int, ysb: Int, dx: Double, dy: Double): Double = {
     val index: Int = perm((perm(xsb & 0xFF) + ysb) & 0xFF) & 0x0E
-    return SimplexNoise.gradients2D(index) * dx + SimplexNoise.gradients2D(index + 1) * dy
+    SimplexNoise.gradients2D(index) * dx + SimplexNoise.gradients2D(index + 1) * dy
   }
 
   private def extrapolate(xsb: Int, ysb: Int, zsb: Int, dx: Double, dy: Double, dz: Double): Double = {
     val index: Int = permGradIndex3D((perm((perm(xsb & 0xFF) + ysb) & 0xFF) + zsb) & 0xFF)
-    return SimplexNoise.gradients3D(index) * dx + SimplexNoise.gradients3D(index + 1) * dy + SimplexNoise.gradients3D(index + 2) * dz
+    SimplexNoise.gradients3D(index) * dx + SimplexNoise.gradients3D(index + 1) * dy + SimplexNoise.gradients3D(index + 2) * dz
   }
 
   private def extrapolate(xsb: Int, ysb: Int, zsb: Int, wsb: Int, dx: Double, dy: Double, dz: Double, dw: Double): Double = {
     val index: Int = perm((perm((perm((perm(xsb & 0xFF) + ysb) & 0xFF) + zsb) & 0xFF) + wsb) & 0xFF) & 0xFC
-    return SimplexNoise.gradients4D(index) * dx + SimplexNoise.gradients4D(index + 1) * dy + SimplexNoise.gradients4D(index + 2) * dz + SimplexNoise.gradients4D(index + 3) * dw
+    SimplexNoise.gradients4D(index) * dx + SimplexNoise.gradients4D(index + 1) * dy + SimplexNoise.gradients4D(index + 2) * dz + SimplexNoise.gradients4D(index + 3) * dw
   }
 }

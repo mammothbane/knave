@@ -15,8 +15,4 @@ case class MapMode(map: GameMap) extends GameMode {
   override def render(): Unit = {
 
   }
-
-  override def persist(): Map[Symbol, String] = {
-    Map()
-  }
 }

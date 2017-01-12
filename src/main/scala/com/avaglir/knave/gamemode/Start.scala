@@ -7,7 +7,7 @@ import org.scalajs.dom.KeyboardEvent
 
 import scala.collection.mutable
 
-class Start extends GameMode {
+case class Start(var load: Boolean = false) extends GameMode {
   private val KNAVE =
     """
       | _        _        _______           _______
@@ -24,7 +24,6 @@ class Start extends GameMode {
   val kCenter = Vector2(KNAVE.split('\n').maxBy{ _.length }.length, KNAVE.split('\n').length).half
   val offset = (Knave.displays('main).center - kCenter) + Vector2.UP * 2
 
-  var load = false
   val menu = Menu(mutable.ListBuffer(Entry("New", 'new), Entry("Load", 'load, enabled = storage.hasSave)), "=>".colorize(Color("#1b58d3")))
 
   override def frame(evt: KeyboardEvent): Option[GameMode] = {
@@ -47,6 +46,4 @@ class Start extends GameMode {
   }
 
   override def exit(): Unit = {}
-
-  override def persist(): Map[Symbol, String] = Map()
 }

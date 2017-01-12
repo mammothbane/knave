@@ -18,6 +18,7 @@ object Cellular extends TileGenerator {
       if (y < 0 || y >= height) return 0
       cur(x)(y)
     }
+
     def neighborCount(x: Int, y: Int): Int =
       locValue(x + 1, y) +
         locValue(x - 1, y) +

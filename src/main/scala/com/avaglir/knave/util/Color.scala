@@ -1,6 +1,6 @@
 package com.avaglir.knave.util
 
-abstract class Color {
+sealed abstract class Color {
   def red: Int
   def green: Int
   def blue: Int
