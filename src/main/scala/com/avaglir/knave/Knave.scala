@@ -74,10 +74,7 @@ object Knave extends JSApp with Persist {
   def values(key: String): Float = inputs(key).value.toFloat
   def update() = elems.foreach { elem => {
     val span = document.getElementById(elem + "-text").asInstanceOf[Span]
-    val tn = document.createTextNode(values(elem).toString)
-
-    if (span.children.length != 0) span.removeChild(span.children(0))
-    span.appendChild(tn)
+    span.textContent = values(elem).toString
   }}
 
   val cutoff = document.getElementById("cutoff").asInstanceOf[Input]
@@ -98,12 +95,10 @@ object Knave extends JSApp with Persist {
     val smallWeight = values("small-weight")
     val largeWeight = values("large-weight")
 
-    val largeFalloff = values("large-falloff")
-    val smallFalloff = values("small-falloff")
     val threshold = values("threshold")
 
-    val largeFalloffRadius = mag * values("scale-large")
-    val smallFalloffRadius = mag * values("scale-small")
+    val largeFalloffRadius = mag * values("large-falloff")
+    val smallFalloffRadius = mag * values("small-falloff")
 
     (0 until mn.width).foreach { x =>
       (0 until mn.height).foreach { y =>
@@ -113,8 +108,6 @@ object Knave extends JSApp with Persist {
 
         val smallScale = if (fromCtr.magnitude > smallFalloffRadius) 1 - (fromCtr.magnitude - smallFalloffRadius) / (mag - smallFalloffRadius) else 1
         val largeScale = if (fromCtr.magnitude > largeFalloffRadius) 1 - (fromCtr.magnitude - largeFalloffRadius) / (mag - largeFalloffRadius) else 1
-
-        val mg = ((1 - fromCtr.magnitude / mag) + largeFalloff) / (1 + largeFalloff)
 
         val v = (large.eval(fromCtr.x.toFloat / scaleLarge, fromCtr.y.toFloat / scaleLarge) * largeWeight.toFloat * largeScale * largeScale +
           small.eval(fromCtr.x.toFloat / scaleSmall, fromCtr.y.toFloat / scaleSmall) * smallWeight.toFloat * smallScale * smallScale)/(largeWeight + smallWeight)
