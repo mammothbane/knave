@@ -87,7 +87,7 @@ object Knave extends JSApp with Persist {
   canvas.width = 500
   document.body.appendChild(canvas)
 
-  val ctx = canvas.getContext("2d")
+  val ctx = canvas.getContext("2d").asInstanceOf[CanvasRenderingContext2D]
 
   val mag = Vector2(canvas.width, canvas.height).half.magnitude
 
