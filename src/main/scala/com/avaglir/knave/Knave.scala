@@ -5,7 +5,7 @@ import com.avaglir.knave.util._
 import com.avaglir.knave.util.storage.Pickling._
 import org.scalajs.dom._
 import org.scalajs.dom.ext.KeyCode
-import org.scalajs.dom.html.{Button, Input, Span}
+import org.scalajs.dom.html.{Button, Canvas, Input, Span}
 import rot.RNGState
 
 import scala.scalajs.js.{JSApp, JSON}
@@ -30,17 +30,17 @@ object Knave extends JSApp with Persist {
     displays.values.foreach { _.clear() }
     //    currentMode.render()
 
-    // hacky and dumb
-    mousedown = true
-    redraw(null)
-    mousedown = false
+//    // hacky and dumb
+//    mousedown = true
+//    redraw(null)
+//    mousedown = false
 
     inputs.values.foreach { input =>
       input.addEventListener("mousedown", (m: MouseEvent) => mousedown = true)
       input.addEventListener("mouseup", (m: MouseEvent) => mousedown = false)
     }
 
-    window.addEventListener("mousemove", redraw _)
+    window.addEventListener("mousemove", (_: Event) => update())
 
     regenerate.addEventListener("click", (m: MouseEvent) => {
       large = simplex.SimplexNoise(random.int(Int.MinValue, Int.MaxValue))
@@ -66,7 +66,9 @@ object Knave extends JSApp with Persist {
     "large-weight",
     "large-falloff",
     "small-falloff",
-    "threshold"
+    "threshold",
+    "small-anti-bias",
+    "small-anti-radius"
   )
 
   val inputs = elems.map { elem => (elem, document.getElementById(elem).asInstanceOf[Input]) }.toMap
@@ -80,7 +82,14 @@ object Knave extends JSApp with Persist {
   val cutoff = document.getElementById("cutoff").asInstanceOf[Input]
   val regenerate = document.getElementById("regenerate").asInstanceOf[Button]
 
-  val mag = Vector2(mn.width, mn.height).half.magnitude
+  val canvas = document.createElement("canvas").asInstanceOf[Canvas]
+  canvas.height = 500
+  canvas.width = 500
+  document.body.appendChild(canvas)
+
+  val ctx = canvas.getContext("2d")
+
+  val mag = Vector2(canvas.width, canvas.height).half.magnitude
 
   def redraw(evt: MouseEvent): Unit = {
     if (!mousedown) return
@@ -100,22 +109,36 @@ object Knave extends JSApp with Persist {
     val largeFalloffRadius = mag * values("large-falloff")
     val smallFalloffRadius = mag * values("small-falloff")
 
-    (0 until mn.width).foreach { x =>
-      (0 until mn.height).foreach { y =>
+    val smallAntiRadius = values("small-anti-radius")
+    val smallAntiBias = values("small-anti-bias")
+
+    ctx.fillStyle = Color.BLACK.hex
+    ctx.fillRect(0, 0, canvas.width, canvas.width)
+
+    (0 until canvas.width).foreach { x =>
+      (0 until canvas.height).foreach { y =>
         val vec = Vector2(x, y)
 
-        val fromCtr = vec - mn.center
+        val fromCtr = vec - Vector2(canvas.width / 2, canvas.height / 2)
 
         val smallScale = if (fromCtr.magnitude > smallFalloffRadius) 1 - (fromCtr.magnitude - smallFalloffRadius) / (mag - smallFalloffRadius) else 1
         val largeScale = if (fromCtr.magnitude > largeFalloffRadius) 1 - (fromCtr.magnitude - largeFalloffRadius) / (mag - largeFalloffRadius) else 1
 
-        val v = (large.eval(fromCtr.x.toFloat / scaleLarge, fromCtr.y.toFloat / scaleLarge) * largeWeight.toFloat * largeScale * largeScale +
-          small.eval(fromCtr.x.toFloat / scaleSmall, fromCtr.y.toFloat / scaleSmall) * smallWeight.toFloat * smallScale * smallScale)/(largeWeight + smallWeight)
+        val lgVal = large.eval(fromCtr.x.toFloat / scaleLarge, fromCtr.y.toFloat / scaleLarge) * largeWeight.toFloat * (largeScale * largeScale)
+        val smVal = small.eval(fromCtr.x.toFloat / scaleSmall, fromCtr.y.toFloat / scaleSmall) * smallWeight.toFloat * (smallScale * smallScale)
+
+        val v = lgVal + smVal
 
         if (cutoff.checked) {
-          displays('main).draw(vec, 'a', HSL(0f, 0f, v.toFloat))
+          ctx.fillStyle = HSL(0f, 0f, v.toFloat).hex
+          ctx.fillRect(vec.x, vec.y, 1, 1)
+
+//          displays('main).draw(vec, 'a', HSL(0f, 0f, v.toFloat))
         } else {
-          if (v > threshold) displays('main).draw(vec, 'a', Color.WHITE)
+          ctx.fillStyle = Color.WHITE.hex
+          if (v > threshold) ctx.fillRect(vec.x, vec.y, 1, 1)
+
+//          if (v > threshold) displays('main).draw(vec, 'a', Color.WHITE)
         }
       }
     }
