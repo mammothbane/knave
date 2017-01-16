@@ -109,9 +109,6 @@ object Knave extends JSApp with Persist {
     val largeFalloffRadius = mag * values("large-falloff")
     val smallFalloffRadius = mag * values("small-falloff")
 
-    val smallAntiRadius = values("small-anti-radius")
-    val smallAntiBias = values("small-anti-bias")
-
     ctx.fillStyle = Color.BLACK.hex
     ctx.fillRect(0, 0, canvas.width, canvas.width)
 
