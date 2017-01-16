@@ -1,11 +1,12 @@
 package com.avaglir.knave
 
 import com.avaglir.knave.gamemode.{GameMode, Start}
+import com.avaglir.knave.map.GenMap
 import com.avaglir.knave.util._
 import com.avaglir.knave.util.storage.Pickling._
 import org.scalajs.dom._
 import org.scalajs.dom.ext.KeyCode
-import org.scalajs.dom.html.{Button, Canvas, Input, Span}
+import org.scalajs.dom.html.Canvas
 import rot.RNGState
 
 import scala.scalajs.js.{JSApp, JSON}
@@ -30,114 +31,24 @@ object Knave extends JSApp with Persist {
     displays.values.foreach { _.clear() }
     //    currentMode.render()
 
-//    // hacky and dumb
-//    mousedown = true
-//    redraw(null)
-//    mousedown = false
+    val canvas = document.createElement("canvas").asInstanceOf[Canvas]
+    canvas.height = 500
+    canvas.width = 500
 
-    inputs.values.foreach { input =>
-      input.addEventListener("mousedown", (m: MouseEvent) => mousedown = true)
-      input.addEventListener("mouseup", (m: MouseEvent) => mousedown = false)
-    }
+    document.body.appendChild(canvas)
 
-    window.addEventListener("mousemove", (_: Event) => update())
-
-    regenerate.addEventListener("click", (m: MouseEvent) => {
-      large = simplex.SimplexNoise(random.int(Int.MinValue, Int.MaxValue))
-      small = simplex.SimplexNoise(random.int(Int.MinValue, Int.MaxValue))
-
-      // hacky and dumb
-      mousedown = true
-      redraw(null)
-      mousedown = false
-    })
-  }
-
-  var large = simplex.SimplexNoise(random.int(Int.MinValue, Int.MaxValue))
-  var small = simplex.SimplexNoise(random.int(Int.MinValue, Int.MaxValue))
-
-  var mousedown = false
-  val mn = displays('main)
-
-  val elems = List(
-    "scale-small",
-    "scale-large",
-    "small-weight",
-    "large-weight",
-    "large-falloff",
-    "small-falloff",
-    "threshold",
-    "small-anti-bias",
-    "small-anti-radius"
-  )
-
-  val inputs = elems.map { elem => (elem, document.getElementById(elem).asInstanceOf[Input]) }.toMap
-
-  def values(key: String): Float = inputs(key).value.toFloat
-  def update() = elems.foreach { elem => {
-    val span = document.getElementById(elem + "-text").asInstanceOf[Span]
-    span.textContent = values(elem).toString
-  }}
-
-  val cutoff = document.getElementById("cutoff").asInstanceOf[Input]
-  val regenerate = document.getElementById("regenerate").asInstanceOf[Button]
-
-  val canvas = document.createElement("canvas").asInstanceOf[Canvas]
-  canvas.height = 500
-  canvas.width = 500
-  document.body.appendChild(canvas)
-
-  val ctx = canvas.getContext("2d").asInstanceOf[CanvasRenderingContext2D]
-
-  val mag = Vector2(canvas.width, canvas.height).half.magnitude
-
-  def redraw(evt: MouseEvent): Unit = {
-    if (!mousedown) return
-    println("redrawing")
-
-    update()
-
-    mn.clear()
-
-    val scaleLarge = values("scale-large")
-    val scaleSmall = values("scale-small")
-    val smallWeight = values("small-weight")
-    val largeWeight = values("large-weight")
-
-    val threshold = values("threshold")
-
-    val largeFalloffRadius = mag * values("large-falloff")
-    val smallFalloffRadius = mag * values("small-falloff")
-
+    val ctx = canvas.getContext("2d").asInstanceOf[CanvasRenderingContext2D]
     ctx.fillStyle = Color.BLACK.hex
-    ctx.fillRect(0, 0, canvas.width, canvas.width)
+    ctx.fillRect(0, 0, 500, 500)
 
-    (0 until canvas.width).foreach { x =>
-      (0 until canvas.height).foreach { y =>
-        val vec = Vector2(x, y)
+    println("generating map")
+    val out = GenMap.emit(500)
 
-        val fromCtr = vec - Vector2(canvas.width / 2, canvas.height / 2)
-
-        val smallScale = if (fromCtr.magnitude > smallFalloffRadius) 1 - (fromCtr.magnitude - smallFalloffRadius) / (mag - smallFalloffRadius) else 1
-        val largeScale = if (fromCtr.magnitude > largeFalloffRadius) 1 - (fromCtr.magnitude - largeFalloffRadius) / (mag - largeFalloffRadius) else 1
-
-        val lgVal = large.eval(fromCtr.x.toFloat / scaleLarge, fromCtr.y.toFloat / scaleLarge) * largeWeight.toFloat * (largeScale * largeScale)
-        val smVal = small.eval(fromCtr.x.toFloat / scaleSmall, fromCtr.y.toFloat / scaleSmall) * smallWeight.toFloat * (smallScale * smallScale)
-
-        val v = lgVal + smVal
-
-        if (cutoff.checked) {
-          ctx.fillStyle = HSL(0f, 0f, v.toFloat).hex
-          ctx.fillRect(vec.x, vec.y, 1, 1)
-
-//          displays('main).draw(vec, 'a', HSL(0f, 0f, v.toFloat))
-        } else {
-          ctx.fillStyle = Color.WHITE.hex
-          if (v > threshold) ctx.fillRect(vec.x, vec.y, 1, 1)
-
-//          if (v > threshold) displays('main).draw(vec, 'a', Color.WHITE)
-        }
-      }
+    println("rendering map")
+    for (i <- 0 until 500; j <- 0 until 500) {
+//      ctx.fillStyle = HSL(0f, 0f, out(i)(j)).hex
+      ctx.fillStyle = if (out(i)(j) > 0.35) Color.WHITE.hex else Color.BLACK.hex
+      ctx.fillRect(i, j, 1, 1)
     }
   }
 
