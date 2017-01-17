@@ -2,11 +2,10 @@ package com.avaglir.knave.util
 
 import com.avaglir.knave.Knave
 import com.avaglir.knave.gamemode.{GameMode, MapMode, Start}
-import com.avaglir.knave.map.{GameMap, Simplex, Tile}
+import com.avaglir.knave.map.Simplex
 import com.avaglir.knave.util.storage.Macros._
 import org.scalajs.dom.window
 import prickle.{CompositePickler, _}
-import simplex.SimplexNoise
 
 import scala.collection.mutable
 import scala.reflect.ClassTag
@@ -55,32 +54,8 @@ package object storage {
     implicit val colorPickler = CompositePickler[Color].concreteType[RGB].concreteType[HSL]
   }
 
-  import Pickling._
-
   private val HAS_SAVE = 'save_present
 
-  val pkl = Pickle.intoString[Array[Boolean]](Array[Boolean](true, false, true))
-  println(pkl)
-  Unpickle[Array[Boolean]].fromString(pkl).get.foreach(println)
-
-  val pkl2 = Pickle.intoString[Tile](Tile.WALL)
-  println(pkl2)
-  println(Unpickle[Tile].fromString(pkl2).get)
-
-  val pk3 = Pickle.intoString[IntVec](Vector2.UNIT)
-  println(pk3)
-  println(Unpickle[IntVec].fromString(pk3).get)
-
-  val pk4 = Pickle.intoString[GameMap](GameMap(Array.fill[Tile](5, 5) { Tile.WALL} ))
-  println(pk4)
-  println(Unpickle[GameMap].fromString(pk4).get)
-
-  val pk5 = Pickle.intoString[SimplexNoise](SimplexNoise())
-  println(pk5)
-
-  //  val pkl2 = Pickle.intoString[GameMap](GameMap(Array.ofDim[Tile](5, 5)))
-//  println(pkl2)
-//  println(Unpickle[GameMap].fromString(pkl2).get)
 
   private def persistJs(k: Symbol, value: js.Any) = persist(k, JSON.stringify(value))
   private def loadJs[T](k: Symbol): T = JSON.parse(load[String](k).get).asInstanceOf[T]
