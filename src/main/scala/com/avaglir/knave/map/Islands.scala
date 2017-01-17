@@ -9,11 +9,14 @@ object Islands {
 
   def edges: List[Set[IntVec]] = {
     val dimen = 250
-//    val chunks = GenMap.locs(dimen).filter { case (_, v) => v >= threshold }
-    val chunks = GenMap.emit(dimen)
     val bounds = Vector2.UNIT[Int] * dimen
+    val chunks = GenMap.emit(dimen)
 
     def boundary(v: IntVec): Boolean = chunks(v) >= threshold && v.adjacent(true).exists { elem => elem.componentsClamped(bounds) && chunks(elem) < threshold }
+
+    val vecs = chunks.indices.cartesianProduct(chunks.indices).map(Vector2.apply[Int]).toSet
+
+
 
     val out = mutable.ListBuffer.empty[Set[Vector2[Int]]]
 

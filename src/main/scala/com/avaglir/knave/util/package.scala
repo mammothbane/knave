@@ -1,7 +1,7 @@
 package com.avaglir.knave
 
 import scala.annotation.tailrec
-import scala.collection.mutable
+import scala.collection.{GenTraversable, mutable}
 
 package object util {
   type IntVec = Vector2[Int]
@@ -108,8 +108,6 @@ package object util {
     search(Set(init), init, Set.empty)
   }
 
-  //def pointInPolygon()
-
   def bfs[S](init: S, expand: S => Set[S]): Set[S] = {
     @tailrec
     def search(unexpanded: Set[S], seen: Set[S]): Set[S] = unexpanded.toList.headOption match {
@@ -122,8 +120,31 @@ package object util {
     search(Set(init), Set.empty)
   }
 
+  /**
+    * Computes the distinct components of the graph represented by elems. Quadratic in time with no optimization.
+    * @param elems The graph.
+    * @param connected A function that determines whether two nodes in the graph are connected. Assumed to be transitive.
+    * @tparam S The node type.
+    * @return A list of connected components.
+    */
+  def components[S](elems: Set[S], connected: (S, S) => Boolean): List[Set[S]] = {
+    @tailrec
+    def buildComponent(remaining: Set[S], existing: List[Set[S]]): List[Set[S]] = remaining match {
+      case x if x.isEmpty => existing
+      case _ =>
+        val component = remaining.tail.filter { connected(remaining.head, _) } + remaining.head
+        buildComponent(remaining diff component, component :: existing)
+    }
+    buildComponent(elems, Nil)
+  }
+
   implicit class ary2dExt[T](a: Array[Array[T]]) {
     def apply(x: IntVec) = a(x.x)(x.y)
+  }
+
+  implicit class genTExt[W](a: GenTraversable[W]) {
+    def cartesianProduct[Z](other: GenTraversable[Z]): GenTraversable[(W, Z)] =
+      a.flatMap { elem => other.map { inner => (elem, inner) } }
   }
 
   def maxOf[T: Ordering](args: T*): T = args.max

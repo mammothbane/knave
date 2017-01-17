@@ -70,6 +70,8 @@ case class Vector2[T: Numeric](x: T, y: T) {
 }
 
 object Vector2 {
+  def apply[T: Numeric](t: (T, T)): Vector2[T] = Vector2(t._1, t._2)
+
   def ZERO[T: Numeric]: Vector2[T] = {
     val num = implicitly[Numeric[T]]
     import num._
