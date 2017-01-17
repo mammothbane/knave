@@ -67,9 +67,9 @@ package object storage {
   println(pkl2)
   println(Unpickle[Tile].fromString(pkl2).get)
 
-  val pk3 = Pickle.intoString[Vector2](Vector2.UNIT)
+  val pk3 = Pickle.intoString[IntVec](Vector2.UNIT)
   println(pk3)
-  println(Unpickle[Vector2].fromString(pk3).get)
+  println(Unpickle[IntVec].fromString(pk3).get)
 
   val pk4 = Pickle.intoString[GameMap](GameMap(Array.fill[Tile](5, 5) { Tile.WALL} ))
   println(pk4)

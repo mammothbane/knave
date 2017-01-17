@@ -65,7 +65,7 @@ object SimplexNoise {
 }
 
 case class SimplexNoise(perm: Array[Short], permGradIndex3D: Array[Short]) {
-  def eval(v: Vector2): Double = eval(v.x, v.y)
+  def eval(v: Vector2[Int]): Double = eval(v.x, v.y)
 
   //2D OpenSimplex Noise.
   def eval(x: Double, y: Double): Double = {

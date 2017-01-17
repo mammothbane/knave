@@ -12,7 +12,7 @@ object ShadowRaycast {
     *                        *not* occlude.
     * @return The set of locations visible from the camera.
     */
-  def calculate(camera: Vector2, fov: Int, checkVisibility: (Vector2) => Boolean): List[Vector2] = {
+  def calculate(camera: Vector2[Int], fov: Int, checkVisibility: (Vector2[Int]) => Boolean): List[Vector2[Int]] = {
     circle_simple(camera, fov).filter { elem =>
 
       val line = bresenhamLine(camera, elem)

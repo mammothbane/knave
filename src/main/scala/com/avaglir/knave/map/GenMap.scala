@@ -22,7 +22,7 @@ object GenMap extends Persist {
 
   val DIMENS = 4096
 
-  def apply(x: Vector2): Float = apply(x.x, x.y)
+  def apply(x: IntVec): Float = apply(x.x, x.y)
   def apply(x: Int, y: Int): Float = apply(x.toFloat/DIMENS, y.toFloat/DIMENS)
   def apply(x: Float, y: Float): Float = {
     val dx = (x - 0.5) * totalScale
@@ -54,7 +54,7 @@ object GenMap extends Persist {
     out
   }
 
-  def locs(res: Int): Map[Vector2, Float] = {
+  def locs(res: Int): Map[IntVec, Float] = {
     Range(0, res).flatMap { x =>
       Range(0, res).map { y =>
         (Vector2(x, y), this(x.toFloat/res, y.toFloat/res))

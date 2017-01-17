@@ -8,7 +8,7 @@ trait GameObject {
   def bg: Color = Color.BLACK
 
   def displayPriority: Int = 0
-  def draw(display: Display, loc: Vector2, fgOverride: Option[Color] = None, bgOverride: Option[Color] = None) = {
+  def draw(display: Display, loc: IntVec, fgOverride: Option[Color] = None, bgOverride: Option[Color] = None) = {
     val f = fgOverride match {
       case Some(color) => color
       case None => fg

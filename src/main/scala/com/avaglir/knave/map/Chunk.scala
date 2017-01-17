@@ -7,7 +7,7 @@ class Chunk(seed: Float) {
 
   private val tiles = Array.ofDim[Tile](DIMENS, DIMENS)
 
-  def apply(v: Vector2) = {
+  def apply(v: IntVec) = {
     if (v.x >= DIMENS || v.y >= DIMENS) throw new IllegalArgumentException
     tiles(v.x)(v.y)
   }

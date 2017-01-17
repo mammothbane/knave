@@ -9,17 +9,17 @@ case class GameMap(tiles: Array[Array[Tile]]) {
     * @param radius The vision radius.
     * @return A list of locations that can be seen from the specified location with the specified field of view.
     */
-  def vision(loc: Vector2, radius: Int): List[Vector2] = ShadowRaycast.calculate(loc, radius, { this(_).transparent })
+  def vision(loc: IntVec, radius: Int): List[IntVec] = ShadowRaycast.calculate(loc, radius, { this(_).transparent })
 
   tiles.foreach { elem => println(elem.toString) }
 
   def apply(x: Int)(y: Int): Tile = tiles(x)(y)
-  def apply(loc: Vector2): Tile = tiles(loc.x)(loc.y)
+  def apply(loc: IntVec): Tile = tiles(loc.x)(loc.y)
 
   def height: Int = this.tiles.head.length
   def width: Int = this.tiles.length
 
-  def pathableNear(loc: Vector2, radius: Int): List[Vector2] = circle_simple(loc, radius).filter(this(_).pathable)
+  def pathableNear(loc: IntVec, radius: Int): List[IntVec] = circle_simple(loc, radius).filter(this(_).pathable)
 
   def log(): Unit = {
     val a = (0 until height).map { y => (0 until width).map { x => tiles(x)(y).char }.mkString(" ") }.mkString("\n")

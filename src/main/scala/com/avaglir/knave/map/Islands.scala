@@ -7,21 +7,21 @@ import scala.collection.mutable
 object Islands {
   val threshold = 0.35
 
-  def edges: List[Set[Vector2]] = {
+  def edges: List[Set[Vector2[Int]]] = {
     val dimen = 250
 //    val chunks = GenMap.locs(dimen).filter { case (_, v) => v >= threshold }
     val chunks = GenMap.emit(dimen)
-    val bounds = Vector2.UNIT * dimen
+    val bounds = Vector2.UNIT[Int] * dimen
 
-    def boundary(v: Vector2): Boolean = chunks(v.x)(v.y) >= threshold && v.adjacent(true).exists { elem => elem.componentsClamped(bounds) && chunks(elem.x)(elem.y) < threshold }
+    def boundary(v: Vector2[Int]): Boolean = chunks(v.x)(v.y) >= threshold && v.adjacent(true).exists { elem => elem.componentsClamped(bounds) && chunks(elem.x)(elem.y) < threshold }
 
-    val out = mutable.ListBuffer.empty[Set[Vector2]]
+    val out = mutable.ListBuffer.empty[Set[Vector2[Int]]]
 
     // run through all pixels
     for (x <- 0 until dimen; y <- 0 until dimen) {
       val vec = Vector2(x, y)
       if (boundary(vec) && !out.exists { _ contains vec }) {
-        out += bfs[Vector2](vec, { v =>
+        out += bfs[Vector2[Int]](vec, { v =>
           v.adjacent(true).filter(boundary)
         })
       }
@@ -30,12 +30,12 @@ object Islands {
     out.toList
   }
 
-  lazy val all: List[Set[Vector2]] = {
+  lazy val all: List[Set[Vector2[Int]]] = {
 //    val dimen = GenMap.DIMENS / 4
     val dimen = 250
     val chunks = GenMap.emit(dimen)
 
-    val out = mutable.ListBuffer.empty[Set[Vector2]]
+    val out = mutable.ListBuffer.empty[Set[Vector2[Int]]]
 
     for (x <- 0 until dimen; y <- 0 until dimen) {
       val vec = Vector2(x, y)

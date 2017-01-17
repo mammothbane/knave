@@ -4,7 +4,9 @@ import scala.annotation.tailrec
 import scala.collection.mutable
 
 package object util {
-  def circle_simple(center: Vector2, radius: Int): List[Vector2] = {
+  type IntVec = Vector2[Int]
+
+  def circle_simple(center: Vector2[Int], radius: Int): List[Vector2[Int]] = {
     val sorted = midpoint(center, radius).groupBy { _.x }.values.map { xls => (xls.minBy { _.y }, xls.maxBy { _.y } ) }
 
     sorted.flatMap {
@@ -14,14 +16,14 @@ package object util {
 
   // midpoint algorithm, borrowed from rosetta code:
   // https://rosettacode.org/wiki/Bitmap/Midpoint_circle_algorithm#Scala
-  def midpoint(center: Vector2, radius: Int): List[Vector2] = {
+  def midpoint(center: Vector2[Int], radius: Int): List[Vector2[Int]] = {
     var f = 1 - radius
     var ddF_x = 1
     var ddF_y = -2*radius
     var x = 0
     var y = radius
 
-    val out = new mutable.ListBuffer[Vector2]
+    val out = new mutable.ListBuffer[Vector2[Int]]
 
     out += Vector2(center.x, center.y + radius)
     out += Vector2(center.x, center.y - radius)
@@ -51,8 +53,8 @@ package object util {
     out.toList
   }
 
-  def bresenhamLine(from: Vector2, to: Vector2): List[Vector2] = {
-    val out = mutable.ListBuffer[Vector2]()
+  def bresenhamLine(from: Vector2[Int], to: Vector2[Int]): List[Vector2[Int]] = {
+    val out = mutable.ListBuffer.empty[Vector2[Int]]
 
     val tDelta = to - from
     var delta = tDelta.map(math.abs)
@@ -106,7 +108,7 @@ package object util {
     search(Set(init), init, Set.empty)
   }
 
-  def pointInPolygon()
+  //def pointInPolygon()
 
   def bfs[S](init: S, expand: S => Set[S]): Set[S] = {
     @tailrec

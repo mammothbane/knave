@@ -22,7 +22,7 @@ case class Start(var load: Boolean = false) extends GameMode {
 
   val mainColor = Color("#15d34e")
   val kCenter = Vector2(KNAVE.split('\n').maxBy{ _.length }.length, KNAVE.split('\n').length).half
-  val offset = (Knave.displays('main).center - kCenter) + Vector2.UP * 2
+  val offset = (Knave.displays('main).center - kCenter) + Vector2.UP[Int] * 2
 
   val menu = Menu(mutable.ListBuffer(Entry("New", 'new), Entry("Load", 'load, enabled = storage.hasSave)), "=>".colorize(Color("#1b58d3")))
 

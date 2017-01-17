@@ -10,22 +10,23 @@ case class Vector2[T: Numeric](x: T, y: T) {
 
   def unary_-(): Vector2[T] = map(num.negate)
 
-  def *[V](factor: V)(implicit conv: V => T) = map { (elem) => num.times(elem, factor) }
-  def /[V](factor: V)(implicit conv: V => T) = num match {
-    case n: Integral[T] => map { (elem) => n.quot(elem, factor) }
-    case n: Fractional[T] => map { (elem) => n.div(elem, factor) }
+  def *[V](factor: V)(implicit conv: V => T) = map { elem => num.times(elem, factor) }
+  def /[V](factor: V)(implicit conv: V => T): Vector2[T] = num match {
+    case n: Integral[T] => map { elem => n.quot(elem, factor) }
+    case n: Fractional[T] => map { elem => n.div(elem, factor) }
   }
 
-  def half = this / 2
+  def half = this / (one + one)
   def magnitude: Double = {
     val doubleX = x.toDouble
     val doubleY = y.toDouble
+
     math.sqrt(doubleX*doubleX + doubleY*doubleY)
   }
-  def normalize = this / magnitude
+  def normalize: Vector2[Double] = map { _.toDouble } / magnitude
   def transpose = Vector2(y, x)
 
-  def map[V](fn: (V) => V)(implicit conv: V => T): Vector2[T] = Vector2(fn(x), fn(y))
+  def map[V: Numeric](fn: (T) => V): Vector2[V] = Vector2(fn(x), fn(y))
 
   def adjacent: Set[Vector2[T]] = adjacent(false)
   def adjacent(diag: Boolean): Set[Vector2[T]] = Set(
@@ -40,15 +41,8 @@ case class Vector2[T: Numeric](x: T, y: T) {
     this + Vector2.DOWN + Vector2.LEFT
   ) else Set.empty)
 
-  def componentsClamped[V](max: Vector2[V])(implicit conv: V => T): Boolean = componentsClamped(max, Vector2.ZERO)
+  def componentsClamped[V](max: Vector2[V])(implicit conv: V => T, convU: Int => T): Boolean = componentsClamped(max, Vector2.ZERO)
   def componentsClamped[V, U](max: Vector2[V], min: Vector2[U])(implicit conv: V => T, convU: U => T): Boolean = this >= min && this < max
-
-  override def equals(obj: scala.Any): Boolean = {
-    if (!obj.isInstanceOf[Vector2]) return false
-
-    val other = obj.asInstanceOf[Vector2]
-    other.x == x && other.y == y
-  }
 
   override def toString: String = s"v2($x, $y)"
 
@@ -75,11 +69,35 @@ case class Vector2[T: Numeric](x: T, y: T) {
 }
 
 object Vector2 {
-  val ZERO = Vector2(0, 0)
-  val UNIT = Vector2(1, 1)
+  def ZERO[T: Numeric]: Vector2[T] = {
+    val num = implicitly[Numeric[T]]
+    import num._
+    Vector2(zero, zero)
+  }
+  def UNIT[T: Numeric]: Vector2[T] = {
+    val num = implicitly[Numeric[T]]
+    import num._
+    Vector2(one, one)
+  }
 
-  val UP = Vector2(0, -1)
-  val DOWN = Vector2(0, 1)
-  val LEFT = Vector2(-1, 0)
-  val RIGHT = Vector2(1, 0)
+  def UP[T: Numeric]: Vector2[T] = {
+    val num = implicitly[Numeric[T]]
+    import num._
+    Vector2(zero, -one)
+  }
+  def DOWN[T: Numeric]: Vector2[T] = {
+    val num = implicitly[Numeric[T]]
+    import num._
+    Vector2(zero, -one)
+  }
+  def LEFT[T: Numeric]: Vector2[T] = {
+    val num = implicitly[Numeric[T]]
+    import num._
+    Vector2(-one, zero)
+  }
+  def RIGHT[T: Numeric]: Vector2[T] = {
+    val num = implicitly[Numeric[T]]
+    import num._
+    Vector2(one, zero)
+  }
 }

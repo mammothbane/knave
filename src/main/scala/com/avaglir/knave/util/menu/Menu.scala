@@ -39,7 +39,7 @@ case class Menu(entries: mutable.ListBuffer[Entry], pointer: String, private var
   private def indexValue = (index + entries.length) % entries.length
   private lazy val ptrLength = pointer.trim.decolorize.length
 
-  def draw(d: Display, v: Vector2): Unit = {
+  def draw(d: Display, v: IntVec): Unit = {
     val longestStr = entries.map{ _.name.decolorize }.maxBy { _.length }
     if (v.x + ptrLength + 1 + longestStr.length > d.width) throw new IllegalArgumentException(s"Cannot draw menu at $v: too wide.")
 
@@ -47,9 +47,9 @@ case class Menu(entries: mutable.ListBuffer[Entry], pointer: String, private var
       case (entry, idx) =>
         val draw = if (entry.enabled) entry.name else entry.name.colorize(entry.disabledColor)
         println(draw)
-        d.drawText(v + Vector2.DOWN * idx, draw)
+        d.drawText(v + Vector2.DOWN[Int] * idx, draw)
     }
 
-    d.drawText(v + (Vector2.DOWN * indexValue) + Vector2.LEFT * (ptrLength + 1), pointer.trim)
+    d.drawText(v + (Vector2.DOWN[Int] * indexValue) + Vector2.LEFT[Int] * (ptrLength + 1), pointer.trim)
   }
 }
