@@ -27,6 +27,7 @@ case class Vector2[T: Numeric](x: T, y: T) {
   def transpose = Vector2(y, x)
 
   def map[V: Numeric](fn: (T) => V): Vector2[V] = Vector2(fn(x), fn(y))
+  def asVec[V: Numeric](implicit conv: T => V): Vector2[V] = map(conv)
 
   def adjacent: Set[Vector2[T]] = adjacent(false)
   def adjacent(diag: Boolean): Set[Vector2[T]] = Set(
