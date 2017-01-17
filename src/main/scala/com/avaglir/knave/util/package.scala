@@ -122,6 +122,10 @@ package object util {
     search(Set(init), Set.empty)
   }
 
+  implicit class ary2dExt[T](a: Array[Array[T]]) {
+    def apply(x: IntVec) = a(x.x)(x.y)
+  }
+
   def maxOf[T: Ordering](args: T*): T = args.max
   def minOf[T: Ordering](args: T*): T = args.min
 
