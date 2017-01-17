@@ -54,6 +54,14 @@ object GenMap extends Persist {
     out
   }
 
+  def locs(res: Int): Map[Vector2, Float] = {
+    Range(0, res).flatMap { x =>
+      Range(0, res).map { y =>
+        (Vector2(x, y), this(x.toFloat/res, y.toFloat/res))
+      }
+    }.toMap
+  }
+
   import com.avaglir.knave.util.storage.Pickling._
   import prickle._
   override def persist(): Map[Symbol, String] = Map(

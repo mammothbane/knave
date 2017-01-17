@@ -106,6 +106,8 @@ package object util {
     search(Set(init), init, Set.empty)
   }
 
+  def pointInPolygon()
+
   def bfs[S](init: S, expand: S => Set[S]): Set[S] = {
     @tailrec
     def search(unexpanded: Set[S], seen: Set[S]): Set[S] = unexpanded.toList.headOption match {

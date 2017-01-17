@@ -52,7 +52,7 @@ object Knave extends JSApp with Persist {
 //    println(Islands.all.head.size)
 //    Islands.all.foreach(println)
 
-    Islands.all.foreach { island =>
+    Islands.edges.foreach { island =>
       ctx.fillStyle = colors(random.int(0, 3)).hex
       island.foreach { tile =>
         ctx.fillRect(tile.x, tile.y, 1, 1)

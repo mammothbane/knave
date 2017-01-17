@@ -17,12 +17,20 @@ case class Vector2(x: Int, y: Int) {
 
   def map(fn: (Int) => Int) = Vector2(fn(x), fn(y))
 
-  def adjacent: Set[Vector2] = Set(
+  def adjacent: Set[Vector2] = adjacent(false)
+  def adjacent(diag: Boolean): Set[Vector2] = Set(
     this + Vector2.UP,
     this + Vector2.DOWN,
     this + Vector2.LEFT,
     this + Vector2.RIGHT
-  )
+  ) ++ (if (diag) Set(
+    this + Vector2.UP + Vector2.RIGHT,
+    this + Vector2.DOWN + Vector2.RIGHT,
+    this + Vector2.UP + Vector2.LEFT,
+    this + Vector2.DOWN + Vector2.LEFT
+  ) else Set.empty)
+
+  def componentsClamped(max: Vector2, min: Vector2 = Vector2.ZERO): Boolean = this >= min && this < max
 
   override def equals(obj: scala.Any): Boolean = {
     if (!obj.isInstanceOf[Vector2]) return false
@@ -33,7 +41,9 @@ case class Vector2(x: Int, y: Int) {
 
   override def toString: String = s"v2($x, $y)"
 
+  def <=(other: Vector2): Boolean = this == other || this < other
   def <(other: Vector2): Boolean = x < other.x && y < other.y
+  def >=(other: Vector2): Boolean = this == other || this > other
   def >(other: Vector2): Boolean = x > other.y && y > other.y
 
   def octant: Int = {
