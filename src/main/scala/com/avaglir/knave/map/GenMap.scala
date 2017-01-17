@@ -20,10 +20,10 @@ object GenMap extends Persist {
   private val smallRadius = smallFalloff * ctrMag
   private val largeRadius = largeFalloff * ctrMag
 
-  private val mapScale = 30000
+  val DIMENS = 4096
 
   def apply(x: Vector2): Float = apply(x.x, x.y)
-  def apply(x: Int, y: Int): Float = apply(x.toFloat/mapScale, y.toFloat/mapScale)
+  def apply(x: Int, y: Int): Float = apply(x.toFloat/DIMENS, y.toFloat/DIMENS)
   def apply(x: Float, y: Float): Float = {
     val dx = (x - 0.5) * totalScale
     val dy = (y - 0.5) * totalScale

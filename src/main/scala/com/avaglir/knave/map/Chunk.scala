@@ -11,10 +11,8 @@ class Chunk(seed: Float) {
     if (v.x >= DIMENS || v.y >= DIMENS) throw new IllegalArgumentException
     tiles(v.x)(v.y)
   }
-
-
 }
 
 object Chunk {
-  val DIMENS = 64
+  val DIMENS = 256
 }

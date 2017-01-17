@@ -1,7 +1,7 @@
 package com.avaglir.knave
 
 import com.avaglir.knave.gamemode.{GameMode, Start}
-import com.avaglir.knave.map.GenMap
+import com.avaglir.knave.map.Islands
 import com.avaglir.knave.util._
 import com.avaglir.knave.util.storage.Pickling._
 import org.scalajs.dom._
@@ -23,7 +23,7 @@ object Knave extends JSApp with Persist {
 
   def main(): Unit = {
     displays.foreach {
-      case (sym: scala.Symbol, disp: Display) => document.getElementById(s"knave-${sym.name}").appendChild(disp.container)
+      case (sym: Symbol, disp: Display) => document.getElementById(s"knave-${sym.name}").appendChild(disp.container)
     }
 
     window.addEventListener("keydown", handleInput _)
@@ -41,15 +41,33 @@ object Knave extends JSApp with Persist {
     ctx.fillStyle = Color.BLACK.hex
     ctx.fillRect(0, 0, 500, 500)
 
-    println("generating map")
-    val out = GenMap.emit(500)
+    val colors = List(Color.WHITE, Color.RED, Color.GREEN, Color.BLUE)
 
-    println("rendering map")
-    for (i <- 0 until 500; j <- 0 until 500) {
-//      ctx.fillStyle = HSL(0f, 0f, out(i)(j)).hex
-      ctx.fillStyle = if (out(i)(j) > 0.35) Color.WHITE.hex else Color.BLACK.hex
-      ctx.fillRect(i, j, 1, 1)
+//    val out = GenMap.emit(500)
+//    ctx.fillStyle = Color.WHITE.hex
+//    for (x <- out.indices; y <- out.indices) {
+//      if (out(x)(y) > 0.35) ctx.fillRect(x, y, 1, 1)
+//    }
+//
+//    println(Islands.all.head.size)
+//    Islands.all.foreach(println)
+
+    Islands.all.foreach { island =>
+      ctx.fillStyle = colors(random.int(0, 3)).hex
+      island.foreach { tile =>
+        ctx.fillRect(tile.x, tile.y, 1, 1)
+      }
     }
+
+//    println("generating map")
+//    val out = GenMap.emit(500)
+//
+//    println("rendering map")
+//    for (i <- 0 until 500; j <- 0 until 500) {
+////      ctx.fillStyle = HSL(0f, 0f, out(i)(j)).hex
+//      ctx.fillStyle = if (out(i)(j) > 0.35) Color.WHITE.hex else Color.BLACK.hex
+//      ctx.fillRect(i, j, 1, 1)
+//    }
   }
 
   final val ignoreKeyCodes = Set(

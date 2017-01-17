@@ -1,5 +1,6 @@
 package com.avaglir.knave
 
+import scala.annotation.tailrec
 import scala.collection.mutable
 
 package object util {
@@ -84,6 +85,39 @@ package object util {
     }).map{ elem => elem + from }.toList
   }
 
+  // found here: https://github.com/raboof/astar/blob/master/src/main/scala/Astar.scala
+  def aStar[S](init: S, expand: S => Set[S], h: S => Float, value: S => Float) = {
+    @tailrec
+    def search(unexpanded: Set[S], best: S, seen: Set[S]): S =
+      unexpanded.toList.map(s => (s, h(s))).sortBy { case (_, heur) => -heur }.headOption match {
+        case None => best
+        case Some((_, heur)) if heur <= value(best) => best
+        case Some((exp, _)) =>
+          val expanded = expand(exp) diff seen
+          val result = if (value(exp) > value(best)) exp else best
+          val bestV = value(result)
+          search(
+            (unexpanded.filter { _ != exp } ++ expanded).filter { h(_) > bestV },
+            result,
+            (seen + exp).filter { h(_) > bestV }
+          )
+      }
+
+    search(Set(init), init, Set.empty)
+  }
+
+  def bfs[S](init: S, expand: S => Set[S]): Set[S] = {
+    @tailrec
+    def search(unexpanded: Set[S], seen: Set[S]): Set[S] = unexpanded.toList.headOption match {
+      case None => seen
+      case Some(elem) =>
+        val expanded = expand(elem)
+        search(unexpanded.tail ++ (expanded diff seen), seen + elem)
+    }
+
+    search(Set(init), Set.empty)
+  }
+
   def maxOf[T: Ordering](args: T*): T = args.max
   def minOf[T: Ordering](args: T*): T = args.min
 
@@ -91,7 +125,7 @@ package object util {
     def clamp: Float = clamp(0f, 1f)
     def clamp(min: Float, max: Float): Float = if (f < min) min else if (f > max) max else f
 
-    def unitClamped = new UnitClampedFloat(f)
+    def unitClamped = UnitClampedFloat(f)
   }
 
   private final val colorRegex = "%c{#[0-9a-f]{6}}%b{#[0-9a-f]{6}}".r

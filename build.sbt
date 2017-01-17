@@ -5,7 +5,8 @@ lazy val main = (project in file(".")).
     name := "Knave",
     mainClass in Compile := Some("com.avaglir.knave.Knave"),
     scalacOptions ++= Seq(
-      "-language:implicitConversions"
+      "-language:implicitConversions",
+      "-language:reflectiveCalls"
     ),
     skip in packageJSDependencies := false,
     jsDependencies ++= Seq(

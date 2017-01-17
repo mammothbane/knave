@@ -17,6 +17,13 @@ case class Vector2(x: Int, y: Int) {
 
   def map(fn: (Int) => Int) = Vector2(fn(x), fn(y))
 
+  def adjacent: Set[Vector2] = Set(
+    this + Vector2.UP,
+    this + Vector2.DOWN,
+    this + Vector2.LEFT,
+    this + Vector2.RIGHT
+  )
+
   override def equals(obj: scala.Any): Boolean = {
     if (!obj.isInstanceOf[Vector2]) return false
 
