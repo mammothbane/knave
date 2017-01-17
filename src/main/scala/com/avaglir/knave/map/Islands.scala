@@ -14,23 +14,8 @@ object Islands {
 
     def boundary(v: IntVec): Boolean = chunks(v) >= threshold && v.adjacent(true).exists { elem => elem.componentsClamped(bounds) && chunks(elem) < threshold }
 
-    val vecs = chunks.indices.cartesianProduct(chunks.indices).map(Vector2.apply[Int]).toSet
-
-
-
-    val out = mutable.ListBuffer.empty[Set[Vector2[Int]]]
-
-    // run through all pixels
-    for (x <- 0 until dimen; y <- 0 until dimen) {
-      val vec = Vector2(x, y)
-      if (boundary(vec) && !out.exists { _ contains vec }) {
-        out += bfs[Vector2[Int]](vec, { v =>
-          v.adjacent(true).filter(boundary)
-        })
-      }
-    }
-
-    out.toList
+    val vecs = chunks.indices.cartesianProduct(chunks.indices).map(Vector2.apply[Int]).seq.toSet
+    components[IntVec](vecs, (a: IntVec, b: IntVec) => a.adjacent(true) contains b )
   }
 
   lazy val all: List[Set[IntVec]] = {
