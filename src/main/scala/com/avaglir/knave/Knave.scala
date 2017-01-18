@@ -57,22 +57,22 @@ object Knave extends JSApp with Persist {
 //        }
 //    }
 
-    val points = Islands.edges.head
-    println(points)
-    println(points.size)
-
-    val poly = Polygon.fromUnordered(points.toList: _*)
-    println(poly)
-    println(poly.points.size)
+//    val points = Islands.edges.head
+//    println(points)
+//    println(points.size)
+//
+//    val poly = Polygon.fromUnordered(points.toList: _*)
+//    println(poly)
+//    println(poly.points.size)
 
 //    println(Polygon.fromUnordered(Vector2(1, 1), Vector2(0, 0), Vector2(0, 1), Vector2(1, 0)).points)
 
-//    Islands.edges.foreach { island =>
-//      val path = document.createElementNS(svgNs, "path")
-//      path.setAttributeNS(null, "d", Polygon(island).svgPath)
-//      svg.appendChild(path)
-//    }
-
+    Islands.edges.map { edge => Polygon.fromUnordered(edge.toList: _*) }.foreach { polygon =>
+      val path = document.createElementNS(svgNs, "path")
+      path.setAttributeNS(null, "d", polygon.svgPath)
+      path.setAttributeNS(null, "fill-rule", "nonzero")
+      svg.appendChild(path)
+    }
   }
 
   final val ignoreKeyCodes = Set(

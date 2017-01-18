@@ -53,5 +53,4 @@ object Polygon {
 
     Polygon(pbfs(pts.head, (elem: IntVec) => elem.adjacent.intersect(pts)): _*)
   }
-
 }
