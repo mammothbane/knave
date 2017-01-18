@@ -9,14 +9,14 @@ import scala.collection.mutable
 object Islands {
   val threshold = 0.35
 
-  def edges: List[ListSet[IntVec]] = {
+  def edges: List[Set[IntVec]] = {
     val dimen = 250
     val bounds = Vector2.UNIT[Int] * dimen
     val chunks = GenMap.emit(dimen)
 
     def boundary(v: IntVec): Boolean = chunks(v) >= threshold && v.adjacent(true).exists { elem => elem.componentsClamped(bounds) && chunks(elem) < threshold }
 
-    val out = mutable.ListBuffer.empty[ListSet[IntVec]]
+    val out = mutable.ListBuffer.empty[Set[IntVec]]
 
     @tailrec
     def search(toExpand: Set[IntVec], start: IntVec, path: ListSet[IntVec]): ListSet[IntVec] = {
@@ -32,7 +32,7 @@ object Islands {
       val vec = Vector2(x, y)
       if (boundary(vec) && !out.exists { _ contains vec }) {
         out += bfs[Vector2[Int]](vec, { v =>
-          v.adjacent(true).filter(boundary).toSeq
+          v.adjacent(true).filter(boundary)
         })
       }}
 
@@ -53,7 +53,7 @@ object Islands {
           v.adjacent.filter { vec =>
             chunks(vec.x)(vec.y) >= threshold &&
               vec.x >= 0 && vec.x < dimen && vec.y >= 0 && vec.y < dimen
-          }.toSeq
+          }
         })
       }
     }

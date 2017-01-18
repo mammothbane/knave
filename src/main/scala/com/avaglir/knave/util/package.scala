@@ -1,7 +1,6 @@
 package com.avaglir.knave
 
 import scala.annotation.tailrec
-import scala.collection.immutable.ListSet
 import scala.collection.{GenTraversable, mutable}
 
 package object util {
@@ -109,16 +108,16 @@ package object util {
     search(Set(init), init, Set.empty)
   }
 
-  def bfs[S](init: S, expand: S => Seq[S]): ListSet[S] = {
+  def bfs[S](init: S, expand: S => Set[S]): Set[S] = {
     @tailrec
-    def search(unexpanded: ListSet[S], seen: ListSet[S]): ListSet[S] = unexpanded.toList.headOption match {
+    def search(unexpanded: Set[S], seen: Set[S]): Set[S] = unexpanded.toList.headOption match {
       case None => seen
       case Some(elem) =>
-        val expanded = ListSet(expand(elem): _*)
+        val expanded = expand(elem)
         search((expanded diff seen) ++ unexpanded.tail.filter { _ != elem }, seen + elem)
     }
 
-    search(ListSet(init), ListSet.empty)
+    search(Set(init), Set.empty)
   }
 
   /**
