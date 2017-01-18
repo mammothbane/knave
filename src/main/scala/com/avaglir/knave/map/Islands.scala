@@ -39,8 +39,10 @@ object Islands {
     out.toList
   }
 
-  lazy val all: List[Set[IntVec]] = {
-//    val dimen = GenMap.DIMENS / 4
+  /**
+    * This is fast enough.
+    */
+  val all: List[Set[IntVec]] = {
     val dimen = 250
     val chunks = GenMap.emit(dimen)
 
@@ -48,7 +50,7 @@ object Islands {
 
     for (x <- 0 until dimen; y <- 0 until dimen) {
       val vec = Vector2(x, y)
-      if (!out.exists { _ contains vec } && chunks(x)(y) >= threshold) {
+      if (chunks(vec) >= threshold && !out.exists { _ contains vec }) {
         out += bfs(vec, { v =>
           v.adjacent.filter { vec =>
             chunks(vec.x)(vec.y) >= threshold &&

@@ -110,14 +110,15 @@ package object util {
 
   def bfs[S](init: S, expand: S => Set[S]): Set[S] = {
     @tailrec
-    def search(unexpanded: Set[S], seen: Set[S]): Set[S] = unexpanded.toList.headOption match {
-      case None => seen
-      case Some(elem) =>
+    def search(unexpanded: List[S], seen: Set[S]): Set[S] = unexpanded match {
+      case Nil => seen
+      case elem :: tail if seen contains elem => search(tail, seen)
+      case elem :: tail =>
         val expanded = expand(elem)
-        search((expanded diff seen) ++ unexpanded.tail.filter { _ != elem }, seen + elem)
+        search(tail ++ expanded, seen + elem)
     }
 
-    search(Set(init), Set.empty)
+    search(List(init), Set.empty)
   }
 
   /**
