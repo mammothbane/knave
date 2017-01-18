@@ -37,50 +37,8 @@ case class Polygon(points: IntVec*) {
 }
 
 object Polygon {
-  import com.thesamet.spatial._
-  private implicit val ivOrd = new DimensionalOrdering[IntVec] {
-    /** How many dimensions type A has. */
-    override def dimensions: Int = 2
-
-    /** Returns an integer whose sign communicates how x's projection on a given dimension compares
-      * to y's.
-      *
-      * Denote the projection of x and y on `dimension` by x' and y' respectively. The result sign has
-      * the following meaning:
-      *
-      * - negative if x' < y'
-      * - positive if x' > y'
-      * - zero if x' == y'
-      */
-    override def compareProjection(dimension: Int)(x: IntVec, y: IntVec): Int = dimension match {
-      case 0 => x.x.compare(y.x)
-      case 1 => x.y.compare(y.y)
-      case _ => throw new IllegalArgumentException
-    }
-  }
-
-  implicit val euclideanMetric = new Metric[IntVec, Double] {
-    /** Returns the distance between two points. */
-    override def distance(x: IntVec, y: IntVec): Double = (x - y).magnitude
-
-    /** Returns the distance between x and a hyperplane that passes through y and perpendicular to
-      * that dimension.
-      */
-    override def planarDistance(dimension: Int)(x: IntVec, y: IntVec): Double = dimension match {
-      case 0 => x.x - y.x
-      case 1 => x.y - y.y
-      case _ => throw new IllegalArgumentException
-    }
-  }
-
   def fromUnordered(pts: IntVec*): Polygon = {
     if (pts.isEmpty) return Polygon()
-    val tree = KDTree(pts: _*)
-
-    val nearest = pts.map { pt =>
-      val nearest = tree.findNearest(pt, 3).filter { _ != pt}
-      (pt, nearest)
-    }.toMap
 
     def pbfs[S](init: S, expand: S => List[S]): List[S] = {
       @tailrec
