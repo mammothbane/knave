@@ -27,20 +27,20 @@ case class Vector2[T: Numeric](x: T, y: T) {
   def transpose = Vector2(y, x)
 
   def map[V: Numeric](fn: (T) => V): Vector2[V] = Vector2(fn(x), fn(y))
-  def asVec[V: Numeric](implicit conv: T => V): Vector2[V] = map(conv)
+  def as[V: Numeric](implicit conv: T => V): Vector2[V] = map(conv)
 
-  def adjacent: Set[Vector2[T]] = adjacent(false)
-  def adjacent(diag: Boolean): Set[Vector2[T]] = Set(
+  def adjacent: List[Vector2[T]] = adjacent(false)
+  def adjacent(diag: Boolean): List[Vector2[T]] = List(
     this + Vector2.UP,
     this + Vector2.DOWN,
     this + Vector2.LEFT,
     this + Vector2.RIGHT
-  ) ++ (if (diag) Set(
+  ) ++ (if (diag) List(
     this + Vector2.UP + Vector2.RIGHT,
     this + Vector2.DOWN + Vector2.RIGHT,
     this + Vector2.UP + Vector2.LEFT,
     this + Vector2.DOWN + Vector2.LEFT
-  ) else Set.empty)
+  ) else List.empty)
 
   def componentsClamped[V](max: Vector2[V])(implicit conv: V => T, convU: Int => T): Boolean = componentsClamped(max, Vector2.ZERO)
   def componentsClamped[V, U](max: Vector2[V], min: Vector2[U])(implicit conv: V => T, convU: U => T): Boolean = this >= min && this < max

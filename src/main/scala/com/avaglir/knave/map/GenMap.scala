@@ -22,8 +22,9 @@ object GenMap extends Persist {
 
   val DIMENS = 4096
 
-  def apply(x: IntVec): Float = apply(x.x, x.y)
-  def apply(x: Int, y: Int): Float = apply(x.toFloat/DIMENS, y.toFloat/DIMENS)
+  def apply(x: IntVec, scale: Int = DIMENS): Float = apply(x.x, x.y, scale)
+  def apply(x: Int, y: Int, scale: Int): Float = apply(x.toFloat/scale, y.toFloat/scale)
+
   def apply(x: Float, y: Float): Float = {
     val dx = (x - 0.5) * totalScale
     val dy = (y - 0.5) * totalScale

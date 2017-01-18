@@ -2,47 +2,18 @@ package com.avaglir.knave.map
 
 import com.avaglir.knave.util._
 
-import scala.annotation.tailrec
-import scala.collection.immutable.ListSet
 import scala.collection.mutable
 
 object Islands {
   val threshold = 0.35
+  private val DIMEN = 250
+  val bounds = Vector2.UNIT[Int] * DIMEN
 
-  def edges: List[Set[IntVec]] = {
-    val dimen = 250
-    val bounds = Vector2.UNIT[Int] * dimen
-    val chunks = GenMap.emit(dimen)
+  private def boundary(v: IntVec): Boolean = GenMap(v, DIMEN) >= threshold && v.adjacent(true).exists { elem => elem.componentsClamped(bounds) && GenMap(elem, DIMEN) < threshold }
 
-    def boundary(v: IntVec): Boolean = chunks(v) >= threshold && v.adjacent(true).exists { elem => elem.componentsClamped(bounds) && chunks(elem) < threshold }
+  lazy val edges: List[Set[IntVec]] = all map { island => island.filter(boundary) }
 
-    val out = mutable.ListBuffer.empty[Set[IntVec]]
-
-    @tailrec
-    def search(toExpand: Set[IntVec], start: IntVec, path: ListSet[IntVec]): ListSet[IntVec] = {
-      toExpand.headOption match {
-        case None => ListSet.empty
-        case Some(x) if x.adjacent(true).filter(boundary) contains start => path
-        case Some(x) => search(x.adjacent(diag = true).diff(path ++ toExpand).filter(boundary) ++ toExpand, start, path + x)
-      }
-    }
-
-    // run through all pixels
-    for (x <- 0 until dimen; y <- 0 until dimen) {
-      val vec = Vector2(x, y)
-      if (boundary(vec) && !out.exists { _ contains vec }) {
-        out += bfs[Vector2[Int]](vec, { v =>
-          v.adjacent(true).filter(boundary)
-        })
-      }}
-
-    out.toList
-  }
-
-  /**
-    * This is fast enough.
-    */
-  val all: List[Set[IntVec]] = {
+  lazy val all: List[Set[IntVec]] = {
     val dimen = 250
     val chunks = GenMap.emit(dimen)
 

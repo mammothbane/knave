@@ -74,19 +74,23 @@ object Knave extends JSApp with Persist {
 //        ctx.fillRect(tile.x * 2, tile.y * 2, 2, 2)
 //      }
 
-//    Islands.edges.foreach { island =>
+
+
+    Islands.edges.zipWithIndex.foreach {
+      case (island, index) =>
+        ctx.fillStyle = HSL(index.toFloat/Islands.edges.length, 0.5f, 0.5f).hex
+
+        island.foreach { tile =>
+          ctx.fillRect(tile.x * 2, tile.y * 2, 2, 2)
+        }
+    }
+
+//    Islands.all.foreach { island =>
 //      ctx.fillStyle = colors(random.int(0, 3)).hex
 //      island.foreach { tile =>
-//        ctx.fillRect(tile.x * 2, tile.y * 2, 2, 2)
+//        ctx.fillRect(tile.x, tile.y, 1, 1)
 //      }
 //    }
-
-    Islands.all.foreach { island =>
-      ctx.fillStyle = colors(random.int(0, 3)).hex
-      island.foreach { tile =>
-        ctx.fillRect(tile.x, tile.y, 1, 1)
-      }
-    }
 
     //    Islands.edges.foreach { island =>
 //      val path = document.createElementNS(svgNs, "path")
