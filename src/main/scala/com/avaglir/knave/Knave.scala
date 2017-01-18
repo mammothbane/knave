@@ -31,9 +31,9 @@ object Knave extends JSApp with Persist {
     displays.values.foreach { _.clear() }
     //    currentMode.render()
 
-//    val svgNs = "http://www.w3.org/2000/svg"
-//    val svg = document.getElementById("map")
-//    document.body.appendChild(svg)
+    val svgNs = "http://www.w3.org/2000/svg"
+    val svg = document.getElementById("map")
+    document.body.appendChild(svg)
 //    svg.setAttributeNS(null, "path", s"M${}z")
 
     val canvas = document.createElement("canvas").asInstanceOf[Canvas]
@@ -48,65 +48,22 @@ object Knave extends JSApp with Persist {
 
     val colors = List(Color.WHITE, Color.RED, Color.GREEN, Color.BLUE)
 
-//    val out = GenMap.emit(500)
-//    ctx.fillStyle = Color.WHITE.hex
-//    for (x <- out.indices; y <- out.indices) {
-//      if (out(x)(y) > 0.35) ctx.fillRect(x, y, 1, 1)
-//    }
+//    Islands.all.zipWithIndex.foreach {
+//      case (island, index) =>
+//        ctx.fillStyle = HSL(index.toFloat/Islands.edges.length, 0.5f, 0.5f).hex
 //
-//    println(Islands.all.head.size)
-//    Islands.all.foreach(println)
-
-//    Islands.edges.foreach { island =>
-//      ctx.fillStyle = colors(random.int(0, 3)).hex
-//      island.foreach { tile =>
-//        ctx.fillRect(tile.x * 2, tile.y * 2, 2, 2)
-//      }
+//        island.foreach { tile =>
+//          ctx.fillRect(tile.x * 2, tile.y * 2, 2, 2)
+//        }
 //    }
 
-//    val islands = Islands.edges.map(Polygon.apply)
-//    ctx.fillStyle = Color.WHITE.hex
-//
-//    scala.Range(0, 500).cartesianProduct(scala.Range(0, 500)).
-//      map(Vector2.apply[Int]).
-//      filter { loc => islands.exists { _ contains loc } }.
-//      foreach { tile =>
-//        ctx.fillRect(tile.x * 2, tile.y * 2, 2, 2)
-//      }
 
-
-
-    Islands.edges.zipWithIndex.foreach {
-      case (island, index) =>
-        ctx.fillStyle = HSL(index.toFloat/Islands.edges.length, 0.5f, 0.5f).hex
-
-        island.foreach { tile =>
-          ctx.fillRect(tile.x * 2, tile.y * 2, 2, 2)
-        }
+    Islands.edges.foreach { island =>
+      val path = document.createElementNS(svgNs, "path")
+      path.setAttributeNS(null, "d", Polygon(island).svgPath)
+      svg.appendChild(path)
     }
 
-//    Islands.all.foreach { island =>
-//      ctx.fillStyle = colors(random.int(0, 3)).hex
-//      island.foreach { tile =>
-//        ctx.fillRect(tile.x, tile.y, 1, 1)
-//      }
-//    }
-
-    //    Islands.edges.foreach { island =>
-//      val path = document.createElementNS(svgNs, "path")
-//      path.setAttributeNS(null, "d", Polygon(island).svgPath)
-//      svg.appendChild(path)
-//    }
-
-//    println("generating map")
-//    val out = GenMap.emit(500)
-//
-//    println("rendering map")
-//    for (i <- 0 until 500; j <- 0 until 500) {
-////      ctx.fillStyle = HSL(0f, 0f, out(i)(j)).hex
-//      ctx.fillStyle = if (out(i)(j) > 0.35) Color.WHITE.hex else Color.BLACK.hex
-//      ctx.fillRect(i, j, 1, 1)
-//    }
   }
 
   final val ignoreKeyCodes = Set(
