@@ -34,4 +34,6 @@ case class Polygon(points: Set[IntVec]) {
 
     inside(0, ptList.length - 1, oddNodes = false)
   }
+
+  def svgPath: String = "M" + this.points.map { point => s"${point.x},${point.y}" }.mkString(" ") + "z"
 }

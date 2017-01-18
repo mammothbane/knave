@@ -91,7 +91,7 @@ object Vector2 {
   def DOWN[T: Numeric]: Vector2[T] = {
     val num = implicitly[Numeric[T]]
     import num._
-    Vector2(zero, -one)
+    Vector2(zero, one)
   }
   def LEFT[T: Numeric]: Vector2[T] = {
     val num = implicitly[Numeric[T]]
