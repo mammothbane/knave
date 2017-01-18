@@ -115,7 +115,7 @@ package object util {
       case None => seen
       case Some(elem) =>
         val expanded = ListSet(expand(elem): _*)
-        search((expanded diff seen) ++ unexpanded.tail, seen + elem)
+        search((expanded diff seen) ++ unexpanded.tail.filter { _ != elem }, seen + elem)
     }
 
     search(ListSet(init), ListSet.empty)

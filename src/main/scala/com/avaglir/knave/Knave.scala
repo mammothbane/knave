@@ -64,22 +64,22 @@ object Knave extends JSApp with Persist {
 //      }
 //    }
 
-    val islands = Islands.edges.map(Polygon.apply)
-    ctx.fillStyle = Color.WHITE.hex
-
-    scala.Range(0, 500).cartesianProduct(scala.Range(0, 500)).
-      map(Vector2.apply[Int]).
-      filter { loc => islands.exists { _ contains loc } }.
-      foreach { tile =>
-        ctx.fillRect(tile.x * 2, tile.y * 2, 2, 2)
-      }
-
-//    Islands.edges.foreach { island =>
-//      ctx.fillStyle = colors(random.int(0, 3)).hex
-//      island.foreach { tile =>
+//    val islands = Islands.edges.map(Polygon.apply)
+//    ctx.fillStyle = Color.WHITE.hex
+//
+//    scala.Range(0, 500).cartesianProduct(scala.Range(0, 500)).
+//      map(Vector2.apply[Int]).
+//      filter { loc => islands.exists { _ contains loc } }.
+//      foreach { tile =>
 //        ctx.fillRect(tile.x * 2, tile.y * 2, 2, 2)
 //      }
-//    }
+
+    Islands.edges.foreach { island =>
+      ctx.fillStyle = colors(random.int(0, 3)).hex
+      island.foreach { tile =>
+        ctx.fillRect(tile.x * 2, tile.y * 2, 2, 2)
+      }
+    }
 
 
     //    Islands.edges.foreach { island =>
