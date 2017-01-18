@@ -43,7 +43,7 @@ object Knave extends JSApp with Persist {
     document.body.appendChild(canvas)
 
     val ctx = canvas.getContext("2d").asInstanceOf[CanvasRenderingContext2D]
-    ctx.fillStyle = Color.BLACK.hex
+    ctx.fillStyle = Color("#11517f").darker.hex
     ctx.fillRect(0, 0, 500, 500)
 
     val colors = List(Color.WHITE, Color.RED, Color.GREEN, Color.BLUE)
@@ -57,12 +57,21 @@ object Knave extends JSApp with Persist {
 //        }
 //    }
 
+    val points = Islands.edges.head
+    println(points)
+    println(points.size)
 
-    Islands.edges.foreach { island =>
-      val path = document.createElementNS(svgNs, "path")
-      path.setAttributeNS(null, "d", Polygon(island).svgPath)
-      svg.appendChild(path)
-    }
+    val poly = Polygon.fromUnordered(points.toList: _*)
+    println(poly)
+    println(poly.points.size)
+
+//    println(Polygon.fromUnordered(Vector2(1, 1), Vector2(0, 0), Vector2(0, 1), Vector2(1, 0)).points)
+
+//    Islands.edges.foreach { island =>
+//      val path = document.createElementNS(svgNs, "path")
+//      path.setAttributeNS(null, "d", Polygon(island).svgPath)
+//      svg.appendChild(path)
+//    }
 
   }
 
