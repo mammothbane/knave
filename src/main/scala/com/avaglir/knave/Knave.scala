@@ -1,7 +1,7 @@
 package com.avaglir.knave
 
 import com.avaglir.knave.gamemode.{GameMode, Start}
-import com.avaglir.knave.map.Islands
+import com.avaglir.knave.map.Nation
 import com.avaglir.knave.util._
 import com.avaglir.knave.util.storage.Pickling._
 import org.scalajs.dom._
@@ -41,14 +41,16 @@ object Knave extends JSApp with Persist {
     ctx.fillStyle = Color("#11517f").darker.hex
     ctx.fillRect(0, 0, 500, 500)
 
-    val colors = List(Color.WHITE, Color.RED, Color.GREEN, Color.BLUE)
+    val scale = 500
 
-    Islands.all.zipWithIndex.foreach {
-      case (island, index) =>
-        ctx.fillStyle = HSL(index.toFloat/Islands.all.length, 0.5f, 0.5f).hex
+    Nation.all.zipWithIndex.foreach {
+      case (nation, index) =>
+        ctx.fillStyle = HSL(index.toFloat/Nation.all.size, 0.4f, 0.5f).hex
 
-        island.foreach { tile =>
-          ctx.fillRect(tile.x * 2, tile.y * 2, 2, 2)
+        nation.land.foreach { landmass =>
+          landmass.tiles.map{ _ * scale }.foreach { tile =>
+            ctx.fillRect(tile.x, tile.y, 2, 2)
+          }
         }
     }
   }

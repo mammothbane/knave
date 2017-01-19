@@ -2,7 +2,7 @@ package com.avaglir.knave.map
 
 import com.avaglir.knave.util._
 
-case class Landmass(sizeClass: IslandClass, tiles: Set[IntVec], name: Option[String], adjective: Option[String]) {
+case class Landmass(sizeClass: IslandClass, tiles: Set[Vector2[Double]], name: Option[String], adjective: Option[String]) {
   def area = tiles.size
 }
 

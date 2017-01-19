@@ -9,14 +9,15 @@ object GenMap extends Persist {
 
   private val smallScale = 13.1
   private val largeScale = 30
-  private val smallWeight = 0.31
-  private val largeWeight = 0.56
+
+  private val smallWeight = 0.33
+  private val largeWeight = 0.6
 
   private val totalScale = 500
   private val ctrMag = math.sqrt(totalScale/2 * totalScale/2 + totalScale/2 * totalScale/2)
 
-  private val smallFalloff = 0.91
-  private val largeFalloff = 0.18
+  private val smallFalloff = 0.96
+  private val largeFalloff = 0.04
   private val smallRadius = smallFalloff * ctrMag
   private val largeRadius = largeFalloff * ctrMag
 
