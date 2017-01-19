@@ -16,7 +16,9 @@ private[map] trait IsleFormatter {
     else s"The ${adj.get} $name of ${noun.get}"
 }
 
-private [map] object IslandClass {
+object IslandClass {
+  def all = List(Continent, Island, Isle, Atoll)
+
   object Continent extends IslandClass {
     override def rank: Int = 1
     override def name: String = "Continent"

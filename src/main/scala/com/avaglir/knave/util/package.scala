@@ -137,6 +137,30 @@ package object util {
     buildComponent(elems, Nil)
   }
 
+  def seededRandom(implicit seed: RandomSeed): rot.RNG = {
+    val rand = rot.RNG.clone()
+    rand.setSeed(seed.value)
+    rand
+  }
+
+  /**
+    * Sample from a poisson distribution with expected value lambda.
+    * Note: this implementation uses the Knuth algorithm, so it is slow for large lambda.
+    * @param lambda The expected value.
+    */
+  def poisson(lambda: Int)(implicit rng: rot.RNG): Int = {
+    val l = math.exp(-lambda)
+    var k = 0
+    var p: Double = 1
+
+    do {
+      k += 1
+      p *= rng.uniform()
+    } while (p > l)
+
+    k - 1
+  }
+
   implicit class ary2dExt[T](a: Array[Array[T]]) {
     def apply(x: IntVec) = a(x.x)(x.y)
   }
@@ -149,10 +173,15 @@ package object util {
   def maxOf[T: Ordering](args: T*): T = args.max
   def minOf[T: Ordering](args: T*): T = args.min
 
-  implicit class floatExt(f: Float) {
-    def clamp: Float = clamp(0f, 1f)
-    def clamp(min: Float, max: Float): Float = if (f < min) min else if (f > max) max else f
+  implicit class numericExt[T: Numeric](t: T) {
+    private val num = implicitly[Numeric[T]]
+    import num._
 
+    def clamp: T = clamp(zero, one)
+    def clamp(min: T, max: T): T = if (t < min) min else if (t > max) max else t
+  }
+
+  implicit class floatExt(f: Float) {
     def unitClamped = UnitClampedFloat(f)
   }
 

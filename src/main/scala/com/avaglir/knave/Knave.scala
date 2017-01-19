@@ -1,7 +1,7 @@
 package com.avaglir.knave
 
 import com.avaglir.knave.gamemode.{GameMode, Start}
-import com.avaglir.knave.map.Islands
+import com.avaglir.knave.map.{Islands, Landmass, Nation}
 import com.avaglir.knave.util._
 import com.avaglir.knave.util.storage.Pickling._
 import org.scalajs.dom._
@@ -31,11 +31,6 @@ object Knave extends JSApp with Persist {
     displays.values.foreach { _.clear() }
     //    currentMode.render()
 
-    val svgNs = "http://www.w3.org/2000/svg"
-    val svg = document.getElementById("map")
-    document.body.appendChild(svg)
-//    svg.setAttributeNS(null, "path", s"M${}z")
-
     val canvas = document.createElement("canvas").asInstanceOf[Canvas]
     canvas.height = 500
     canvas.width = 500
@@ -48,30 +43,32 @@ object Knave extends JSApp with Persist {
 
     val colors = List(Color.WHITE, Color.RED, Color.GREEN, Color.BLUE)
 
-//    Islands.all.zipWithIndex.foreach {
-//      case (island, index) =>
-//        ctx.fillStyle = HSL(index.toFloat/Islands.edges.length, 0.5f, 0.5f).hex
+    Islands.all.zipWithIndex.foreach {
+      case (island, index) =>
+        ctx.fillStyle = HSL(index.toFloat/Islands.all.length, 0.5f, 0.5f).hex
+
+        island.foreach { tile =>
+          ctx.fillRect(tile.x * 2, tile.y * 2, 2, 2)
+        }
+    }
+
+//    implicit val rng = random
 //
-//        island.foreach { tile =>
-//          ctx.fillRect(tile.x * 2, tile.y * 2, 2, 2)
-//        }
-//    }
-
-//    val points = Islands.edges.head
-//    println(points)
-//    println(points.size)
+//    val hist = (0 until 20).map { _ =>
+//      poisson(1) + 1
+//    }.groupBy { identity }
 //
-//    val poly = Polygon.fromUnordered(points.toList: _*)
-//    println(poly)
-//    println(poly.points.size)
+//    hist.toList.sortBy { _._1 }.foreach { case (i, elems) => println(s"$i: ${elems.length}")}
 
-//    println(Polygon.fromUnordered(Vector2(1, 1), Vector2(0, 0), Vector2(0, 1), Vector2(1, 0)).points)
+//    val total = Islands.all.map { _.size }.sum - Islands.all.map { _.size }.max
+//    Islands.all.map { _.size.toFloat / total * 100 }.foreach(println)
 
-    Islands.edges.map { edge => Polygon.fromUnordered(edge.toList: _*) }.foreach { polygon =>
-      val path = document.createElementNS(svgNs, "path")
-      path.setAttributeNS(null, "d", polygon.svgPath)
-      path.setAttributeNS(null, "fill-rule", "nonzero")
-      svg.appendChild(path)
+//    val (continent, subcontinent) = Islands.all.partition { _.size < (Landmass.CONTINENT_THRESHOLD*total) }
+
+    println(s"${Landmass.all.size} landmasses; ${Nation.all.size} nations")
+
+    Nation.all.toList.sortBy { -_.land.map { _.area }.sum }.foreach { nation =>
+      println(s"${nation.nClass}: ${nation.land.size} islands of classes ${nation.land.toList.map { _.sizeClass.name }} (total land area: ${nation.land.map { _.area}.sum})")
     }
   }
 
