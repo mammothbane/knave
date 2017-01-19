@@ -57,15 +57,6 @@ object Nation extends Persist with Random {
       }
     }
 
-//    lmAssigns.zipWithIndex.filter {
-//      case (lms, idx) => lms.head.area < stateSizes(idx)
-//    }.foreach {
-//      case (lms, idx) => freeLMs.find { elem => !lmAssigns.exists { _.contains(elem) } } match {
-//        case Some(elem) => lms += elem
-//        case None =>
-//      }
-//    }
-
     (0 until stateCount).foreach { idx =>
       println(s"target: ${stateAreas(idx)}, actual: ${lmAssigns(idx).map { _.area }.sum }")
     }

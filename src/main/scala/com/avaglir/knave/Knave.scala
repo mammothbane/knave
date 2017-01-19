@@ -1,7 +1,7 @@
 package com.avaglir.knave
 
 import com.avaglir.knave.gamemode.{GameMode, Start}
-import com.avaglir.knave.map.{Islands, Landmass, Nation}
+import com.avaglir.knave.map.Islands
 import com.avaglir.knave.util._
 import com.avaglir.knave.util.storage.Pickling._
 import org.scalajs.dom._
@@ -50,25 +50,6 @@ object Knave extends JSApp with Persist {
         island.foreach { tile =>
           ctx.fillRect(tile.x * 2, tile.y * 2, 2, 2)
         }
-    }
-
-//    implicit val rng = random
-//
-//    val hist = (0 until 20).map { _ =>
-//      poisson(1) + 1
-//    }.groupBy { identity }
-//
-//    hist.toList.sortBy { _._1 }.foreach { case (i, elems) => println(s"$i: ${elems.length}")}
-
-//    val total = Islands.all.map { _.size }.sum - Islands.all.map { _.size }.max
-//    Islands.all.map { _.size.toFloat / total * 100 }.foreach(println)
-
-//    val (continent, subcontinent) = Islands.all.partition { _.size < (Landmass.CONTINENT_THRESHOLD*total) }
-
-    println(s"${Landmass.all.size} landmasses; ${Nation.all.size} nations")
-
-    Nation.all.toList.sortBy { -_.land.map { _.area }.sum }.foreach { nation =>
-      println(s"${nation.nClass}: ${nation.land.size} islands of classes ${nation.land.toList.map { _.sizeClass.name }} (total land area: ${nation.land.map { _.area}.sum})")
     }
   }
 
