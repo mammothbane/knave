@@ -2,17 +2,17 @@ package com.avaglir.knave.map
 
 import com.avaglir.knave.util._
 
-class Chunk(seed: Float) {
-  import Chunk._
+case class Chunk(location: IntVec, tiles: Array[Array[Tile]]) {
 
-  private val tiles = Array.ofDim[Tile](DIMENS, DIMENS)
-
-  def apply(v: IntVec) = {
-    if (v.x >= DIMENS || v.y >= DIMENS) throw new IllegalArgumentException
-    tiles(v.x)(v.y)
-  }
+  def apply(v: IntVec) = tiles(v)
 }
 
 object Chunk {
   val DIMENS = 256
+  val cache =
+
+
+  def apply(location: IntVec): Chunk = {
+    val ialands
+  }
 }
