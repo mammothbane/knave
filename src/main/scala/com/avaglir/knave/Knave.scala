@@ -32,8 +32,8 @@ object Knave extends JSApp with Persist {
     //    currentMode.render()
 
     val canvas = document.createElement("canvas").asInstanceOf[Canvas]
-    canvas.height = 500
-    canvas.width = 500
+    canvas.height = 512
+    canvas.width = 512
 
     document.body.appendChild(canvas)
 
@@ -41,7 +41,7 @@ object Knave extends JSApp with Persist {
     ctx.fillStyle = Color("#11517f").darker.hex
     ctx.fillRect(0, 0, 500, 500)
 
-    val scale = 500
+    val scale = 512
 
     Nation.all.zipWithIndex.foreach {
       case (nation, index) =>
@@ -49,7 +49,7 @@ object Knave extends JSApp with Persist {
 
         nation.land.foreach { landmass =>
           landmass.tiles.map{ _ * scale }.foreach { tile =>
-            ctx.fillRect(tile.x, tile.y, 2, 2)
+            ctx.fillRect(tile.x, tile.y, 1, 1)
           }
         }
     }

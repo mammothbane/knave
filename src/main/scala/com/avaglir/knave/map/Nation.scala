@@ -4,7 +4,7 @@ import com.avaglir.knave.util._
 
 import scala.collection.mutable
 
-case class Nation(land: Set[Landmass], name: String, nClass: NationClass) {}
+case class Nation(land: Set[Landmass], name: String, nClass: NationClass, townDensity: UnitClampedFloat) {}
 
 sealed abstract class NationClass(val size: Int)
 
@@ -62,7 +62,7 @@ object Nation extends Persist with Random {
     }
 
     lmAssigns.zipWithIndex.map {
-      case (lms, idx) => Nation(lms.toSet, "", NationClass(stateClasses(idx)))
+      case (lms, idx) => Nation(lms.toSet, "", NationClass(stateClasses(idx)), random.uniform().toFloat)
     }.toSet
   }
 

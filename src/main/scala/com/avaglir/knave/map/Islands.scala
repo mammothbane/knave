@@ -6,7 +6,7 @@ import scala.collection.mutable
 
 object Islands {
   val threshold = 0.36
-  private val DIMEN = 250
+  private val DIMEN = 512
   val bounds = Vector2.UNIT[Int] * DIMEN
 
   private implicit def double2Int(d: Double): Int = d.toInt
