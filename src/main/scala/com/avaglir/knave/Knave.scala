@@ -30,10 +30,7 @@ object Knave extends JSApp with Persist {
     displays.values.foreach { _.clear() }
     currentMode.render()
 
-    val canvas = document.createElement("canvas").asInstanceOf[Canvas]
-    canvas.height = 512
-    canvas.width = 512
-
+    val canvas = document.getElementById("map").asInstanceOf[Canvas]
     document.body.appendChild(canvas)
 
     val ctx = canvas.getContext("2d").asInstanceOf[CanvasRenderingContext2D]
