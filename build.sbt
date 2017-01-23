@@ -18,7 +18,9 @@ lazy val main = (project in file(".")).
       "com.github.benhutchison" %%% "prickle" % "1.1.13",
       "com.github.cb372" %%% "scalacache-core" % "0.9.3"
     ),
-    resolvers += "Sonatype OSS Snapshots" at "https://oss.sonatype.org/content/repositories/snapshots"
+    resolvers ++= Seq(
+      "Sonatype OSS Snapshots" at "https://oss.sonatype.org/content/repositories/snapshots"
+    )
   ).dependsOn(macros)
 
 lazy val macros = (project in file("macros")).
@@ -32,7 +34,8 @@ lazy val macros = (project in file("macros")).
     )
   )
 
-
 lazy val commonSettings = Seq(
-  scalaVersion := "2.12.1"
+  scalaVersion := "2.12.1",
+  addCompilerPlugin("org.scalamacros" % "paradise" % "2.1.0" cross CrossVersion.full),
+  resolvers += Resolver.sonatypeRepo("releases")
 )
