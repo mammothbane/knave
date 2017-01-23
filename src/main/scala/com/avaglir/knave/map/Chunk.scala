@@ -10,7 +10,7 @@ case class Chunk(location: IntVec, tiles: Array[Array[Tile]]) {
 object Chunk {
   val DIMENS = 256
 
-  @cache
+  @cache(25, None)
   def apply(location: IntVec): Chunk = {
     println("computing new chunk")
     Chunk(location, Array.ofDim[Tile](DIMENS, DIMENS))

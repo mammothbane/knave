@@ -12,13 +12,14 @@ class Lru[K, V](val maxElems: Int, compute: K => V, val expiration: Option[Int],
       vals(k)
     } else {
       if (vals.size == maxElems) {
-        val evictK = lru.minBy { case (k, time) => time }._1
+        val evictK = lru.minBy { case (_, time) => time }._1
         vals remove evictK
         lru remove evictK
       }
 
       val upd = compute(k)
       vals(k) = upd
+      lru(k) = System.currentTimeMillis
       upd
     }
   }
