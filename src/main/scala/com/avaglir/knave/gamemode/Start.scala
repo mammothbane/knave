@@ -1,13 +1,12 @@
 package com.avaglir.knave.gamemode
 import com.avaglir.knave.Knave
-import com.avaglir.knave.input.Action
 import com.avaglir.knave.util._
 import com.avaglir.knave.util.menu.{Entry, Menu}
 import org.scalajs.dom.KeyboardEvent
 
 import scala.collection.mutable
 
-case class Start(var load: Boolean = false) extends GameMode {
+object Start extends GameMode {
   private val KNAVE =
     """
       | _        _        _______           _______
@@ -29,12 +28,11 @@ case class Start(var load: Boolean = false) extends GameMode {
   override def frame(evt: KeyboardEvent): Option[GameMode] = {
     if (evt.`type` != "keydown") return None
 
-    menu.input(evt).getOrElse(Action.SKIP) match {
-      case Action.UP | Action.DOWN => load = !load
-      case Action.INTERACT =>
-      case _ =>
+    menu.input(evt) match {
+      case Some('new) => Some(OverworldMode)
+      case Some('load) => None
+      case _ => None
     }
-    None
   }
 
   override def render(): Unit = {

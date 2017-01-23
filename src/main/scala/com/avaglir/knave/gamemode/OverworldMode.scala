@@ -1,9 +1,8 @@
 package com.avaglir.knave.gamemode
 
-import com.avaglir.knave.map._
 import org.scalajs.dom.KeyboardEvent
 
-case class MapMode(map: GameMap) extends GameMode {
+object OverworldMode extends GameMode {
   override def exit(): Unit = {
 
   }

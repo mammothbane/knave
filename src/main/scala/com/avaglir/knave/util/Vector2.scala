@@ -1,7 +1,7 @@
 package com.avaglir.knave.util
 
 case class Vector2[T: Numeric](x: T, y: T) {
-  private lazy val num = implicitly[Numeric[T]]
+  private val num = implicitly[Numeric[T]]
   import num._
 
   def +[V](other: Vector2[V])(implicit conv: V => T) = Vector2(x + other.x, y + other.y)
@@ -67,6 +67,9 @@ case class Vector2[T: Numeric](x: T, y: T) {
       else 7
     } else 0 // origin
   }
+
+  def clamp[V, W](min: Vector2[V], max: Vector2[W])(implicit convV: V => T, convW: W => T): Vector2[T] =
+    Vector2(minOf[T](max.x, maxOf[T](min.x, x)), minOf[T](max.y, maxOf[T](min.y, y)))
 }
 
 object Vector2 {

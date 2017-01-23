@@ -1,7 +1,6 @@
 package com.avaglir.knave.util
 
 import com.avaglir.knave.Knave
-import com.avaglir.knave.gamemode.{GameMode, MapMode, Start}
 import com.avaglir.knave.map.Simplex
 import com.avaglir.knave.util.storage.Macros._
 import org.scalajs.dom.window
@@ -50,7 +49,6 @@ package object storage {
       }
     }
 
-    implicit val modePickler = CompositePickler[GameMode].concreteType[Start].concreteType[MapMode]
     implicit val colorPickler = CompositePickler[Color].concreteType[RGB].concreteType[HSL]
   }
 

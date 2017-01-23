@@ -1,9 +1,8 @@
 package com.avaglir.knave
 
-import com.avaglir.knave.gamemode.{GameMode, Start}
+import com.avaglir.knave.gamemode.{GameMode, OverworldMode, Start}
 import com.avaglir.knave.map.Nation
 import com.avaglir.knave.util._
-import com.avaglir.knave.util.storage.Pickling._
 import org.scalajs.dom._
 import org.scalajs.dom.ext.KeyCode
 import org.scalajs.dom.html.Canvas
@@ -19,7 +18,7 @@ object Knave extends JSApp with Persist {
   )
 
   val random = rot.RNG
-  private var currentMode: GameMode = Start()
+  private var currentMode: GameMode = Start
 
   def main(): Unit = {
     displays.foreach {
@@ -29,7 +28,7 @@ object Knave extends JSApp with Persist {
     window.addEventListener("keydown", handleInput _)
     window.addEventListener("keypress", handleInput _)
     displays.values.foreach { _.clear() }
-    //    currentMode.render()
+    currentMode.render()
 
     val canvas = document.createElement("canvas").asInstanceOf[Canvas]
     canvas.height = 512
@@ -76,17 +75,22 @@ object Knave extends JSApp with Persist {
     currentMode.render()
   }
 
+  private val modeMap = Map[Symbol, GameMode](
+    'start -> Start,
+    'overworld -> OverworldMode
+  )
+
   import prickle._
   override def persist(): Map[Symbol, String] = Map(
     'rand_seed -> JSON.stringify(random.getSeed()),
     'rand_state -> JSON.stringify(random.getState()),
-    'game_mode -> Pickle.intoString(currentMode)
+    'game_mode -> modeMap.find { _._2 == currentMode }.get.toString
   )
 
   override def restore(v: Map[Symbol, String]): Unit = {
     random.setSeed(JSON.parse(v('rand_seed)).asInstanceOf[Double])
     random.setState(JSON.parse(v('rand_state)).asInstanceOf[RNGState])
-    currentMode = Unpickle[GameMode].fromString(v('game_mode)).get
+    currentMode = modeMap(Symbol(v('game_mode)))
   }
 
   override val key: Symbol = 'knave_root
