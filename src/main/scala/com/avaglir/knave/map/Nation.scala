@@ -25,9 +25,12 @@ object NationClass {
 }
 
 object Nation extends Persist with Random {
-  private lazy val stateCount = random.int(Landmass.all.size/2, Landmass.all.size)
+  private lazy val stateCount = random.int(Landmass.all.size/3, 2*Landmass.all.size/3)
 
   private val standard = NationClass.County
+
+  implicit def double2Int(d: Double): Int = d.toInt
+  def which(vec: Vector2[Int]) = Nation.all.find { _.land.exists { _.tiles.map { elem => (elem * 512).as[Int] }.contains(vec) }}
 
   lazy val all: Set[Nation] = {
     val totalLand = Landmass.all.map { _.area }.sum
@@ -50,15 +53,21 @@ object Nation extends Persist with Random {
 
     val remainingProp = stateSizes.map { remainingArea.toFloat * _.toFloat / totalStateSize }
 
-    freeLMs.foreach { free =>
-      lmAssigns.zipWithIndex.find { case (lms, idx) => lms.head.area < remainingProp(idx) } match {
-        case Some(set) => set._1 += free
-        case None => lmAssigns(random.int(0, lmAssigns.length - 1)) += free
-      }
+    // low scores are desirable
+    def score(lm: Landmass, candidate: mutable.Set[Landmass], remainingArea: Float): Float = {
+      val sz = lm.area + candidate.map { _.area }.sum - remainingArea
+      val szComponent = if (sz <= 0) 0 else sz
+      val distanceComponent = candidate.map { elem => (elem.center - lm.center).magnitude * 100 }.sum
+
+      (distanceComponent * distanceComponent * distanceComponent * distanceComponent + szComponent/20).toFloat
     }
 
-    (0 until stateCount).foreach { idx =>
-      println(s"target: ${stateAreas(idx)}, actual: ${lmAssigns(idx).map { _.area }.sum }")
+    freeLMs.foreach { free =>
+      lmAssigns.zipWithIndex.minBy { case (lms, idx) => score(free, lms, remainingProp(idx)) }._1 += free
+    }
+
+    lmAssigns.zipWithIndex.foreach {
+      case (lms, idx) => println(s"Nation class ${NationClass(stateClasses(idx))}, ${lms.size} island(s), distance sum: ${lms.map { lm => (lms - lm).map { elem => (elem.center - lm.center).magnitude }.sum}.sum }, area: ${lms.map { _.area }.sum}")
     }
 
     lmAssigns.zipWithIndex.map {

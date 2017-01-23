@@ -4,6 +4,8 @@ import com.avaglir.knave.util._
 
 case class Landmass(sizeClass: IslandClass, tiles: Set[Vector2[Double]], name: Option[String], adjective: Option[String]) {
   def area = tiles.size
+  lazy val center: Vector2[Double] = tiles.fold(Vector2.ZERO[Double]){ _ + _ } / tiles.size
+  lazy val edge = tiles.filter { tile => tile.adjacent.exists { !tiles.contains(_) }}
 }
 
 object Landmass extends Persist with Random {

@@ -37,21 +37,55 @@ object Knave extends JSApp with Persist {
     document.body.appendChild(canvas)
 
     val ctx = canvas.getContext("2d").asInstanceOf[CanvasRenderingContext2D]
-    ctx.fillStyle = Color("#11517f").darker.hex
-    ctx.fillRect(0, 0, 500, 500)
 
     val scale = 512
 
-    Nation.all.zipWithIndex.foreach {
-      case (nation, index) =>
-        ctx.fillStyle = HSL(index.toFloat/Nation.all.size, 0.4f, 0.5f).hex
+    def redraw(): Unit = {
+      ctx.fillStyle = Color("#11517f").darker.hex
+      ctx.fillRect(0, 0, 512, 512)
 
-        nation.land.foreach { landmass =>
-          landmass.tiles.map{ _ * scale }.foreach { tile =>
-            ctx.fillRect(tile.x, tile.y, 1, 1)
+      Nation.all.zipWithIndex.foreach {
+        case (nation, index) =>
+          ctx.fillStyle = HSL(index.toFloat/Nation.all.size, 0.4f, 0.5f).hex
+
+          nation.land.foreach { landmass =>
+            landmass.tiles.map{ _ * scale }.foreach { tile =>
+              ctx.fillRect(tile.x, tile.y, 1, 1)
+            }
+            //          val oldstyle = ctx.fillStyle
+            //          ctx.fillStyle = Color.RED.hex
+            //          val ctr = landmass.center * scale
+            //          ctx.fillRect(ctr.x - 2, ctr.y - 2, 4, 4)
+            //          ctx.fillStyle = oldstyle
           }
-        }
+      }
     }
+
+    redraw()
+
+    implicit def double2Int(d: Double): Int = d.toInt
+    var dirty = false
+
+    canvas.addEventListener("mousemove", (evt: MouseEvent) => {
+      val coords = Vector2(evt.pageX - canvas.offsetLeft, evt.pageY - canvas.offsetTop).as[Int]
+      println(s"mouseover at $coords")
+
+      Nation.which(coords) match {
+        case Some(nation) =>
+          redraw()
+          dirty = true
+          ctx.fillStyle = Color.RED.darker.hex
+          nation.land.map { _.edge }.foreach { _.foreach { tile =>
+            val tl = tile * scale
+            ctx.fillRect(tl.x, tl.y, 1, 1)
+          } }
+
+        case None =>
+          if (dirty) redraw()
+          dirty = false
+      }
+
+    })
   }
 
   final val ignoreKeyCodes = Set(

@@ -46,7 +46,6 @@ case class Menu(entries: mutable.ListBuffer[Entry], pointer: String, private var
     entries.zipWithIndex.foreach {
       case (entry, idx) =>
         val draw = if (entry.enabled) entry.name else entry.name.colorize(entry.disabledColor)
-        println(draw)
         d.drawText(v + Vector2.DOWN[Int] * idx, draw)
     }
 
