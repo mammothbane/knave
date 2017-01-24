@@ -4,13 +4,14 @@ import scala.collection.mutable
 
 class Lru[K, V](val maxElems: Int, compute: K => V, val expiration: Option[Int], initial: K*) {
   private var lastEvict = System.currentTimeMillis
+  private val maxEvictFreq = 100 // only run evictions every 100ms
 
   private val lru = mutable.Map[K, Long](initial.map { (_, System.currentTimeMillis ) }: _*)
   private val vals = mutable.Map(initial.map { elem => (elem, compute(elem)) }: _*)
 
   def apply(k: K): V = {
     val now = System.currentTimeMillis
-    if (expiration.isDefined && now - lastEvict > expiration.get) evict()
+    if (expiration.isDefined && now - lastEvict > maxEvictFreq) evict()
 
     if (vals contains k) {
       lru(k) = now

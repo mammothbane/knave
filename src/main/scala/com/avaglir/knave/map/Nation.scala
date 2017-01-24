@@ -72,9 +72,9 @@ object Nation extends Persist with Random {
       lmAssigns.zipWithIndex.minBy { case (lms, idx) => score(free, lms, remainingProp(idx)) }._1 += free
     }
 
-    lmAssigns.zipWithIndex.foreach {
-      case (lms, idx) => println(s"Nation class ${NationClass(stateClasses(idx))}, ${lms.size} island(s), distance sum: ${lms.map { lm => (lms - lm).map { elem => (elem.center - lm.center).magnitude }.sum}.sum }, area: ${lms.map { _.area }.sum}")
-    }
+//    lmAssigns.zipWithIndex.foreach {
+//      case (lms, idx) => println(s"Nation class ${NationClass(stateClasses(idx))}, ${lms.size} island(s), distance sum: ${lms.map { lm => (lms - lm).map { elem => (elem.center - lm.center).magnitude }.sum}.sum }, area: ${lms.map { _.area }.sum}")
+//    }
 
     lmAssigns.zipWithIndex.map {
       case (lms, idx) => Nation(lms.toSet, "", NationClass(stateClasses(idx)), random.uniform().toFloat)

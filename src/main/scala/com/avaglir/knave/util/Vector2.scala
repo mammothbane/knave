@@ -47,10 +47,10 @@ case class Vector2[T: Numeric](x: T, y: T) {
 
   override def toString: String = s"v2($x, $y)"
 
-  def <=[V](other: Vector2[V])(implicit conv: V => T): Boolean = this == other || this < other
+  def <=[V](other: Vector2[V])(implicit conv: V => T): Boolean = x <= other.x && y <=other.y
   def <[V](other: Vector2[V])(implicit conv: V => T): Boolean = x < other.x && y < other.y
-  def >=[V](other: Vector2[V])(implicit conv: V => T): Boolean = this == other || this > other
-  def >[V](other: Vector2[V])(implicit conv: V => T): Boolean = x > other.y && y > other.y
+  def >=[V](other: Vector2[V])(implicit conv: V => T): Boolean = x >= other.x && y >= other.y
+  def >[V](other: Vector2[V])(implicit conv: V => T): Boolean = x > other.x && y > other.y
 
   def octant: Int = {
     if (x > zero && y >= zero) { // first quadrant

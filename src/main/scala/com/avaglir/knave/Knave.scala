@@ -1,7 +1,8 @@
 package com.avaglir.knave
 
+import com.avaglir.knave.entities.Player
 import com.avaglir.knave.gamemode.{GameMode, OverworldMode, Start}
-import com.avaglir.knave.map.Nation
+import com.avaglir.knave.map.{Chunk, Islands, Landmass, Nation}
 import com.avaglir.knave.util._
 import org.scalajs.dom._
 import org.scalajs.dom.ext.KeyCode
@@ -29,6 +30,8 @@ object Knave extends JSApp with Persist {
     window.addEventListener("keypress", handleInput _)
     displays.values.foreach { _.clear() }
     currentMode.render()
+
+    Player.loc = Landmass.all.toList(random.int(0, Islands.all.length)).center * Chunk.DIMENS
 
     val canvas = document.getElementById("map").asInstanceOf[Canvas]
     document.body.appendChild(canvas)
@@ -63,7 +66,6 @@ object Knave extends JSApp with Persist {
 
     canvas.addEventListener("mousemove", (evt: MouseEvent) => {
       val coords = Vector2(evt.pageX - canvas.offsetLeft, evt.pageY - canvas.offsetTop).as[Int]
-      println(s"mouseover at $coords")
 
       Nation.which(coords) match {
         case Some(nation) =>
