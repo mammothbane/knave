@@ -1,8 +1,7 @@
 package com.avaglir.knave
 
-import com.avaglir.knave.entities.Player
 import com.avaglir.knave.gamemode.{GameMode, OverworldMode, Start}
-import com.avaglir.knave.map.{Chunk, Islands, Landmass, Nation}
+import com.avaglir.knave.map.Nation
 import com.avaglir.knave.util._
 import org.scalajs.dom._
 import org.scalajs.dom.ext.KeyCode
@@ -31,7 +30,7 @@ object Knave extends JSApp with Persist {
     displays.values.foreach { _.clear() }
     currentMode.render()
 
-    Player.loc = Landmass.all.toList(random.int(0, Islands.all.length)).center * Chunk.DIMENS
+//    Player.loc = Landmass.all.toList(random.int(0, Islands.all.length)).center * Chunk.DIMENS
 
     val canvas = document.getElementById("map").asInstanceOf[Canvas]
     document.body.appendChild(canvas)
