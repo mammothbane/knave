@@ -30,7 +30,13 @@ object Nation extends Persist with Random {
   private val standard = NationClass.County
 
   implicit def double2Int(d: Double): Int = d.toInt
-  def which(vec: Vector2[Int]) = Nation.all.find { _.land.exists { _.tiles.map { elem => (elem * 512).as[Int] }.contains(vec) }}
+
+  /**
+    * Find the nation in which the given vector is located. Nation scale assumed.
+    * @param vec The location to check for a nation.
+    * @return A nation if it exists at the given location. Else None.
+    */
+  def which(vec: Vector2[Int]) = Nation.all.find { _.land.exists { _.tiles.contains(vec) }}
 
   lazy val all: Set[Nation] = {
     val totalLand = Landmass.all.map { _.area }.sum
@@ -57,7 +63,7 @@ object Nation extends Persist with Random {
     def score(lm: Landmass, candidate: mutable.Set[Landmass], remainingArea: Float): Float = {
       val sz = lm.area + candidate.map { _.area }.sum - remainingArea
       val szComponent = if (sz <= 0) 0 else sz
-      val distanceComponent = candidate.map { elem => (elem.center - lm.center).magnitude * 100 }.sum
+      val distanceComponent = candidate.map { elem => (elem.center - lm.center).magnitude }.sum
 
       (distanceComponent * distanceComponent * distanceComponent * distanceComponent + szComponent/20).toFloat
     }

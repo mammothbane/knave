@@ -3,7 +3,7 @@ package com.avaglir.knave.map
 import com.avaglir.knave.util._
 import simplex.SimplexNoise
 
-object GenMap extends Persist {
+object World extends Persist {
   var large = SimplexNoise()
   var small = SimplexNoise()
 

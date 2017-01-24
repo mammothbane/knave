@@ -21,7 +21,7 @@ object Overworld extends Persist {
   def surrounding(v: Vector2[Int]): List[Vector2[Int]] = {
     val chunk = chunkCoords(v)
 
-    val vec = chunk.clamp(Vector2.UNIT[Int] * under * Chunk.DIMENS, Vector2.UNIT[Int] * (GenMap.DIMENS - over)*Chunk.DIMENS)
+    val vec = chunk.clamp(Vector2.UNIT[Int] * under * Chunk.DIMENS, Vector2.UNIT[Int] * (World.DIMENS - over)*Chunk.DIMENS)
     println(vec)
 
     (vec.x - under until vec.x + over).cartesianProduct(vec.y - under until vec.y + over).map {

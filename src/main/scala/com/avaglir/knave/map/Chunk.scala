@@ -12,12 +12,12 @@ object Chunk {
 
   @cache(25, None)
   def apply(location: Vector2[Int]): Chunk = {
-    assert(location.componentsClamped(Vector2.UNIT[Int] * GenMap.DIMENS))
+    assert(location.componentsClamped(Vector2.UNIT[Int] * World.DIMENS))
     val tiles = Array.ofDim[Tile](DIMENS, DIMENS)
 
     (0 until DIMENS).cartesianProduct(0 until DIMENS).foreach { case (x, y) =>
       val loc = Vector2(x, y) + location
-      tiles(x)(y) = if (GenMap(loc) >= Islands.threshold) {
+      tiles(x)(y) = if (World(loc) >= Islands.threshold) {
         Tile.FLOOR
       } else {
         Tile.WATER

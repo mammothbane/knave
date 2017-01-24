@@ -6,25 +6,26 @@ import scala.collection.mutable
 
 object Islands {
   val threshold = 0.36
-  private val DIMEN = 512
-  val bounds = Vector2.UNIT[Int] * DIMEN
+  val SCALE = 8
+  val DIMENS = World.DIMENS / SCALE
+  val bounds = Vector2.UNIT[Int] * DIMENS
 
   private implicit def double2Int(d: Double): Int = d.toInt
-  private def boundary(v: IntVec): Boolean = GenMap(v, DIMEN) >= threshold && v.adjacent(true).exists { elem => elem.componentsClamped(bounds) && GenMap(elem, DIMEN) < threshold }
+  private def boundary(v: IntVec): Boolean = World(v, DIMENS) >= threshold && v.adjacent(true).exists { elem => elem.componentsClamped(bounds) && World(elem, DIMENS) < threshold }
 
-  lazy val edges: List[Set[IntVec]] = edgesRes(DIMEN)
+  lazy val edges: List[Set[IntVec]] = edgesRes(DIMENS)
 
   def edgesRes(resolution: Int): List[Set[Vector2[Int]]] = allRes(resolution).map { island =>
     island.map { pt => (pt * resolution).as[Int] }.filter(boundary)
   }
 
   /**
-    * Return all islands, rendered initially at a resolution of 250x250.
+    * A list of islands at reduced resolution.
     */
-  lazy val all: List[Set[Vector2[Double]]] = allRes(DIMEN)
+  lazy val all: List[Set[Vector2[Int]]] = allRes(DIMENS)
 
-  def allRes(resolution: Int): List[Set[Vector2[Double]]] = {
-    val chunks = GenMap.emit(resolution)
+  def allRes(resolution: Int): List[Set[Vector2[Int]]] = {
+    val chunks = World.emit(resolution)
     val out = mutable.ListBuffer.empty[Set[Vector2[Int]]]
 
     for (x <- 0 until resolution; y <- 0 until resolution) {
@@ -38,6 +39,6 @@ object Islands {
       }
     }
 
-    out.toList.map{ _.map { _.as[Double] / resolution } }
+    out.toList
   }
 }

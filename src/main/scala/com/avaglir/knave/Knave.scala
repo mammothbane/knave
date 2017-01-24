@@ -35,18 +35,16 @@ object Knave extends JSApp with Persist {
 
     val ctx = canvas.getContext("2d").asInstanceOf[CanvasRenderingContext2D]
 
-    val scale = 512
-
     def redraw(): Unit = {
       ctx.fillStyle = Color("#11517f").darker.hex
-      ctx.fillRect(0, 0, 512, 512)
+      ctx.fillRect(0, 0, canvas.width, canvas.height)
 
       Nation.all.zipWithIndex.foreach {
         case (nation, index) =>
           ctx.fillStyle = HSL(index.toFloat/Nation.all.size, 0.4f, 0.5f).hex
 
           nation.land.foreach { landmass =>
-            landmass.tiles.map{ _ * scale }.foreach { tile =>
+            landmass.tiles.foreach { tile =>
               ctx.fillRect(tile.x, tile.y, 1, 1)
             }
             //          val oldstyle = ctx.fillStyle
@@ -71,10 +69,9 @@ object Knave extends JSApp with Persist {
         case Some(nation) =>
           redraw()
           dirty = true
-          ctx.fillStyle = Color.RED.darker.hex
+          ctx.fillStyle = Color.RED.hex
           nation.land.map { _.edge }.foreach { _.foreach { tile =>
-            val tl = tile * scale
-            ctx.fillRect(tl.x, tl.y, 1, 1)
+            ctx.fillRect(tile.x, tile.y, 1, 1)
           } }
 
         case None =>
