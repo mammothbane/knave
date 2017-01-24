@@ -30,7 +30,7 @@ object Knave extends JSApp with Persist {
     displays.values.foreach { _.clear() }
     currentMode.render()
 
-//    Player.loc = Landmass.all.toList(random.int(0, Islands.all.length)).center * Chunk.DIMENS
+//    Player.loc = Landmass.all.toList(random.int(0, Landmass.all.size)).center * Chunk.DIMENS
 
     val canvas = document.getElementById("map").asInstanceOf[Canvas]
     document.body.appendChild(canvas)

@@ -1,0 +1,27 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Knave</title>
+    <style type="text/css">
+        .display {
+            padding: 4px;
+            float: left;
+        }
+    </style>
+
+    <script type="text/javascript" src="./knave-jsdeps.js"></script>
+    <script type="text/javascript" src="./knave-opt.js"></script>
+    <script type="text/javascript">
+        window.onload = function() { com.avaglir.knave.Knave().main(); };
+    </script>
+
+</head>
+<body>
+<div id="knave-status" class="display" style="padding-top: 8px; padding-left: 8px"></div>
+<div id="knave-main" class="display" style="padding-top: 8px"></div>
+<div id="knave-messages" class="display" style="clear: both; margin-top: -4px; padding-left: 8px"></div>
+
+<canvas id="map" width="512px" height="512px"></canvas>
+</body>
+</html>
