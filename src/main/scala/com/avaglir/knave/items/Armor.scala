@@ -6,7 +6,7 @@ import com.avaglir.knave.items.Weapon.DamageType
 import com.avaglir.knave.properties.Skilled
 import com.avaglir.knave.skill.{Skill, SkillBased}
 
-abstract class Armor(owner: Entity) extends Item(owner) with SkillBased {
+abstract class Armor(owner: Entity) extends Item(owner) with SkillBased with Equippable {
   import Armor._
 
   def slot: GearSlot

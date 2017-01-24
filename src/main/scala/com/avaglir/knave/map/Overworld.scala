@@ -3,6 +3,8 @@ package com.avaglir.knave.map
 import com.avaglir.knave.util._
 
 object Overworld extends Persist {
+  println(surrounding(Vector2.ZERO[Int]))
+
   private val PRELOAD = 5
   private val under = PRELOAD / 2
   private val over = PRELOAD - PRELOAD / 2
@@ -16,10 +18,11 @@ object Overworld extends Persist {
   private def chunkCoords(v: Vector2[Int]): Vector2[Int] = v.map { component => math.round(component.toFloat/Chunk.DIMENS)*Chunk.DIMENS }
   private def cacheExtent: (Vector2[Int], Vector2[Int]) = (location - Vector2(under * Chunk.DIMENS, under*Chunk.DIMENS), location + Vector2(over * Chunk.DIMENS, over * Chunk.DIMENS))
 
-  private def surrounding(v: Vector2[Int]): List[Vector2[Int]] = {
+  def surrounding(v: Vector2[Int]): List[Vector2[Int]] = {
     val chunk = chunkCoords(v)
 
     val vec = chunk.clamp(Vector2.UNIT[Int] * under * Chunk.DIMENS, Vector2.UNIT[Int] * (GenMap.DIMENS - over)*Chunk.DIMENS)
+    println(vec)
 
     (vec.x - under until vec.x + over).cartesianProduct(vec.y - under until vec.y + over).map {
       case (x: Int, y: Int) => Vector2(x, y)*Chunk.DIMENS

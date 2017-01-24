@@ -6,13 +6,15 @@ import com.avaglir.knave.properties.Skilled
 import com.avaglir.knave.skill.{Skill, SkillBased}
 import com.avaglir.knave.util._
 
-abstract class Weapon(owner: Entity) extends Item(owner) with SkillBased {
+abstract class Weapon(owner: Entity) extends Item(owner) with SkillBased with Equippable {
   import Weapon._
 
   def baseDamage: Int
   def baseHit: UnitClampedFloat
   def endurance: Int
   def weaponClass: WeaponClass
+
+  override def slot: GearSlot = GearSlot.Weapon
 
   def great: Boolean = false
 

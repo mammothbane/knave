@@ -13,6 +13,6 @@ trait Entity extends GameObject {
   def y_:(newY: Int) = this.loc = Vector2(x, newY)
 
   private val props = mutable.Map.empty[String, Property[_]]
-  private[properties] def register(p: Property[_]) = props(p.name) = p
-  def message[T](m: Message[T]) = props.values.foreach { _.message(m) }
+  final def register(p: Property[_]) = props(p.name) = p
+  def message[T, U](m: Message[T, U]) = props.values.foreach { _.message(m) }
 }

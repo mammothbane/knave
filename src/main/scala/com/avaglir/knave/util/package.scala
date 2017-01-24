@@ -163,6 +163,7 @@ package object util {
 
   implicit class ary2dExt[T](a: Array[Array[T]]) {
     def apply(x: IntVec) = a(x.x)(x.y)
+    def extents = Vector2(a.length, a.head.length)
   }
 
   implicit class genTExt[W](a: GenTraversable[W]) {

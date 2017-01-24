@@ -8,5 +8,5 @@ abstract class Property[T <: Entity](val parent: T) {
   def name: String
   def group: Option[Symbol] = None
 
-  def message[U](message: Message[U]): Unit
+  def message[U, V](message: Message[U, V]): Unit
 }

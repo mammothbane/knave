@@ -16,6 +16,6 @@ package object items {
     }
   }
 
-  val linearEfficacy = polynomialEfficacy(1)
-  val quadraticEfficacy = polynomialEfficacy(2)
+  val linearEfficacy = polynomialEfficacy(1)(_, _)
+  val quadraticEfficacy = polynomialEfficacy(2)(_, _)
 }

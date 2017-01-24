@@ -15,8 +15,7 @@ lazy val main = (project in file(".")).
     ),
     libraryDependencies ++= Seq(
       "org.scala-js" %%% "scalajs-dom" % "0.9.1",
-      "com.github.benhutchison" %%% "prickle" % "1.1.13",
-      "com.github.cb372" %%% "scalacache-core" % "0.9.3"
+      "com.github.benhutchison" %%% "prickle" % "1.1.13"
     ),
     resolvers ++= Seq(
       "Sonatype OSS Snapshots" at "https://oss.sonatype.org/content/repositories/snapshots"
