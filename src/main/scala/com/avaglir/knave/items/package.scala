@@ -1,9 +1,21 @@
 package com.avaglir.knave
 
+import com.avaglir.knave.util._
+
 package object items {
-  //  private var items: List[Item] = Nil
+  def polynomialEfficacy(power: Int)(floor: Int, ceiling: Int): (Int) => UnitClampedFloat = {
+    val diff = floor - ceiling
 
-  def initialize(): Unit = {
-
+    (skill: Int) => {
+      val adjSkill: UnitClampedFloat = (skill - floor).clamp(0, diff).toFloat / diff
+      var out = 1f
+      for (_ <- 0 until power) {
+        out *= adjSkill
+      }
+      out
+    }
   }
+
+  val linearEfficacy = polynomialEfficacy(1)
+  val quadraticEfficacy = polynomialEfficacy(2)
 }
