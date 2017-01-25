@@ -38,7 +38,7 @@ object Knave extends JSApp with Persist {
     val ctx = canvas.getContext("2d").asInstanceOf[CanvasRenderingContext2D]
 
     def redraw(): Unit = {
-      nationText.textContent = ""
+      while (nationText.firstChild != null) { nationText.removeChild(nationText.firstChild) }
       ctx.fillStyle = Color("#11517f").darker.hex
       ctx.fillRect(0, 0, canvas.width, canvas.height)
 
@@ -70,7 +70,19 @@ object Knave extends JSApp with Persist {
           nation.land.map { _.edge }.foreach { _.foreach { tile =>
             ctx.fillRect(tile.x, tile.y, 1, 1)
           } }
-          nationText.textContent = s"${nation.nClass} of ${nation.name}"
+
+          val islandtext = nation.land.map { landmass => landmass.sizeClass.withModifiers(landmass.adjective, landmass.name) }
+          val tn = document.createTextNode(s"${nation.nClass} of ${nation.name}\n")
+          val b = document.createElement("b")
+          b.appendChild(tn)
+          nationText.appendChild(b)
+
+          islandtext.foreach { tx =>
+            nationText.appendChild(document.createElement("br"))
+            val i = document.createElement("i")
+            i.appendChild(document.createTextNode(tx))
+            nationText.appendChild(i)
+          }
 
         case None =>
           if (dirty) redraw()

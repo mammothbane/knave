@@ -190,6 +190,11 @@ package object util {
   implicit class strExt(s: String) {
     def colorize(fg: Color = Color.WHITE, bg: Color = Color.BLACK): String = s"%c{${fg.hex}}%b{${bg.hex}}$s"
     def decolorize: String = colorRegex.replaceAllIn(s, "")
+    def titleCase: String = s match {
+      case "" => s
+      case x if x.length == 1 => x.toUpperCase
+      case _ => s(0).toUpper + s.substring(1)
+    }
   }
 
   implicit def clamped2Float(c: ClampedFloat): Float = c.value
