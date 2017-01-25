@@ -76,12 +76,14 @@ object Nation extends Persist with Random {
 //      case (lms, idx) => println(s"Nation class ${NationClass(stateClasses(idx))}, ${lms.size} island(s), distance sum: ${lms.map { lm => (lms - lm).map { elem => (elem.center - lm.center).magnitude }.sum}.sum }, area: ${lms.map { _.area }.sum}")
 //    }
 
-    val unused = mutable.ListBuffer(nameList.toList: _*)
+    println(names.size, lmAssigns.length)
+
+    val unused = mutable.ListBuffer(names.toList: _*)
     lmAssigns.zipWithIndex.map {
       case (lms, idx) =>
-        val nameIndex = random.int(0, unused.length)
-        val name = unused(nameIndex)
-        unused.remove(nameIndex)
+        val name = if (unused.nonEmpty) {
+          unused.remove(random.int(0, unused.length - 1))
+        } else NameGen.get
 
         Nation(lms.toSet, name, NationClass(stateClasses(idx)), random.uniform().toFloat)
     }.toSet
@@ -97,10 +99,35 @@ object Nation extends Persist with Random {
 
   override def key: Symbol = 'nation
 
-  private val nameList = Set(
+  private val names = Set(
     "Arstotzka", "Atlantis", "Gondor", "Beleriand", "Londor", "Londo", "Vanu", "Chadbourne", "Ancelstierre", "Belisaere",
     "Vandreka", "Tirania", "Sercia", "Oriosa", "Nivia", "Lukano", "Bregna", "Bensalem", "Panau", "Nim", "R'lyeh",
     "Nollop", "Tsalal", "Illyria", "Orsinia", "Vespugia", "Republia", "Obristan", "Kolechia", "Impor", "Gilead", "Farfelu",
-    "Florin", "Orleans", "Dauphin", "Syldavia", "Sciriel", "Vascovy"
+    "Florin", "Orleans", "Dauphin", "Syldavia", "Sciriel", "Vascovy", "Queelag", "Carthus", "Ambrosia", "Avalon", "Avernus",
+    "Xethoila", "Resceasal", "Atrulor", "Esharia", "Cadrar"
   )
+
+  object NameGen {
+    // borrowed from http://fantasynamegenerators.com/scripts/landNames.js
+    private val nm1 = List("b","c","d","f","g","h","i","j","k","l","m","n","p","q","r","s","t","v","w","x","y","z","","","","","")
+    private val nm2 = List("a","e","o","u")
+    private val nm3 = List("br","cr","dr","fr","gr","pr","str","tr","bl","cl","fl","gl","pl","sl","sc","sk","sm","sn","sp","st","sw","ch","sh","th","wh")
+    private val nm4 = List("ae","ai","ao","au","a","ay","ea","ei","eo","eu","e","ey","ua","ue","ui","uo","u","uy","ia","ie","iu","io","iy","oa","oe","ou","oi","o","oy")
+    private val nm5 = List("stan","dor","vania","nia","lor","cor","dal","bar","sal","ra","la","lia","jan","rus","ze","tan","wana","sil","so","na","le","bia","ca","ji","ce","ton","ssau","sau","sia","ca","ya","ye","yae","tho","stein","ria","nia","burg","nia","gro","que","gua","qua","rhiel","cia","les","dan","nga","land")
+    private val nm6 = List("ia","a","en","ar","istan","aria","ington","ua","ijan","ain","ium","us","esh","os","ana","il","ad","or","ea","eau","ax","on","ana","ary","ya","ye","yae","ait","ein","urg","al","ines","ela")
+
+    private val nameParts = List(nm1, nm2, nm3, nm4, nm5, nm6)
+
+    def get: String = {
+      val rands = nameParts.map { part => part(random.int(0, part.length - 1)) }
+
+      (random.int(0, 4) match {
+        case 0 => 0 until 5
+        case 1 => List(0, 1, 2, 5)
+        case 2 => 2 until 5
+        case 3 => List(1, 2, 5)
+        case _ => List(2, 3, 0, 2, 5)
+      }).map(rands.apply).mkString
+    }
+  }
 }
