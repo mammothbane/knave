@@ -32,12 +32,13 @@ object Knave extends JSApp with Persist {
 
 //    Player.loc = Landmass.all.toList(random.int(0, Landmass.all.size)).center * Chunk.DIMENS
 
+    val nationText = document.getElementById("nation-label")
     val canvas = document.getElementById("map").asInstanceOf[Canvas]
-    document.body.appendChild(canvas)
 
     val ctx = canvas.getContext("2d").asInstanceOf[CanvasRenderingContext2D]
 
     def redraw(): Unit = {
+      nationText.textContent = ""
       ctx.fillStyle = Color("#11517f").darker.hex
       ctx.fillRect(0, 0, canvas.width, canvas.height)
 
@@ -49,11 +50,6 @@ object Knave extends JSApp with Persist {
             landmass.tiles.foreach { tile =>
               ctx.fillRect(tile.x, tile.y, 1, 1)
             }
-            //          val oldstyle = ctx.fillStyle
-            //          ctx.fillStyle = Color.RED.hex
-            //          val ctr = landmass.center * scale
-            //          ctx.fillRect(ctr.x - 2, ctr.y - 2, 4, 4)
-            //          ctx.fillStyle = oldstyle
           }
       }
     }
@@ -74,6 +70,7 @@ object Knave extends JSApp with Persist {
           nation.land.map { _.edge }.foreach { _.foreach { tile =>
             ctx.fillRect(tile.x, tile.y, 1, 1)
           } }
+          nationText.textContent = s"${nation.nClass} of ${nation.name}"
 
         case None =>
           if (dirty) redraw()

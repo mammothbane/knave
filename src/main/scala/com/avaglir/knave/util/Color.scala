@@ -79,6 +79,9 @@ object Color {
   val RED = RGB(0xff, 0, 0)
   val GREEN = RGB(0, 0xff, 0)
   val BLUE = RGB(0, 0, 0xff)
+  val YELLOW = RGB(0xff, 0xff, 0)
+  val CYAN = RGB(0, 0xff, 0xff)
+  val MAGENTA = RGB(0xff, 0, 0xff)
 
   private val matchRegex = "#([0-9a-f]{2})([0-9a-f]{2})([0-9a-f]{2})".r
 

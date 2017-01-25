@@ -15,8 +15,8 @@ object Overworld extends Persist {
   private var cached: Map[Vector2[Int], Chunk] = surrounding(location).map { loc => (loc, Chunk(loc)) }.toMap
 
   private implicit class vecExt(v: Vector2[Int]) {
-    def chunkCoords = v.map { component => math.round(component.toFloat/Chunk.DIMENS)*Chunk.DIMENS }
-    def tileCoords = v / Chunk.DIMENS
+    def chunkCoords = v / Chunk.DIMENS
+    def tileCoords = v * Chunk.DIMENS
   }
 
   /**
@@ -45,7 +45,10 @@ object Overworld extends Persist {
 
     val (preserved, load) = surrounding(newCenter).partition { cached contains _ }
     cached = (load.map { loc => (loc, Chunk(loc)) } ++ preserved.map { loc => (loc, cached(loc)) }).toMap
-    location = newCenter
+    location = vec
+
+    println(s"center updated: $vec")
+    load.foreach { key => println(s"$key loaded")}
   }
 
   private def chunkContaining(location: Vector2[Int]): Option[Chunk] = cached.get(location.chunkCoords)

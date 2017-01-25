@@ -3,22 +3,8 @@ package com.avaglir.knave.entities
 import com.avaglir.knave.util._
 
 trait GameObject {
-  def char: Char = ' '
-  def fg: Color = Color.WHITE
-  def bg: Color = Color.BLACK
+  def repr: RenderTile
 
   def displayPriority: Int = 0
-  def draw(display: Display, loc: IntVec, fgOverride: Option[Color] = None, bgOverride: Option[Color] = None) = {
-    val f = fgOverride match {
-      case Some(color) => color
-      case None => fg
-    }
-
-    val b = bgOverride match {
-      case Some(color) => color
-      case None => bg
-    }
-
-    display.draw(loc, char, f, b)
-  }
+  def draw(display: Display, loc: IntVec) = repr.draw(display, loc)
 }

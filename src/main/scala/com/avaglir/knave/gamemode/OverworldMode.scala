@@ -16,14 +16,14 @@ object OverworldMode extends GameMode {
   override def frame(evt: KeyboardEvent): Option[GameMode] = {
     input.translate(evt) match {
       case Some(act) =>
-        val nw = act match {
+        val tgt = Player.loc + (act match {
           case Action.UP => Vector2.UP[Int]
           case Action.DOWN => Vector2.DOWN[Int]
           case Action.LEFT => Vector2.LEFT[Int]
           case Action.RIGHT => Vector2.RIGHT[Int]
           case _ => Vector2.ZERO[Int]
-        }
-        Player.loc = (Player.loc + nw).clamp(Vector2.ZERO[Int], Vector2.UNIT[Int] * Chunk.TILE_DIMENS)
+        })
+        Player.loc = tgt.clamp(Vector2.ZERO[Int], Vector2.UNIT[Int] * Chunk.TILE_DIMENS)
       case None =>
     }
 
@@ -38,7 +38,7 @@ object OverworldMode extends GameMode {
 
     println(s"Player location: ${Player.loc}")
 
-    ShadowRaycast.calculate(main.center, 10, vec => {
+    ShadowRaycast.calculate(main.center, 6, vec => {
       tiles(vec).transparent
     }).foreach { vec =>
       tiles(vec).draw(main, vec)

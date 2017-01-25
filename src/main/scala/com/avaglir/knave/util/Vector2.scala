@@ -1,6 +1,6 @@
 package com.avaglir.knave.util
 
-case class Vector2[T: Numeric](x: T, y: T) {
+case class Vector2[@specialized(Int, Double, Float) T: Numeric](x: T, y: T) {
   private val num = implicitly[Numeric[T]]
   import num._
 

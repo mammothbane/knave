@@ -76,8 +76,14 @@ object Nation extends Persist with Random {
 //      case (lms, idx) => println(s"Nation class ${NationClass(stateClasses(idx))}, ${lms.size} island(s), distance sum: ${lms.map { lm => (lms - lm).map { elem => (elem.center - lm.center).magnitude }.sum}.sum }, area: ${lms.map { _.area }.sum}")
 //    }
 
+    val unused = mutable.ListBuffer(nameList.toList: _*)
     lmAssigns.zipWithIndex.map {
-      case (lms, idx) => Nation(lms.toSet, "", NationClass(stateClasses(idx)), random.uniform().toFloat)
+      case (lms, idx) =>
+        val nameIndex = random.int(0, unused.length)
+        val name = unused(nameIndex)
+        unused.remove(nameIndex)
+
+        Nation(lms.toSet, name, NationClass(stateClasses(idx)), random.uniform().toFloat)
     }.toSet
   }
 
@@ -90,4 +96,11 @@ object Nation extends Persist with Random {
   }
 
   override def key: Symbol = 'nation
+
+  private val nameList = Set(
+    "Arstotzka", "Atlantis", "Gondor", "Beleriand", "Londor", "Londo", "Vanu", "Chadbourne", "Ancelstierre", "Belisaere",
+    "Vandreka", "Tirania", "Sercia", "Oriosa", "Nivia", "Lukano", "Bregna", "Bensalem", "Panau", "Nim", "R'lyeh",
+    "Nollop", "Tsalal", "Illyria", "Orsinia", "Vespugia", "Republia", "Obristan", "Kolechia", "Impor", "Gilead", "Farfelu",
+    "Florin", "Orleans", "Dauphin", "Syldavia", "Sciriel", "Vascovy"
+  )
 }

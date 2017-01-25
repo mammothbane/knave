@@ -1,13 +1,11 @@
 package com.avaglir.knave.map
 
 import com.avaglir.knave.entities.GameObject
-import com.avaglir.knave.util.Color
+import com.avaglir.knave.util.{Color, RenderTile}
 
 case class Tile(
                  name: String,
-                 override val char: Char,
-                 override val fg: Color = Color.WHITE,
-                 override val bg: Color = Color.BLACK,
+                 repr: RenderTile,
                  pathable: Boolean = false,
                  opaque: Boolean = false,
                  debug: Boolean = false
@@ -15,11 +13,11 @@ case class Tile(
 
   def transparent = !opaque
 
-  override def toString: String = s"Tile('$char', pathable = $pathable, opaque = $opaque)"
+  override def toString: String = s"Tile('${repr.char}', pathable = $pathable, opaque = $opaque)"
 }
 
 object Tile {
-  val WALL = Tile("wall", '#', opaque = true)
-  val FLOOR = Tile("floor", '.', pathable = true)
-  val WATER = Tile("Water", '~', fg = Color.BLUE)
+  val WALL = Tile("wall", RenderTile('#'), opaque = true)
+  val FLOOR = Tile("floor", RenderTile('.'), pathable = true)
+  val WATER = Tile("Water", RenderTile('~', fg = Color.BLUE))
 }
