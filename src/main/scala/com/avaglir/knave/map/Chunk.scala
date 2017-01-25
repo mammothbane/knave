@@ -2,8 +2,14 @@ package com.avaglir.knave.map
 
 import com.avaglir.knave.util._
 
+import scala.collection.mutable
+
 case class Chunk(location: Vector2[Int], tiles: Array[Array[Tile]]) {
   import Chunk._
+
+  val remembered = mutable.Set.empty[Vector2[Int]]
+
+  def view(v: Vector2[Int]*) = v.foreach(remembered.add)
 
   def apply(v: Vector2[Int]) = {
     assert (v.componentsClamped(Vector2.UNIT[Int] * DIMENS))
@@ -20,7 +26,7 @@ object Chunk {
     */
   @cache(25, None)
   def apply(location: Vector2[Int]): Chunk = {
-    println(location)
+//    println(location)
     assert(location.componentsClamped(Vector2.UNIT[Int] * World.DIMENS))
     val tiles = Array.ofDim[Tile](DIMENS, DIMENS)
     val fullLoc = location * TILE_DIMENS

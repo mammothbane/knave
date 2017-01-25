@@ -1,7 +1,8 @@
 package com.avaglir.knave
 
+import com.avaglir.knave.entities.Player
 import com.avaglir.knave.gamemode.{GameMode, OverworldMode, Start}
-import com.avaglir.knave.map.Nation
+import com.avaglir.knave.map.{Chunk, Nation}
 import com.avaglir.knave.util._
 import org.scalajs.dom._
 import org.scalajs.dom.ext.KeyCode
@@ -52,6 +53,9 @@ object Knave extends JSApp with Persist {
             }
           }
       }
+
+      ctx.fillStyle = Color.RED.hex
+      ctx.fillRect(Player.x/Chunk.DIMENS, Player.y/Chunk.DIMENS, 4, 4)
     }
 
     redraw()

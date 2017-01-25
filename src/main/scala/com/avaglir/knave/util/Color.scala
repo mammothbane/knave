@@ -9,13 +9,16 @@ sealed abstract class Color {
   def saturation: UnitClampedFloat
   def luminance: UnitClampedFloat
 
-  def hex: String = f"#$red%02x$green%02x$blue%02x"
+  lazy val hex: String = f"#$red%02x$green%02x$blue%02x"
 
   def hsl = HSL(hue, saturation, luminance)
   def rgb = RGB(red, green, blue)
 
   def darker = HSL(hue, saturation, UnitClampedFloat(luminance.value/2))
   def lighter = HSL(hue, saturation, UnitClampedFloat((luminance.value + 1f)/2))
+
+  def desaturated = HSL(hue, UnitClampedFloat(saturation.value/2), luminance)
+  def saturated = HSL(hue, UnitClampedFloat((saturation.value + 1f)/2), luminance)
 }
 
 case class RGB(red: Int, green: Int, blue: Int) extends Color {

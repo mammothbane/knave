@@ -19,5 +19,5 @@ case class Tile(
 object Tile {
   val WALL = Tile("wall", RenderTile('#'), opaque = true)
   val FLOOR = Tile("floor", RenderTile('.'), pathable = true)
-  val WATER = Tile("Water", RenderTile('~', fg = Color.BLUE))
+  val WATER = Tile("Water", RenderTile('~', fg = Color.WHITE.darker, bg = Color.BLUE.desaturated))
 }

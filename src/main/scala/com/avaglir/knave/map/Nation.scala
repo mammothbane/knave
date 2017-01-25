@@ -76,8 +76,6 @@ object Nation extends Persist with Random {
 //      case (lms, idx) => println(s"Nation class ${NationClass(stateClasses(idx))}, ${lms.size} island(s), distance sum: ${lms.map { lm => (lms - lm).map { elem => (elem.center - lm.center).magnitude }.sum}.sum }, area: ${lms.map { _.area }.sum}")
 //    }
 
-    println(names.size, lmAssigns.length)
-
     val unused = mutable.ListBuffer(names.toList: _*)
     lmAssigns.zipWithIndex.map {
       case (lms, idx) =>
