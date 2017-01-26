@@ -82,7 +82,7 @@ package object util {
       case 4 => out.reverse.map { elem => Vector2(-elem.x, elem.y) }
       case 5 => out.reverse.map { -_ }
       case 6 => out.reverse.map { _.transpose * -1 }
-      case 7 => out.map { _.transpose * -1 }
+      case 7 => out.map { elem => Vector2(elem.y, -elem.x) }
       case 8 => out.map { elem => Vector2(elem.x, -elem.y) }
     }).map{ elem => elem + from }.toList
   }
@@ -203,7 +203,7 @@ package object util {
 
   private final val colorRegex = "%c{#[0-9a-f]{6}}%b{#[0-9a-f]{6}}".r
   implicit class strExt(s: String) {
-    def colorize(fg: Color = Color.WHITE, bg: Color = Color.BLACK): String = s"%c{${fg.hex}}%b{${bg.hex}}$s"
+    def colorize(fg: Color = Color.WHITE, bg: Color = Color.BLACK): String = s"%c{${fg.hex}}%b{${bg.hex}}$s%c{${Color.WHITE.hex}}%b{${Color.BLACK.hex}}"
     def decolorize: String = colorRegex.replaceAllIn(s, "")
     def titleCase: String = s match {
       case "" => s

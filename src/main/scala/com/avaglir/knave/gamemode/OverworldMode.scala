@@ -2,19 +2,21 @@ package com.avaglir.knave.gamemode
 
 import com.avaglir.knave.entities.Player
 import com.avaglir.knave.input.Action
+import com.avaglir.knave.items.{Armor, Equippable, GearSlot, Weapon}
 import com.avaglir.knave.map._
-import com.avaglir.knave.properties.Fighter
+import com.avaglir.knave.properties.{Equipped, Fighter}
 import com.avaglir.knave.util._
 import com.avaglir.knave.{Knave, input}
 import org.scalajs.dom.KeyboardEvent
 
-object OverworldMode extends GameMode {
+object OverworldMode extends GameMode with Random {
   val main = Knave.displays('main)
   val status = Knave.displays('status)
-
+  var obs: Option[Vector2[Int]] = None
 
   override def enter(): Unit = {
     Overworld.setCenter(Player.loc)
+    obs = Some(Player.loc + Vector2(3, 3))
   }
 
   override def exit(): Unit = {}
@@ -71,12 +73,25 @@ object OverworldMode extends GameMode {
 
     status.drawText(Vector2(1, 1), "STATUS")
 
+    val elems = Player.message(Equipped.equipped)("armored").asInstanceOf[Map[GearSlot, Equippable]]
     val stats = Player.message(Fighter.stats)("fighter").asInstanceOf[Fighter.Stats]
-    status.drawText(Vector2(1, 3), s"Health:   ${stats.health._1.toString.colorize(Color.RED)}/${stats.health._2}")
-    status.drawText(Vector2(1, 4), s"Evasion:  ${(stats.accuracy * 100).toInt.toString.colorize(c"#3675db")}%")
-    status.drawText(Vector2(1, 5), s"Strength: ${stats.strength.toString.colorize(c"#ffa500")}")
+    val armor = elems.unzip._2.map {
+      case x: Armor => x.baseArmor
+      case _ => 0
+    }.sum
 
-    status.drawText(Vector2(1, 7), "INVENTORY")
+    val damage = elems.get(GearSlot.Weapon).map { _.asInstanceOf[Weapon].baseDamage }.getOrElse(0)
+
+    status.drawText(Vector2(2, 3), s"Health:   ${stats.health._1.toString.colorize(Color.RED)}/${stats.health._2}")
+    status.drawText(Vector2(2, 4), s"Damage:   ${damage.toString.colorize(c"#e29d1d")}")
+    status.drawText(Vector2(2, 5), s"Armor:    ${armor.toString.colorize(Color.GREEN.darker)}")
+    status.drawText(Vector2(2, 6), s"Accuracy: ${(stats.accuracy * 100).toInt.toString.colorize(c"#3675db")}%")
+
+    status.drawText(Vector2(1, 9), "EQUIPMENT")
+
+    elems.take(5).zipWithIndex.foreach { case ((slot, eq), index) =>
+      status.drawText(Vector2(2, 11 + index), s"${slot.name.titleCase.colorize(c"#36db80")}: ${eq.name.titleCase}")
+    }
 
     Overworld.debug.tile.textContent = s"Tile: ${Player.loc}"
     Overworld.debug.chunk.textContent = s"Chunk: ${Player.loc/Chunk.DIMENS}"
@@ -85,7 +100,7 @@ object OverworldMode extends GameMode {
 
     val ext = main.extents
     (0 until ext.x).cartesianProduct(0 until ext.y).foreach {
-      case (x, y) => main.draw(Vector2(x,y), ' ', bg = waterBlue)
+      case (x, y) => main.draw(Vector2(x, y), ' ', bg = waterBlue)
     }
 
     seen.foreach { vec =>
@@ -96,7 +111,10 @@ object OverworldMode extends GameMode {
     }
 
     ShadowRaycast.calculate(main.center, 15, vec => {
-      if (vec.componentsClamped(main.extents)) tiles(vec).transparent else false
+      if (vec.componentsClamped(main.extents)) {
+        if (vec == obs.get - screenOrigin) false
+        else tiles(vec).transparent
+      } else false
     }).foreach { vec =>
       val tileLoc = screenOrigin + vec
       if (tileLoc.componentsClamped(Vector2.UNIT[Int] * Chunk.TILE_DIMENS)) Overworld.markSeen(tileLoc)

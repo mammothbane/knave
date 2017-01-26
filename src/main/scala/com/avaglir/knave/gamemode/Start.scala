@@ -7,23 +7,25 @@ import org.scalajs.dom.KeyboardEvent
 import scala.collection.mutable
 
 object Start extends GameMode {
+  // note: i had to use fucking macrons for this because for some reason ROT won't draw underscores in certain
+  // locations. NO IDEA WHY. breaks in chrome, works fine in firefox.
   private val KNAVE =
     """
-      | _        _        _______           _______
-      || \    /\( (    /|(  ___  )|\     /|(  ____ \
-      ||  \  / /|  \  ( || (   ) || )   ( || (    \/
-      ||  (_/ / |   \ | || (___) || |   | || (__
-      ||   _ (  | (\ \) ||  ___  |( (   ) )|  __)
-      ||  ( \ \ | | \   || (   ) | \ \_/ / | (
-      ||  /  \ \| )  \  || )   ( |  \   /  | (____/\
-      ||_/    \/|/    )_)|/     \|   \_/   (_______/
+      ||¯\    /\(¯(    /|(¯¯¯¯¯¯¯)|\     /|(¯¯¯¯¯¯¯\
+      ||  \  / /|  \  ( || (¯¯¯) || )   ( || (¯¯¯¯\/
+      ||  ( / / |   \ | || (   ) || |   | || (
+      ||   ¯ (  | (\ \) ||  ¯¯¯  |( (   ) )|  ¯¯)
+      ||  (¯\ \ | | \   || (¯¯¯) | \ \ / / | (¯¯
+      ||  /  \ \| )  \  || )   ( |  \ ¯ /  | (    /\
+      || /    \/|/    ) )|/     \|   \ /   (  ¯¯¯¯ /
+      | ¯              ¯              ¯     ¯¯¯¯¯¯¯
     """.trim.stripMargin
 
-  val mainColor = Color("#15d34e")
+  val mainColor = c"#15d34e"
   val kCenter = Vector2(KNAVE.split('\n').maxBy{ _.length }.length, KNAVE.split('\n').length).half
-  val offset = (Knave.displays('main).center - kCenter) + Vector2.UP[Int] * 2
+  val offset = (Knave.displays('main).center - kCenter) + Vector2.UP[Int] * 1
 
-  val menu = Menu(mutable.ListBuffer(Entry("New", 'new), Entry("Load", 'load, enabled = storage.hasSave)), "=>".colorize(Color("#1b58d3")))
+  val menu = Menu(mutable.ListBuffer(Entry("New", 'new), Entry("Load", 'load, enabled = storage.hasSave)), "=>".colorize(c"#1b58d3"))
 
   override def enter(): Unit = {}
 

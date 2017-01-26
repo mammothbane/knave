@@ -21,7 +21,9 @@ class Display(val width: Int, val height: Int, val spacing: Float = 1) {
     Vector2(pos._1, pos._2)
   }
 
-  def draw(v: IntVec, ch: Char, fg: Color = Color.WHITE, bg: Color = Color.BLACK) = display.draw(v.x, v.y, s"$ch", fg.hex, bg.hex)
+  def draw(v: IntVec, ch: Char, fg: Color = Color.WHITE, bg: Color = Color.BLACK) = {
+    display.draw(v.x, v.y, new String(Array(ch)), fg.hex, bg.hex)
+  }
 
   def inBounds(v: IntVec) = v.x < width && v.x >= 0 && v.y < height && v.y >= 0
 
@@ -33,7 +35,6 @@ class Display(val width: Int, val height: Int, val spacing: Float = 1) {
 
     pairs.foreach {
       case ((line, offset), index) =>
-        //println(s"drawing '$line', offset $offset")
         maxWidth match {
           case None => display.drawText(v.x + offset, v.y + index, line)
           case Some(wid) => display.drawText(v.x + offset, v.y + index, line, wid)
