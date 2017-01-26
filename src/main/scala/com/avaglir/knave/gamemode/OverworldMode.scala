@@ -39,10 +39,13 @@ object OverworldMode extends GameMode {
 
   private def screenOrigin = Player.loc - main.extents.half
 
+  val waterblue = HSL(Color.BLUE.hue, 0.3f, 0.07f)
+
+
   override def render(): Unit = {
     val tiles = Overworld.render(Player.loc, main.extents)
     val seen = Overworld.seen(Player.loc, main.extents)
-
+    
     Knave.displays('status).drawText(Vector2.UNIT[Int], s"Tile: ${Player.loc}")
     Knave.displays('status).drawText(Vector2(1, 2), s"Chunk: ${Player.loc/Chunk.DIMENS}")
 
@@ -50,7 +53,7 @@ object OverworldMode extends GameMode {
 
     val ext = main.extents
     (0 until ext.x).cartesianProduct(0 until ext.y).foreach {
-      case (x, y) => main.draw(Vector2(x,y), ' ', bg = HSL(Color.BLUE.hue, 0.3f, 0.07f))
+      case (x, y) => main.draw(Vector2(x,y), ' ', bg = waterblue)
     }
 
     seen.foreach { vec =>

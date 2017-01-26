@@ -11,7 +11,8 @@ lazy val main = (project in file(".")).
     ),
     skip in packageJSDependencies := false,
     jsDependencies ++= Seq(
-      ProvidedJS / "rot.min.js"
+      ProvidedJS / "rot.min.js",
+      ProvidedJS / "nouns.js"
     ),
     libraryDependencies ++= Seq(
       "org.scala-js" %%% "scalajs-dom" % "0.9.1",

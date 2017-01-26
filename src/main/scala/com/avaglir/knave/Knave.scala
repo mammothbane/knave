@@ -31,6 +31,9 @@ object Knave extends JSApp with Persist {
     displays.values.foreach { _.clear() }
     currentMode.render()
 
+    println(bytesToHex(Array[Byte](Byte.MinValue)))
+    println(Color.RED.hex)
+
 //    Player.loc = Landmass.all.toList(random.int(0, Landmass.all.size)).center * Chunk.DIMENS
 
     val nationText = document.getElementById("nation-label")
@@ -121,8 +124,6 @@ object Knave extends JSApp with Persist {
     'start -> Start,
     'overworld -> OverworldMode
   )
-
-  import prickle._
   override def persist(): Map[Symbol, String] = Map(
     'rand_seed -> JSON.stringify(random.getSeed()),
     'rand_state -> JSON.stringify(random.getState()),

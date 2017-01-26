@@ -11,6 +11,7 @@ import scala.scalajs.js
   * @param spacing Spacing factor between tiles.
   */
 class Display(val width: Int, val height: Int, val spacing: Float = 1) {
+
   private val display: rot.Display = new rot.Display(js.Dynamic.literal(width = width, height = height, spacing = spacing))
 
   def clear() = display.clear()
@@ -42,4 +43,9 @@ class Display(val width: Int, val height: Int, val spacing: Float = 1) {
 
   def center = Vector2(width, height).half
   def extents = Vector2(width, height)
+}
+
+object Display {
+  private val colorCache = new Lru[Color, String](25, { _.hex }, None)
+
 }

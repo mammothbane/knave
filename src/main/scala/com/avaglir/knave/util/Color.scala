@@ -9,7 +9,7 @@ sealed abstract class Color {
   def saturation: UnitClampedFloat
   def luminance: UnitClampedFloat
 
-  lazy val hex: String = f"#$red%02x$green%02x$blue%02x"
+  lazy val hex: String = "#" + bytesToHex(Array(red.toByte, green.toByte, blue.toByte))
 
   def hsl = HSL(hue, saturation, luminance)
   def rgb = RGB(red, green, blue)
@@ -47,6 +47,8 @@ case class RGB(red: Int, green: Int, blue: Int) extends Color {
       (hue.unitClamped, sat.unitClamped, lum.unitClamped)
     }
   }
+
+  override lazy val hashCode: Int = 0 << 30 | red & 0xff << 16 | green & 0xff << 8 | blue & 0xff
 }
 
 case class HSL(hue: UnitClampedFloat, saturation: UnitClampedFloat, luminance: UnitClampedFloat) extends Color {
@@ -74,6 +76,8 @@ case class HSL(hue: UnitClampedFloat, saturation: UnitClampedFloat, luminance: U
       (hue2rgb(hue + (1f/3)), hue2rgb(hue), hue2rgb(hue - (1f/3)))
     }
   }
+
+  override lazy val hashCode: Int = 0x01 << 30 | ((hue.value * 0x3f).toInt & 0xff) << 20 | ((saturation.value * 0x3f).toInt & 0x3f) << 10 | ((luminance.value * 0x3f).toInt & 0x3f)
 }
 
 object Color {
@@ -85,6 +89,8 @@ object Color {
   val YELLOW = RGB(0xff, 0xff, 0)
   val CYAN = RGB(0, 0xff, 0xff)
   val MAGENTA = RGB(0xff, 0, 0xff)
+
+  private val HslMask = 0x3f
 
   private val matchRegex = "#([0-9a-f]{2})([0-9a-f]{2})([0-9a-f]{2})".r
 

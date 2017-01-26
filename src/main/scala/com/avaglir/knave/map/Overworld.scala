@@ -3,6 +3,8 @@ package com.avaglir.knave.map
 import com.avaglir.knave.Knave
 import com.avaglir.knave.util._
 
+import scala.collection.mutable
+
 /**
   * Effectively translates between World/Chunk coordinates and Tile coordinates. Everything in this file is in
   * Chunk coordinates unless otherwise stated.
@@ -15,6 +17,7 @@ object Overworld extends Persist {
   val max = Vector2.UNIT[Int] * (World.DIMENS - over)
 
   private var location = Vector2.ZERO[Int]
+//  private val cached: Array[Array[Chunk]] = Array.ofDim[Chunk](PRELOAD, PRELOAD)
   private var cached: Map[Vector2[Int], Chunk] = surrounding(location).map { loc => (loc, Chunk(loc)) }.toMap
 
   private implicit class vecExt(v: Vector2[Int]) {
@@ -75,9 +78,8 @@ object Overworld extends Persist {
       if (!loc.componentsClamped(Vector2.UNIT[Int] * Chunk.TILE_DIMENS)) {
         out(vec.x)(vec.y) = Tile.WATER
       } else {
-        val rootCoords = loc.chunkCoords.tileCoords // the tile coordinates of this chunk
         val targetChunk = chunkContaining(loc).get
-        val cnkCoords = loc - rootCoords
+        val cnkCoords = loc - targetChunk.location
 
         out(vec.x)(vec.y) = targetChunk(cnkCoords)
       }
@@ -92,6 +94,8 @@ object Overworld extends Persist {
     out
   }
 
+  val TILE_MAX = Vector2.UNIT[Int] * Chunk.TILE_DIMENS
+
   /**
     * Build the set of seen locations at the given camera location and window dimensions.
     */
@@ -101,16 +105,20 @@ object Overworld extends Persist {
 
     val screenOrigin = cam - dimens/2 // in tile coordinates
 
-    (0 until dimens.x).cartesianProduct(0 until dimens.y).map(Vector2.apply[Int]).toSet.seq.
-      filter { _.componentsClamped(Vector2.UNIT[Int] * Chunk.TILE_DIMENS) }.
-      map { vec =>
-        chunkContaining(screenOrigin + vec).get
-      }.
+    val seenChunks = mutable.Set.empty[Chunk]
+    for (x <- 0 until dimens.x; y <- 0 until dimens.y) {
+      val vec = Vector2(x, y)
+      if (vec.componentsClamped(TILE_MAX)) {
+        seenChunks.add(chunkContaining(screenOrigin + vec).get)
+      }
+    }
+
+    seenChunks.toSet.
       flatMap { (chunk: Chunk) =>
         val root = chunk.location
         chunk.remembered.map { _ + root.tileCoords - screenOrigin }
       }.
-      filter { _.componentsClamped(dimens) }.toSet
+      filter { _.componentsClamped(dimens) }
   }
 
   /**

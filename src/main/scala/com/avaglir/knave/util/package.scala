@@ -171,8 +171,19 @@ package object util {
       a.flatMap { elem => other.map { inner => (elem, inner) } }
   }
 
-  def maxOf[T: Ordering](args: T*): T = args.max
-  def minOf[T: Ordering](args: T*): T = args.min
+  @inline def maxOf[T: Ordering](args: T*): T = args.max
+  @inline def minOf[T: Ordering](args: T*): T = args.min
+
+  val hexArray = "0123456789abcdef".toCharArray
+  @inline def bytesToHex(bytes: Array[Byte], debug: Boolean = false): String = {
+    val hexChars = new Array[Char](bytes.length * 2)
+    for (j <- bytes.indices) {
+      val v = bytes(j) & 0xff
+      hexChars(j * 2)     = hexArray(v >>> 4)
+      hexChars(j * 2 + 1) = hexArray(v & 0x0f)
+    }
+    new String(hexChars)
+  }
 
   implicit class numericExt[T: Numeric](t: T) {
     private val num = implicitly[Numeric[T]]
