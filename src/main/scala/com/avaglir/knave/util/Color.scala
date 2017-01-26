@@ -90,8 +90,6 @@ object Color {
   val CYAN = RGB(0, 0xff, 0xff)
   val MAGENTA = RGB(0xff, 0, 0xff)
 
-  private val HslMask = 0x3f
-
   private val matchRegex = "#([0-9a-f]{2})([0-9a-f]{2})([0-9a-f]{2})".r
 
   def apply(s: String): RGB = {

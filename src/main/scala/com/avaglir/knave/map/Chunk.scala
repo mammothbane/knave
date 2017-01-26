@@ -15,6 +15,8 @@ case class Chunk(location: Vector2[Int], tiles: Array[Array[Tile]]) {
     assert (v.componentsClamped(Vector2.UNIT[Int] * DIMENS))
     tiles(v)
   }
+
+  override def hashCode(): Int = location.hashCode()
 }
 
 object Chunk {
