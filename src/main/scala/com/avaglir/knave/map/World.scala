@@ -27,6 +27,8 @@ object World extends Persist {
   def apply(x: Int, y: Int, scale: Int): Float = apply(x.toFloat/scale, y.toFloat/scale)
 
   def apply(x: Float, y: Float): Float = {
+//    println(s"retrieving at $x, $y")
+
     val dx = (x - 0.5) * totalScale
     val dy = (y - 0.5) * totalScale
     val ctrDist = math.sqrt(dx * dx + dy * dy)

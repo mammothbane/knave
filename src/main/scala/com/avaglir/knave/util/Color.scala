@@ -94,7 +94,11 @@ object Color {
 
   def apply(s: String): RGB = {
     val matchRegex(r, g, b) = s
-    val (red :: green :: blue :: _) = List(r, g, b).map(Integer.parseInt(_, 16) % 255)
+    val (red :: green :: blue :: _) = List(r, g, b).map(Integer.parseInt(_, 16) % 256)
+    println(red, green, blue)
+
     RGB(red, green, blue)
   }
+
+  val BROWN = Color("#89764e")
 }

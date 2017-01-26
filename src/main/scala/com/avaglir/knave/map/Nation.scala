@@ -4,7 +4,9 @@ import com.avaglir.knave.util._
 
 import scala.collection.mutable
 
-case class Nation(land: Set[Landmass], name: String, nClass: NationClass, townDensity: UnitClampedFloat) {}
+case class Nation(land: Set[Landmass], name: String, nClass: NationClass, townDensity: UnitClampedFloat) {
+  def print = s"$nClass of $name"
+}
 
 sealed abstract class NationClass(val size: Int)
 
@@ -36,7 +38,7 @@ object Nation extends Persist with Random {
     * @param vec The location to check for a nation.
     * @return A nation if it exists at the given location. Else None.
     */
-  def which(vec: Vector2[Int]) = Nation.all.find { _.land.exists { _.tiles.contains(vec) }}
+  def which(vec: Vector2[Int]) = all.find { _.land.exists { _.tiles.contains(vec) }}
 
   lazy val all: Set[Nation] = {
     val totalLand = Landmass.all.map { _.area }.sum

@@ -5,6 +5,8 @@ sealed trait GearSlot {
 }
 
 object GearSlot {
+  val all = Set(Head, Torso, Legs, Boots, Gloves, Weapon, Shield)
+
   case object Head extends GearSlot { val name = "head" }
   case object Torso extends GearSlot { val name = "torso" }
   case object Legs extends GearSlot { val name = "legs" }

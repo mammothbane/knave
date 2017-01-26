@@ -21,12 +21,7 @@ abstract class Armor(owner: Entity) extends Item(owner) with SkillBased with Equ
       case Mail => Skill.MailArmor
       case Plate => Skill.PlateArmor
     }
-    var out: Option[Int] = None
-    owner.message(Skilled.skillValue(skill, Some((ret) => out = Some(ret))))
-    out match {
-      case Some(elem) => elem
-      case _ => skill.min
-    }
+    owner.message(Skilled.skillValue(skill))(Skilled.name).asInstanceOf[Int]
   }
 }
 

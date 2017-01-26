@@ -2,7 +2,7 @@ package com.avaglir.knave
 
 import com.avaglir.knave.entities.Player
 import com.avaglir.knave.gamemode.{GameMode, OverworldMode, Start}
-import com.avaglir.knave.map.{Chunk, Nation}
+import com.avaglir.knave.map.{Chunk, Nation, NationClass, Overworld}
 import com.avaglir.knave.util._
 import org.scalajs.dom._
 import org.scalajs.dom.ext.KeyCode
@@ -11,14 +11,13 @@ import rot.RNGState
 
 import scala.scalajs.js.{JSApp, JSON}
 
-object Knave extends JSApp with Persist {
+object Knave extends JSApp with Persist with Random {
   val displays = Map(
     'main -> new Display(80, 24),
     'status -> new Display(20, 24),
     'messages -> new Display(101, 6)
   )
 
-  val random = rot.RNG
   private var currentMode: GameMode = Start
 
   def main(): Unit = {
@@ -26,8 +25,12 @@ object Knave extends JSApp with Persist {
       case (sym: Symbol, disp: Display) => document.getElementById(s"knave-${sym.name}").appendChild(disp.container)
     }
 
+    val target = Nation.all.filter { nation => nation.nClass == NationClass.Barony || nation.nClass == NationClass.County }.head.land.head.center * Chunk.DIMENS * 8
+    Player.loc = target
+
     window.addEventListener("keydown", handleInput _)
     window.addEventListener("keypress", handleInput _)
+
     displays.values.foreach { _.clear() }
     currentMode.render()
 
@@ -53,7 +56,7 @@ object Knave extends JSApp with Persist {
       }
 
       ctx.fillStyle = Color.RED.hex
-      ctx.fillRect(Player.x/Chunk.DIMENS, Player.y/Chunk.DIMENS, 4, 4)
+      ctx.fillRect(Player.x/Chunk.DIMENS/8, Player.y/Chunk.DIMENS/8, 4, 4)
     }
 
     redraw()
@@ -61,6 +64,7 @@ object Knave extends JSApp with Persist {
     implicit def double2Int(d: Double): Int = d.toInt
     var dirty = false
 
+    canvas.addEventListener("mouseleave", (_: MouseEvent) => redraw())
     canvas.addEventListener("mousemove", (evt: MouseEvent) => {
       val coords = Vector2(evt.pageX - canvas.offsetLeft, evt.pageY - canvas.offsetTop).as[Int]
 
@@ -73,8 +77,8 @@ object Knave extends JSApp with Persist {
             ctx.fillRect(tile.x, tile.y, 1, 1)
           } }
 
-          val islandtext = nation.land.map { landmass => landmass.sizeClass.withModifiers(landmass.adjective, landmass.name) }
-          val tn = document.createTextNode(s"${nation.nClass} of ${nation.name}\n")
+          val islandtext = nation.land.map { _.print }
+          val tn = document.createTextNode(s"${nation.print}\n")
           val b = document.createElement("b")
           b.appendChild(tn)
           nationText.appendChild(b)
@@ -92,6 +96,19 @@ object Knave extends JSApp with Persist {
       }
 
     })
+
+    canvas.addEventListener("click", (evt: MouseEvent) => {
+      val coords = Vector2(evt.pageX - canvas.offsetLeft, evt.pageY - canvas.offsetTop).as[Int]
+
+      if (currentMode == OverworldMode) {
+        Player.loc = coords * Chunk.DIMENS * 8
+        Overworld.setCenter(Player.loc)
+
+        displays.values.foreach { _.clear() }
+        OverworldMode.render()
+      }
+      redraw()
+    })
   }
 
   final val ignoreKeyCodes = Set(
@@ -108,6 +125,7 @@ object Knave extends JSApp with Persist {
       case Some(newMode) =>
         currentMode.exit()
         currentMode = newMode
+        currentMode.enter()
       case None =>
     }
 
@@ -119,14 +137,13 @@ object Knave extends JSApp with Persist {
     'start -> Start,
     'overworld -> OverworldMode
   )
+
   override def persist(): Map[Symbol, String] = Map(
-    'rand_seed -> JSON.stringify(random.getSeed()),
     'rand_state -> JSON.stringify(random.getState()),
     'game_mode -> modeMap.find { _._2 == currentMode }.get.toString
   )
 
   override def restore(v: Map[Symbol, String]): Unit = {
-    random.setSeed(JSON.parse(v('rand_seed)).asInstanceOf[Double])
     random.setState(JSON.parse(v('rand_state)).asInstanceOf[RNGState])
     currentMode = modeMap(Symbol(v('game_mode)))
   }

@@ -24,13 +24,7 @@ abstract class Weapon(owner: Entity) extends Item(owner) with SkillBased with Eq
       case _ if great => Skill.GreatWeapon
       case _ => Skill.StandardWeapon
     }
-
-    var out: Option[Int] = None
-    owner.message(Skilled.skillValue(skill, Some((ret) => out = Some(ret))))
-    out match {
-      case Some(elem) => elem
-      case _ => skill.min
-    }
+    owner.message(Skilled.skillValue(skill))(Skilled.name).asInstanceOf[Int]
   }
 }
 

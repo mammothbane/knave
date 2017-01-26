@@ -16,7 +16,7 @@ case class Chunk(location: Vector2[Int], tiles: Array[Array[Tile]]) {
     tiles(v)
   }
 
-  override def hashCode(): Int = location.hashCode()
+  override def hashCode(): Int = location.hashCode
 }
 
 object Chunk {
@@ -28,10 +28,9 @@ object Chunk {
     */
   @cache(25, None)
   def apply(location: Vector2[Int]): Chunk = {
-//    println(location)
     assert(location.componentsClamped(Vector2.UNIT[Int] * World.DIMENS))
     val tiles = Array.ofDim[Tile](DIMENS, DIMENS)
-    val fullLoc = location * TILE_DIMENS
+    val fullLoc = location * DIMENS
 
     (0 until DIMENS).cartesianProduct(0 until DIMENS).foreach { case (x, y) =>
       val loc = Vector2(x, y) + fullLoc

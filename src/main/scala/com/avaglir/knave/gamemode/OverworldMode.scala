@@ -2,14 +2,20 @@ package com.avaglir.knave.gamemode
 
 import com.avaglir.knave.entities.Player
 import com.avaglir.knave.input.Action
-import com.avaglir.knave.map.{Chunk, Overworld}
+import com.avaglir.knave.map._
+import com.avaglir.knave.properties.Fighter
 import com.avaglir.knave.util._
 import com.avaglir.knave.{Knave, input}
 import org.scalajs.dom.KeyboardEvent
 
 object OverworldMode extends GameMode {
   val main = Knave.displays('main)
-  Overworld.setCenter(Player.loc)
+  val status = Knave.displays('status)
+
+
+  override def enter(): Unit = {
+    Overworld.setCenter(Player.loc)
+  }
 
   override def exit(): Unit = {}
 
@@ -45,8 +51,35 @@ object OverworldMode extends GameMode {
     val tiles = Overworld.render(Player.loc, main.extents)
     val seen = Overworld.seen(Player.loc, main.extents)
 
-    Knave.displays('status).drawText(Vector2.UNIT[Int], s"Tile: ${Player.loc}")
-    Knave.displays('status).drawText(Vector2(1, 2), s"Chunk: ${Player.loc/Chunk.DIMENS}")
+    val inWater = tiles(main.extents.half) == Tile.WATER
+
+    val currentNation = Nation.which(Player.loc / Chunk.DIMENS / 8)
+    status.drawText(Vector2(1, Knave.displays('status).height - 3), currentNation match {
+      case Some(nation) => nation.print
+      case None if !inWater =>
+        Nation.all.minBy { _.land.map { lm => (lm.center*8*Chunk.DIMENS - Player.loc).magnitude }.min }.print
+      case None => "Unknown waters"
+    })
+
+    status.drawText(Vector2(1, Knave.displays('status).height - 2),
+      if (inWater) "At sea" else {
+        Landmass.which(Player.loc / Chunk.DIMENS / 8) match {
+          case Some(lm) => lm.print
+          case None => Landmass.all.minBy { lm => (lm.center*8*Chunk.DIMENS - Player.loc).magnitude }.print
+        }
+      }, Color.WHITE.darker)
+
+    status.drawText(Vector2(1, 1), "STATUS")
+
+    val stats = Player.message(Fighter.stats)("fighter").asInstanceOf[Fighter.Stats]
+    status.drawText(Vector2(1, 3), s"Health:   ${stats.health._1.toString.colorize(Color.RED)}/${stats.health._2}")
+    status.drawText(Vector2(1, 4), s"Evasion:  ${(stats.accuracy * 100).toInt.toString.colorize(c"#3675db")}%")
+    status.drawText(Vector2(1, 5), s"Strength: ${stats.strength.toString.colorize(c"#ffa500")}")
+
+    status.drawText(Vector2(1, 7), "INVENTORY")
+
+    Overworld.debug.tile.textContent = s"Tile: ${Player.loc}"
+    Overworld.debug.chunk.textContent = s"Chunk: ${Player.loc/Chunk.DIMENS}"
 
 //    println(s"Player location: ${Player.loc}")
 
@@ -62,8 +95,8 @@ object OverworldMode extends GameMode {
       repr.draw(main, vec)
     }
 
-    ShadowRaycast.calculate(main.center, 6, vec => {
-      tiles(vec).transparent
+    ShadowRaycast.calculate(main.center, 15, vec => {
+      if (vec.componentsClamped(main.extents)) tiles(vec).transparent else false
     }).foreach { vec =>
       val tileLoc = screenOrigin + vec
       if (tileLoc.componentsClamped(Vector2.UNIT[Int] * Chunk.TILE_DIMENS)) Overworld.markSeen(tileLoc)

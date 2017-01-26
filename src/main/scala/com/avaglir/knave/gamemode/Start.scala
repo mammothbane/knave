@@ -25,6 +25,8 @@ object Start extends GameMode {
 
   val menu = Menu(mutable.ListBuffer(Entry("New", 'new), Entry("Load", 'load, enabled = storage.hasSave)), "=>".colorize(Color("#1b58d3")))
 
+  override def enter(): Unit = {}
+
   override def frame(evt: KeyboardEvent): Option[GameMode] = {
     if (evt.`type` != "keydown") return None
 

@@ -9,11 +9,15 @@ case class Landmass(sizeClass: IslandClass, tiles: Set[Vector2[Int]], name: Opti
   def area = tiles.size
   lazy val center: Vector2[Int] = tiles.fold(Vector2.ZERO[Int]){ _ + _ } / tiles.size
   lazy val edge = tiles.filter { tile => tile.adjacent.exists { !tiles.contains(_) }}
+
+  def print = sizeClass.withModifiers(adjective, name)
 }
 
 object Landmass extends Persist with Random {
   val ISLAND_THRESHOLD = 0.02
   val ISLE_THRESHOLD = 0.007
+
+  def which(v: Vector2[Int]) = all.find { _.tiles.contains(v) }
 
   lazy val (continents, islands, isles, atolls) = {
     val isl = Islands.all.toSet
