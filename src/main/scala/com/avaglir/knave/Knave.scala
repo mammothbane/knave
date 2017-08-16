@@ -4,6 +4,9 @@ import com.avaglir.knave.entities.Player
 import com.avaglir.knave.gamemode.{GameMode, OverworldMode, Start}
 import com.avaglir.knave.map.{Chunk, Nation, NationClass, Overworld}
 import com.avaglir.knave.util._
+import com.avaglir.util.structure.VecExts._
+import com.avaglir.util.numeric.Imports._
+import com.avaglir.util.color._
 import org.scalajs.dom._
 import org.scalajs.dom.ext.KeyCode
 import org.scalajs.dom.html.Canvas

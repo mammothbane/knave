@@ -1,6 +1,8 @@
 package com.avaglir.knave.map
 
 import com.avaglir.knave.util._
+import com.avaglir.util.structure.VecExts._
+import com.avaglir.util.structure.Vector2
 
 import scala.scalajs.js
 import scala.scalajs.js.annotation.{JSGlobalScope, JSName}

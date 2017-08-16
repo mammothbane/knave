@@ -6,6 +6,11 @@ import com.avaglir.knave.items.Weapon.WeaponClass
 import com.avaglir.knave.items.{Armor, GearSlot, Weapon}
 import com.avaglir.knave.properties._
 import com.avaglir.knave.util._
+import com.avaglir.util.color.{Color, HSL}
+import com.avaglir.util.structure.VecExts._
+import com.avaglir.util.structure.Vector2
+import com.avaglir.util.numeric.Imports._
+import com.avaglir.util.numeric.UnitClamped
 
 object Player extends Entity {
   val repr = RenderTile('@', HSL(Color.YELLOW.hue, 0.67f, 0.7f))
@@ -32,7 +37,7 @@ object Player extends Entity {
     override val slot: GearSlot = GearSlot.Torso
     override val baseArmor: Int = 1
     override val baseEvasion: Int = 5
-    override val efficacyFunction: (Int) => UnitClampedFloat = items.quadraticEfficacy(0, 30)
+    override val efficacyFunction: (Int) => UnitClamped[Float] = items.quadraticEfficacy(0, 30)
     override val basePrice: Int = 40
     override val repr: RenderTile = RenderTile('r')
   }))

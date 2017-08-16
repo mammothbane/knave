@@ -16,12 +16,15 @@ lazy val main = (project in file(".")).
     ),
     libraryDependencies ++= Seq(
       "org.scala-js" %%% "scalajs-dom" % "0.9.1",
-      "com.github.benhutchison" %%% "prickle" % "1.1.13"
+      "com.github.benhutchison" %%% "prickle" % "1.1.13",
+      "com.avaglir" %%% "util" % "0.1-SNAPSHOT"
     ),
     resolvers ++= Seq(
-      "Sonatype OSS Snapshots" at "https://oss.sonatype.org/content/repositories/snapshots"
+      "Sonatype OSS Snapshots" at "https://oss.sonatype.org/content/repositories/snapshots",
+      Resolver.mavenLocal
     )
-  ).dependsOn(macros)
+  )
+  .dependsOn(macros)
 
 lazy val macros = (project in file("macros")).
   settings(commonSettings: _*).
@@ -30,12 +33,12 @@ lazy val macros = (project in file("macros")).
       "-language:experimental.macros"
     ),
     libraryDependencies ++= Seq(
-      "org.scala-lang" % "scala-reflect" % "2.12.1"
+      "org.scala-lang" % "scala-reflect" % scalaVersion.value
     )
   )
 
 lazy val commonSettings = Seq(
-  scalaVersion := "2.12.1",
+  scalaVersion := "2.12.3",
   addCompilerPlugin("org.scalamacros" % "paradise" % "2.1.0" cross CrossVersion.full),
   resolvers += Resolver.sonatypeRepo("releases")
 )
