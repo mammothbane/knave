@@ -169,7 +169,7 @@ where
             return;
         }
 
-        let (start_line, _end_line) = self.line_range(Some(area.height as usize));
+        let (start_line, end_line) = self.line_range(Some(area.height as usize));
         let (width, height) = self.extents(Some(area.height as usize));
 
         let max_text_width = width - (self.pointer_len() + 1);
@@ -201,20 +201,23 @@ where
             self.pointer.1.clone(),
         );
 
-        self.entries.iter().enumerate().for_each(|(i, entry)| {
-            let y = text_start_y + (i as u16);
-            entry.text().iter().fold(0, |acc, StyledString(s, style)| {
-                buf.set_stringn(
-                    text_start_x + (acc as u16),
-                    y,
-                    &s,
-                    max_text_width as usize - acc,
-                    style.clone(),
-                );
+        self.entries[start_line..end_line]
+            .iter()
+            .enumerate()
+            .for_each(|(i, entry)| {
+                let y = text_start_y + (i as u16);
+                entry.text().iter().fold(0, |acc, StyledString(s, style)| {
+                    buf.set_stringn(
+                        text_start_x + (acc as u16),
+                        y,
+                        &s,
+                        max_text_width as usize - acc,
+                        style.clone(),
+                    );
 
-                acc + s.len()
+                    acc + s.len()
+                });
             });
-        });
     }
 }
 
