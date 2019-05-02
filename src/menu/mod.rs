@@ -17,6 +17,7 @@ mod menu_entry;
 #[derive(Debug, Clone, PartialEq)]
 pub struct StyledString(String, Style);
 
+#[allow(dead_code)]
 impl StyledString {
     pub fn new<S>(s: S, style: Style) -> Self
     where
@@ -55,6 +56,8 @@ where
     index:   usize,
 }
 
+impl<T> Eq for Menu<T> where T: Hash + PartialEq + Clone + Eq {}
+
 impl<T> Menu<T>
 where
     T: Hash + PartialEq + Clone,
@@ -71,17 +74,20 @@ where
         }
     }
 
+    /// Move the pointer up one position (visually).
     #[inline]
     pub fn up(&mut self) {
         self.index = ((((self.index + self.entries.len()) as isize) - 1)
             % (self.entries.len() as isize)) as usize;
     }
 
+    /// Move the pointer down one position (visually).
     #[inline]
     pub fn down(&mut self) {
         self.index = ((self.index + 1) % self.entries.len()) as usize;
     }
 
+    /// Select the entry the pointer currently rests on.
     #[inline]
     pub fn select(&self) -> &T {
         self.entries[self.index].identifier()
@@ -103,7 +109,7 @@ where
                 // the high end of a long list, such that the max-side is space limited but the
                 // min-side is not.
                 //
-                // there is almost definitely a clever way to do this, but this is just
+                // there is almost definitely a more clever way to do this, but this is just
                 // O(1) addition, so i don't care.
 
                 let min_line = (idx - mh / 2).max(0);
