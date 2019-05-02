@@ -131,34 +131,31 @@ impl GameMode for StartMenu {
             },
         };
 
-        match event {
-            Event::Key(Key::Char('q')) => {
-                std::process::exit(0);
+        match DefaultBindings::translate(event) {
+            Action::Up => {
+                self.menu.borrow_mut().up();
             },
-            e => match DefaultBindings::translate(e) {
-                Action::Up => {
-                    self.menu.borrow_mut().up();
-                    ModeTransition::None
-                },
-                Action::Down => {
-                    self.menu.borrow_mut().down();
-                    ModeTransition::None
-                },
-                Action::Interact => {
-                    match self.menu.borrow().select() {
-                        StartMenuOption::New => {
-                            return ModeTransition::NewMode(Box::new(GameMain::new()));
-                        },
-                        StartMenuOption::Load => {},
-                        StartMenuOption::Quit => {
-                            return ModeTransition::Quit;
-                        },
-                    };
-                    ModeTransition::None
-                },
-                _ => ModeTransition::None,
+            Action::Down => {
+                self.menu.borrow_mut().down();
             },
+            Action::Interact => {
+                match self.menu.borrow().select() {
+                    StartMenuOption::New => {
+                        return ModeTransition::NewMode(Box::new(GameMain::new()));
+                    },
+                    StartMenuOption::Load => {},
+                    StartMenuOption::Quit => {
+                        return ModeTransition::Quit;
+                    },
+                };
+            },
+            Action::Quit => {
+                return ModeTransition::Quit;
+            },
+            _ => {},
         }
+
+        ModeTransition::None
     }
 }
 

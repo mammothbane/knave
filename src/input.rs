@@ -10,6 +10,8 @@ pub enum Action {
     Skip,
     Cancel,
 
+    Quit,
+
     NotMapped,
 }
 
@@ -41,6 +43,7 @@ impl InputBindings for DefaultBindings {
             Key(Char('e')) | Key(Char('\n')) => Action::Interact,
             Key(Char(' ')) => Action::Skip,
             Key(Ctrl('[')) => Action::Cancel,
+            Key(Ctrl('c')) | Key(Ctrl('d')) => Action::Quit,
             _ => Action::NotMapped,
         }
     }

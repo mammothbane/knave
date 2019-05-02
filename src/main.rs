@@ -28,6 +28,7 @@ mod logging;
 mod menu;
 mod raw_buffer;
 mod start_menu;
+pub mod systems;
 
 pub struct RenderState {
     pub terminal: Terminal,

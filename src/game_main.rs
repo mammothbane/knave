@@ -1,6 +1,5 @@
 use crossbeam_channel::{
     self,
-    Receiver,
     Sender,
 };
 use specs::prelude::*;
@@ -24,7 +23,6 @@ use crate::{
 pub struct GameMain<'a, 'b> {
     world:      World,
     dispatcher: Dispatcher<'a, 'b>,
-    event_tx:   Sender<Action>,
 }
 
 impl<'a, 'b> GameMain<'a, 'b> {
@@ -32,15 +30,11 @@ impl<'a, 'b> GameMain<'a, 'b> {
         let mut world = World::new();
         let dispatcher = DispatcherBuilder::new().build();
 
-        let (tx, rx) = crossbeam_channel::bounded::<Action>(64);
-
-        world.add_resource(rx);
         world.add_resource(Buffer::empty(Rect::new(0, 0, 0, 0)));
 
         GameMain {
             world,
             dispatcher,
-            event_tx: tx,
         }
     }
 }
@@ -56,6 +50,7 @@ impl<'a, 'b> GameMode for GameMain<'a, 'b> {
     fn exit(&mut self) {}
 
     fn render(&mut self, rs: &mut RenderState) -> Result<()> {
+        use crate::systems::RenderSystem;
         use std::borrow::Borrow;
 
         rs.terminal.draw(move |mut f| {
@@ -66,7 +61,7 @@ impl<'a, 'b> GameMode for GameMain<'a, 'b> {
 
             self.world.res.fetch_mut::<Buffer>().resize(f.size());
 
-            // TODO: run render system
+            RenderSystem {}.run_now(&self.world.res);
 
             let buf = self.world.res.fetch::<Buffer>();
             let buf = buf.borrow();
@@ -78,20 +73,24 @@ impl<'a, 'b> GameMode for GameMain<'a, 'b> {
     }
 
     fn step(&mut self, evt: termion::event::Event) -> ModeTransition {
-        use crossbeam_channel::TrySendError;
-        use log::warn;
+        use std::borrow::BorrowMut;
 
-        let action = DefaultBindings::translate(evt);
+        {
+            let mut action = DefaultBindings::translate(evt);
 
-        if action != Action::NotMapped {
-            match self.event_tx.try_send(action) {
-                Err(TrySendError::Disconnected(_)) => {},
-                Err(TrySendError::Full(action)) => {
-                    warn!("dropping action {:?} because channel was full", action);
-                },
+            match action {
+                Action::NotMapped => return ModeTransition::None,
+                Action::Quit => return ModeTransition::Quit,
                 _ => {},
             }
+
+            let mut cur_action = self.world.write_resource::<Action>();
+            let cur_action = cur_action.borrow_mut();
+
+            std::mem::swap(&mut action, cur_action);
         }
+
+        self.dispatcher.dispatch(&self.world.res);
 
         ModeTransition::None
     }
