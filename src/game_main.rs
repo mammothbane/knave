@@ -31,6 +31,7 @@ impl<'a, 'b> GameMain<'a, 'b> {
         let dispatcher = DispatcherBuilder::new().build();
 
         world.add_resource(Buffer::empty(Rect::new(0, 0, 0, 0)));
+        world.add_resource(Action::NotMapped);
 
         GameMain {
             world,
@@ -51,7 +52,10 @@ impl<'a, 'b> GameMode for GameMain<'a, 'b> {
 
     fn render(&mut self, rs: &mut RenderState) -> Result<()> {
         use crate::systems::RenderSystem;
-        use std::borrow::Borrow;
+        use std::borrow::{
+            Borrow,
+            BorrowMut,
+        };
 
         rs.terminal.draw(move |mut f| {
             use crate::raw_buffer::RawBuffer;
@@ -59,7 +63,12 @@ impl<'a, 'b> GameMode for GameMain<'a, 'b> {
 
             let size = f.size();
 
-            self.world.res.fetch_mut::<Buffer>().resize(f.size());
+            {
+                let mut buf_mut = self.world.res.fetch_mut::<Buffer>();
+                let buf_mut = buf_mut.borrow_mut();
+                buf_mut.resize(f.size());
+                buf_mut.reset();
+            }
 
             RenderSystem {}.run_now(&self.world.res);
 
