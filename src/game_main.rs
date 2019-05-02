@@ -51,6 +51,10 @@ impl<'a, 'b> GameMode for GameMain<'a, 'b> {
         "Main".to_owned()
     }
 
+    fn enter(&mut self) {}
+
+    fn exit(&mut self) {}
+
     fn render(&mut self, rs: &mut RenderState) -> Result<()> {
         use std::borrow::Borrow;
 

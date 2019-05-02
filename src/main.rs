@@ -33,9 +33,17 @@ pub struct RenderState {
     pub terminal: Terminal,
 }
 
+const FPS_CAP: usize = 90;
+lazy_static! {
+    static ref FRAME_DURATION: Duration = Duration::from_secs_f64(1. / FPS_CAP as f64);
+}
+
 fn main() -> Result<()> {
-    use self::start_menu::StartMenu;
-    use log::info;
+    use crate::start_menu::StartMenu;
+    use log::{
+        info,
+        trace,
+    };
 
     logging::init().expect("initializing logging");
 
@@ -58,21 +66,19 @@ fn main() -> Result<()> {
 
     let mut last_render_time;
 
-    const FPS_CAP: usize = 90;
-    lazy_static! {
-        static ref SEC_PER_FRAME: Duration = Duration::from_secs_f64(1. / FPS_CAP as f64);
-    }
-
     info!("entering main loop");
     loop {
+        last_render_time = Instant::now();
+
         rs.terminal.autoresize()?;
         current_mode.render(&mut rs)?;
-        last_render_time = Instant::now();
 
         loop {
             match events.next() {
                 Some(evt) => {
                     for e in evt.into_iter() {
+                        trace!("handling event: {:?}", e);
+
                         match current_mode.step(e) {
                             ModeTransition::NewMode(mode) => current_mode = mode,
                             ModeTransition::None => {},
@@ -88,17 +94,16 @@ fn main() -> Result<()> {
                         };
                     }
                 },
-                None => {
-                    break;
-                },
+                None => break,
             };
         }
 
-        let diff = Instant::now() - last_render_time;
-        if diff <= Duration::new(0, 0) {
+        let frame_elapsed_time = Instant::now() - last_render_time;
+
+        if frame_elapsed_time >= *FRAME_DURATION {
             continue;
         }
 
-        std::thread::sleep(diff);
+        std::thread::sleep(*FRAME_DURATION - frame_elapsed_time);
     }
 }
