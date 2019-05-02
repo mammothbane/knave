@@ -51,7 +51,12 @@ enum StartMenuOption {
 }
 
 impl GameMode for StartMenu {
-    fn render(&self, rs: &mut RenderState) -> Result<()> {
+    #[inline]
+    fn name(&self) -> String {
+        "Start Menu".to_owned()
+    }
+
+    fn render(&mut self, rs: &mut RenderState) -> Result<()> {
         use tui::{
             layout::{
                 Constraint,
@@ -117,10 +122,13 @@ impl GameMode for StartMenu {
             Key,
         };
 
-        use crate::input::{
-            Action,
-            DefaultBindings,
-            InputBindings,
+        use crate::{
+            game_main::GameMain,
+            input::{
+                Action,
+                DefaultBindings,
+                InputBindings,
+            },
         };
 
         match event {
@@ -138,7 +146,9 @@ impl GameMode for StartMenu {
                 },
                 Action::Interact => {
                     match self.menu.borrow().select() {
-                        StartMenuOption::New => {},
+                        StartMenuOption::New => {
+                            return ModeTransition::NewMode(Box::new(GameMain::new()));
+                        },
                         StartMenuOption::Load => {},
                         StartMenuOption::Quit => {
                             return ModeTransition::Quit;

@@ -21,10 +21,12 @@ pub(crate) use game_mode::*;
 pub type Terminal = tui::Terminal<TermionBackend<termion::raw::RawTerminal<io::Stdout>>>;
 
 mod error;
+mod game_main;
 mod game_mode;
 mod input;
-mod log;
+mod logging;
 mod menu;
+mod raw_buffer;
 mod start_menu;
 
 pub struct RenderState {
@@ -33,8 +35,9 @@ pub struct RenderState {
 
 fn main() -> Result<()> {
     use self::start_menu::StartMenu;
+    use log::info;
 
-    log::init().expect("initializing logging");
+    logging::init().expect("initializing logging");
 
     let stdout = io::stdout().into_raw_mode()?;
     let backend = TermionBackend::new(stdout);
@@ -43,6 +46,8 @@ fn main() -> Result<()> {
     terminal.clear()?;
     terminal.hide_cursor()?;
     terminal.autoresize()?;
+
+    info!("terminal initialized");
 
     let mut rs = RenderState {
         terminal,
@@ -58,6 +63,7 @@ fn main() -> Result<()> {
         static ref SEC_PER_FRAME: Duration = Duration::from_secs_f64(1. / FPS_CAP as f64);
     }
 
+    info!("entering main loop");
     loop {
         rs.terminal.autoresize()?;
         current_mode.render(&mut rs)?;
@@ -71,6 +77,8 @@ fn main() -> Result<()> {
                             ModeTransition::NewMode(mode) => current_mode = mode,
                             ModeTransition::None => {},
                             ModeTransition::Quit => {
+                                info!("quitting (invoked by {})", current_mode.name());
+
                                 rs.terminal.clear()?;
                                 rs.terminal.show_cursor()?;
                                 rs.terminal.flush()?;

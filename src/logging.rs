@@ -9,6 +9,7 @@ pub fn init() -> Result<(), fern::InitError> {
                 message,
             ))
         })
+        .level_for("tui", log::LevelFilter::Info)
         .level(log::LevelFilter::Debug)
         .chain(fern::log_file("knave.log")?)
         .apply()?;
