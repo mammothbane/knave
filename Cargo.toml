@@ -1,5 +1,5 @@
 [package]
-name = "knave-rs"
+name = "knave"
 version = "0.1.0"
 authors = ["Nathan Perry <avaglir@gmail.com>"]
 edition = "2018"

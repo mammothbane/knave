@@ -12,6 +12,7 @@ use crate::{
         MenuEntry,
     },
     GameMode,
+    ModeTransition,
     RenderState,
     Result,
 };
@@ -110,7 +111,7 @@ impl GameMode for StartMenu {
         Ok(())
     }
 
-    fn step(&mut self, event: termion::event::Event) -> Option<Box<dyn GameMode>> {
+    fn step(&mut self, event: termion::event::Event) -> ModeTransition {
         use termion::event::{
             Event,
             Key,
@@ -129,23 +130,23 @@ impl GameMode for StartMenu {
             e => match DefaultBindings::translate(e) {
                 Action::Up => {
                     self.menu.borrow_mut().up();
-                    None
+                    ModeTransition::None
                 },
                 Action::Down => {
                     self.menu.borrow_mut().down();
-                    None
+                    ModeTransition::None
                 },
                 Action::Interact => {
                     match self.menu.borrow().select() {
                         StartMenuOption::New => {},
                         StartMenuOption::Load => {},
                         StartMenuOption::Quit => {
-                            std::process::exit(0);
+                            return ModeTransition::Quit;
                         },
                     };
-                    None
+                    ModeTransition::None
                 },
-                _ => None,
+                _ => ModeTransition::None,
             },
         }
     }

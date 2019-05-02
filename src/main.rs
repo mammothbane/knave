@@ -1,11 +1,19 @@
-use specs::prelude::*;
+#![feature(duration_float)]
+
+use std::{
+    io,
+    time::{
+        Duration,
+        Instant,
+    },
+};
+
+use lazy_static::lazy_static;
 use termion::{
     input::TermRead,
     raw::IntoRawMode,
 };
 use tui::backend::TermionBackend;
-
-use std::io;
 
 pub(crate) use error::*;
 pub(crate) use game_mode::*;
@@ -40,24 +48,49 @@ fn main() -> Result<()> {
         terminal,
     };
 
-    let mut events = io::stdin().events();
+    let mut events = termion::async_stdin().events();
     let mut current_mode: Box<dyn GameMode> = Box::new(StartMenu::default());
+
+    let mut last_render_time;
+
+    const FPS_CAP: usize = 90;
+    lazy_static! {
+        static ref SEC_PER_FRAME: Duration = Duration::from_secs_f64(1. / FPS_CAP as f64);
+    }
+
     loop {
         rs.terminal.autoresize()?;
         current_mode.render(&mut rs)?;
+        last_render_time = Instant::now();
 
-        match events.next() {
-            Some(evt) => {
-                for e in evt.into_iter() {
-                    match current_mode.step(e) {
-                        Some(mode) => {
-                            current_mode = mode;
-                        },
-                        _ => {},
-                    };
-                }
-            },
-            None => {},
-        };
+        loop {
+            match events.next() {
+                Some(evt) => {
+                    for e in evt.into_iter() {
+                        match current_mode.step(e) {
+                            ModeTransition::NewMode(mode) => current_mode = mode,
+                            ModeTransition::None => {},
+                            ModeTransition::Quit => {
+                                rs.terminal.clear()?;
+                                rs.terminal.show_cursor()?;
+                                rs.terminal.flush()?;
+
+                                return Ok(());
+                            },
+                        };
+                    }
+                },
+                None => {
+                    break;
+                },
+            };
+        }
+
+        let diff = Instant::now() - last_render_time;
+        if diff <= Duration::new(0, 0) {
+            continue;
+        }
+
+        std::thread::sleep(diff);
     }
 }
