@@ -20,6 +20,7 @@ pub(crate) use game_mode::*;
 
 pub type Terminal = tui::Terminal<TermionBackend<termion::raw::RawTerminal<io::Stdout>>>;
 
+pub mod components;
 mod error;
 mod game_main;
 mod game_mode;
