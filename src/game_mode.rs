@@ -1,5 +1,3 @@
-use std::fmt::Debug;
-
 use crate::{
     RenderState,
     Result,

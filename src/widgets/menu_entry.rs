@@ -1,6 +1,6 @@
 use std::hash::Hash;
 
-use crate::menu::StyledString;
+use crate::widgets::StyledString;
 
 #[derive(Debug, PartialEq, Clone)]
 pub struct MenuEntry<T>

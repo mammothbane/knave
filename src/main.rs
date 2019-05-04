@@ -21,15 +21,16 @@ pub(crate) use game_mode::*;
 pub type Terminal = tui::Terminal<TermionBackend<termion::raw::RawTerminal<io::Stdout>>>;
 
 pub mod components;
+pub mod systems;
+pub mod widgets;
+
 mod error;
-mod game_main;
+mod game;
 mod game_mode;
 mod input;
 mod logging;
-mod menu;
-mod raw_buffer;
+mod procgen;
 mod start_menu;
-pub mod systems;
 
 pub struct RenderState {
     pub terminal: Terminal,

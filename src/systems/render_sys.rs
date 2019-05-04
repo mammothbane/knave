@@ -19,7 +19,7 @@ impl<'a> System<'a> for RenderSystem {
     type SystemData = (Write<'a, Buffer>);
 
     fn run(&mut self, data: Self::SystemData) {
-        let (mut buf) = data;
+        let mut buf = data;
 
         let chunks = Layout::default()
             .direction(Direction::Horizontal)
@@ -42,11 +42,11 @@ impl<'a> System<'a> for RenderSystem {
             .draw(main_pane, &mut buf);
 
         Block::default()
-            .borders(Borders::LEFT | Borders::RIGHT | Borders::BOTTOM)
+            .borders(Borders::ALL)
             .draw(messages_pane, &mut buf);
 
         Block::default()
-            .borders(Borders::TOP | Borders::RIGHT | Borders::BOTTOM)
+            .borders(Borders::ALL)
             .draw(right_pane, &mut buf);
     }
 }

@@ -7,7 +7,7 @@ use tui::{
 };
 
 use crate::{
-    menu::{
+    widgets::{
         Menu,
         MenuEntry,
     },
@@ -117,13 +117,8 @@ impl GameMode for StartMenu {
     }
 
     fn step(&mut self, event: termion::event::Event) -> ModeTransition {
-        use termion::event::{
-            Event,
-            Key,
-        };
-
         use crate::{
-            game_main::GameMain,
+            game::GameMain,
             input::{
                 Action,
                 DefaultBindings,
@@ -161,7 +156,7 @@ impl GameMode for StartMenu {
 
 impl Default for StartMenu {
     fn default() -> Self {
-        use crate::menu::StyledString;
+        use crate::widgets::StyledString;
         use tui::style::{
             Color,
             Style,

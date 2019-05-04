@@ -1,7 +1,3 @@
-use crossbeam_channel::{
-    self,
-    Sender,
-};
 use specs::prelude::*;
 use tui::{
     buffer::Buffer,
@@ -58,7 +54,7 @@ impl<'a, 'b> GameMode for GameMain<'a, 'b> {
         };
 
         rs.terminal.draw(move |mut f| {
-            use crate::raw_buffer::RawBuffer;
+            use crate::widgets::RawBuffer;
             use tui::widgets::Widget;
 
             let size = f.size();
