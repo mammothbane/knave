@@ -19,6 +19,8 @@ trait Entity extends GameObject {
   final def register(p: Property[_]): Unit = props(p.name) = p
 
   def message[T, U](m: Message[T]): Map[String, Any] =
-    props.mapValues(prop => prop.message(m)).filter { case (_, elem) => elem != () }.toMap
-
+    props.view
+      .mapValues(_.message(m))
+      .filter { case (_, elem) => elem != () }
+      .toMap
 }
