@@ -8,7 +8,8 @@ class cache(cacheSize: Int, expiration: Option[Int]) extends StaticAnnotation {
 }
 
 private object CacheImpl {
-  import scala.reflect.macros._
+  import scala.reflect.macros.whitebox
+
   def impl(c: whitebox.Context)(annottees: c.Expr[Any]*): c.Expr[Any] = {
     import c.universe._
 

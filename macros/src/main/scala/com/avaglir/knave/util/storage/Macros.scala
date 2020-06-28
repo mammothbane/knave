@@ -14,6 +14,6 @@ object Macros {
     c.Expr[util.Try[T]](q"""prickle.Unpickle[${weakTypeOf[T]}].fromString(org.scalajs.dom.window.localStorage.getItem($k.name))""")
   }
 
-  private[storage] def persist[T](k: Symbol, value: T) = macro persist_impl[T]
+  private[storage] def persist[T](k: Symbol, value: T): Unit = macro persist_impl[T]
   private[storage] def load[T](k: Symbol): Try[T] = macro load_impl[T]
 }

@@ -29,14 +29,15 @@ lazy val macros = (project in file("macros")).
     settings(
         scalacOptions ++= Seq(
             "-language:experimental.macros",
-            "-Ymacro-annotations"
+            "-Ymacro-annotations",
         ),
-libraryDependencies ++= Seq(
-            "org.scala-lang" % "scala-reflect" % "2.12.1"
+        libraryDependencies ++= Seq(
+            "org.scala-lang" % "scala-reflect" % (ThisBuild / scalaVersion).value
         )
     )
 
+
 lazy val commonSettings = Seq(
     scalaVersion := "2.13.3",
-    resolvers += Resolver.sonatypeRepo("releases")
+    resolvers += Resolver.sonatypeRepo("releases"),
 )
