@@ -17,9 +17,9 @@ class Fighter(
 
   override def message[T](message: Message[T]): Any =
     message match {
-      case Message('stats, _)            => Stats((curHealth, maxHealth), accuracy)
-      case Message('combat, Some(enemy)) =>
-      case _                             =>
+      case Message(Symbol("stats"), _)            => Stats((curHealth, maxHealth), accuracy)
+      case Message(Symbol("combat"), Some(enemy)) =>
+      case _                                      =>
     }
 
 }
@@ -27,6 +27,6 @@ class Fighter(
 object Fighter extends Random {
   case class Stats(health: (Int, Int), accuracy: UnitClampedFloat)
 
-  def stats                  = Message('stats, None)
-  def combat(other: Fighter) = Message('combat, Some(other))
+  def stats                  = Message(Symbol("stats"), None)
+  def combat(other: Fighter) = Message(Symbol("combat"), Some(other))
 }

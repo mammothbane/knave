@@ -66,15 +66,14 @@ object Knave extends Random {
 
     redraw()
 
-    implicit def double2Int(d: Double): Int = d.toInt
-
     var dirty = false
 
     canvas.addEventListener("mouseleave", (_: MouseEvent) => redraw())
     canvas.addEventListener(
       "mousemove",
       (evt: MouseEvent) => {
-        val coords = Vector2(evt.pageX - canvas.offsetLeft, evt.pageY - canvas.offsetTop).as[Int]
+        val coords =
+          Vector2(evt.pageX - canvas.offsetLeft, evt.pageY - canvas.offsetTop).map(_.toInt)
 
         Nation.which(coords) match {
           case Some(nation) =>
@@ -115,7 +114,11 @@ object Knave extends Random {
     canvas.addEventListener(
       "click",
       (evt: MouseEvent) => {
-        val coords = Vector2(evt.pageX - canvas.offsetLeft, evt.pageY - canvas.offsetTop).as[Int]
+        val coords =
+          Vector2(
+            evt.pageX - canvas.offsetLeft,
+            evt.pageY - canvas.offsetTop,
+          ).map(_.toInt)
 
         if (currentMode == OverworldMode) {
           Player.loc = coords * Chunk.DIMENS * 8

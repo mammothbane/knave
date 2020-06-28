@@ -33,10 +33,10 @@ object Start extends GameMode {
     KNAVE.split('\n').length,
   ).half
 
-  val offset = (Knave.displays('main).center - kCenter) + Vector2.UP[Int] * 1
+  val offset = (Knave.displays(Symbol("main")).center - kCenter) + Vector2.UP[Int] * 1
 
   val menu = Menu(
-    mutable.ListBuffer(Entry("New", 'new), Entry("Load", 'load, enabled = false)),
+    mutable.ListBuffer(Entry("New", Symbol("new")), Entry("Load", Symbol("load"), enabled = false)),
     "=>".colorize(c"#1b58d3"),
   )
 
@@ -46,14 +46,14 @@ object Start extends GameMode {
     if (evt.`type` != "keydown") return None
 
     menu.input(evt) match {
-      case Some('new)  => Some(OverworldMode)
-      case Some('load) => None
-      case _           => None
+      case Some(Symbol("new"))  => Some(OverworldMode)
+      case Some(Symbol("load")) => None
+      case _                    => None
     }
   }
 
   override def render(): Unit = {
-    val main = Knave.displays('main)
+    val main = Knave.displays(Symbol("main"))
     main.drawText(offset, KNAVE, fg = mainColor, trim = false)
 
     val menuOffset = main.center + Vector2(-2, kCenter.y + 1)

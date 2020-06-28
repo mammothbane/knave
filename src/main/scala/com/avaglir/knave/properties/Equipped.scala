@@ -14,7 +14,7 @@ class Equipped(parent: Entity, slots: Set[_ <: GearSlot]) extends Property[Entit
 
   override def message[T](message: Message[T]): Any =
     message match {
-      case Message('equip, Some(Equip(slot, eq))) =>
+      case Message(Symbol("equip"), Some(Equip(slot, eq))) =>
         equipState.get(slot) match {
           case Some(x) =>
             equipState(slot) = eq
@@ -22,14 +22,14 @@ class Equipped(parent: Entity, slots: Set[_ <: GearSlot]) extends Property[Entit
           case None => equipState(slot) = eq
         }
 
-      case Message('equipped, _) => equipState.toMap
-      case _                     =>
+      case Message(Symbol("equipped"), _) => equipState.toMap
+      case _                              =>
     }
 
 }
 
 object Equipped {
   case class Equip(gearSlot: GearSlot, equippable: Equippable)
-  def equip(eq: Equippable) = Message('equip, Some(Equip(eq.slot, eq)))
-  def equipped              = Message('equipped, None)
+  def equip(eq: Equippable) = Message(Symbol("equip"), Some(Equip(eq.slot, eq)))
+  def equipped              = Message(Symbol("equipped"), None)
 }

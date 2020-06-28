@@ -10,8 +10,8 @@ import com.avaglir.knave.{input, Knave}
 import org.scalajs.dom.KeyboardEvent
 
 object OverworldMode extends GameMode with Random {
-  val main                      = Knave.displays('main)
-  val status                    = Knave.displays('status)
+  val main                      = Knave.displays(Symbol("main"))
+  val status                    = Knave.displays(Symbol("status"))
   var obs: Option[Vector2[Int]] = None
 
   override def enter(): Unit = {
@@ -58,7 +58,7 @@ object OverworldMode extends GameMode with Random {
 
     val currentNation = Nation.which(Player.loc / Chunk.DIMENS / 8)
     status.drawText(
-      Vector2(1, Knave.displays('status).height - 3),
+      Vector2(1, Knave.displays(Symbol("status")).height - 3),
       currentNation match {
         case Some(nation) => nation.print
         case None if !inWater =>
@@ -70,7 +70,7 @@ object OverworldMode extends GameMode with Random {
     )
 
     status.drawText(
-      Vector2(1, Knave.displays('status).height - 2),
+      Vector2(1, Knave.displays(Symbol("status")).height - 2),
       if (inWater) "At sea"
       else {
         Landmass.which(Player.loc / Chunk.DIMENS / 8) match {

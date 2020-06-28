@@ -11,6 +11,6 @@ class Skilled(parent: Entity) extends Property[Entity](parent) {
 }
 
 object Skilled {
-  def skillValue(s: Skill) = Message('skill, Some(s))
+  def skillValue(s: Skill) = Message(Symbol("skill"), Some(s))
   def name                 = "skilled"
 }
