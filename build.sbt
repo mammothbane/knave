@@ -32,7 +32,7 @@ lazy val macros = (project in file("macros")).
             "-Ymacro-annotations",
         ),
         libraryDependencies ++= Seq(
-            "org.scala-lang" % "scala-reflect" % (ThisBuild / scalaVersion).value
+            "org.scala-lang" % "scala-reflect" % "2.13.3"
         )
     )
 
