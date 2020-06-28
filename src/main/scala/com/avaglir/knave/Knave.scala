@@ -11,7 +11,7 @@ import rot.RNGState
 
 import scala.scalajs.js.JSON
 
-object Knave extends JSApp with Persist with Random {
+object Knave extends Persist with Random {
   val displays = Map(
     'main -> new Display(80, 24),
     'status -> new Display(20, 24),
@@ -20,7 +20,7 @@ object Knave extends JSApp with Persist with Random {
 
   private var currentMode: GameMode = Start
 
-  def main(): Unit = {
+  def main(args: Array[String]): Unit = {
     displays.foreach {
       case (sym: Symbol, disp: Display) => document.getElementById(s"knave-${sym.name}").appendChild(disp.container)
     }
