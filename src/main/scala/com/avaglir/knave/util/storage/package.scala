@@ -54,8 +54,6 @@ package object storage {
 
   private val HAS_SAVE = 'save_present
 
-  import Pickling._
-
   private def persistJs(k: Symbol, value: js.Any) = persist(k, JSON.stringify(value))
   private def loadJs[T](k: Symbol): T = JSON.parse(load[String](k).get).asInstanceOf[T]
 

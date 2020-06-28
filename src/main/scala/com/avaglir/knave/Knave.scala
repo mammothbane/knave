@@ -9,7 +9,7 @@ import org.scalajs.dom.ext.KeyCode
 import org.scalajs.dom.html.Canvas
 import rot.RNGState
 
-import scala.scalajs.js.{JSApp, JSON}
+import scala.scalajs.js.JSON
 
 object Knave extends JSApp with Persist with Random {
   val displays = Map(
