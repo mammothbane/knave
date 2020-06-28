@@ -3,32 +3,33 @@ package com.avaglir.knave.util
 import scala.reflect.ClassTag
 
 class RingBuffer[T: ClassTag](capacity: Int) {
-    private val buf = new Array[T](capacity)
-    private var head = 0
-    private var tail = 0
+  private val buf  = new Array[T](capacity)
+  private var head = 0
+  private var tail = 0
 
-    def isEmpty = head == tail
-    def nonEmpty = head != tail
-    def isFull = (tail - head + capacity) % capacity == 1
+  def isEmpty  = head == tail
+  def nonEmpty = head != tail
+  def isFull   = (tail - head + capacity) % capacity == 1
 
-    def size: Int = length
+  def size: Int = length
 
-    def put(t: T): Boolean = {
-        if (isFull) return false
-        buf(head) = t
-        head += 1
-        true
-    }
+  def put(t: T): Boolean = {
+    if (isFull) return false
+    buf(head) = t
+    head += 1
+    true
+  }
 
-    def get: Option[T] = {
-        if (isEmpty) return None
+  def get: Option[T] = {
+    if (isEmpty) return None
 
-        val ret = buf(tail)
-        tail = (tail + 1) % capacity
-        Some(ret)
-    }
+    val ret = buf(tail)
+    tail = (tail + 1) % capacity
+    Some(ret)
+  }
 
-    def length: Int =
-        if (head >= tail) (head - tail + capacity) % capacity
-        else size - (tail - head)
+  def length: Int =
+    if (head >= tail) (head - tail + capacity) % capacity
+    else size - (tail - head)
+
 }
