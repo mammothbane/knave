@@ -4,7 +4,7 @@ lazy val main = (project in file(".")).
     settings(commonSettings: _*).
     settings(
         name := "Knave",
-        mainClass in Compile := Some("com.avaglir.knave.Knave"),
+        scalaJSUseMainModuleInitializer := true,
         scalacOptions ++= Seq(
             "-language:implicitConversions",
             "-language:reflectiveCalls",
