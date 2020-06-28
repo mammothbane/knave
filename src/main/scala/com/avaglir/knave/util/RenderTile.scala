@@ -6,5 +6,5 @@ case class RenderTile(
     bg: Color = Color.BLACK,
     debug: Boolean = false,
   ) {
-  def draw(display: Display, location: Vector2[Int]) = display.draw(location, char, fg, bg)
+  def draw(display: Display, location: Vector2[Int]): Unit = display.draw(location, char, fg, bg)
 }

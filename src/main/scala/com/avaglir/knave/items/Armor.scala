@@ -32,34 +32,31 @@ object Armor {
     def name: String
     def stdProtection: Int
 
-    lazy val weaknesses = DamageType.all.filter {
+    lazy val weaknesses: Set[DamageType] = DamageType.all.filter {
       _.strengths contains this
     }
-
   }
 
   object ArmorType {
 
     case object Cloth extends ArmorType {
-      val name          = "cloth";
+      val name = "cloth"
       val stdProtection = 1
     }
 
     case object Leather extends ArmorType {
-      val name          = "leather";
+      val name = "leather"
       val stdProtection = 4
     }
 
     case object Mail extends ArmorType {
-      val name          = "mail";
+      val name = "mail"
       val stdProtection = 7
     }
 
     case object Plate extends ArmorType {
-      val name          = "plate";
+      val name = "plate"
       val stdProtection = 11
     }
-
   }
-
 }

@@ -38,14 +38,14 @@ case class Menu(
     None
   }
 
-  def disable(key: Symbol) =
+  def disable(key: Symbol): Unit =
     entries.filter {
       _.result == key
     }.foreach {
       _.enabled = false
     }
 
-  def enable(key: Symbol) =
+  def enable(key: Symbol): Unit =
     entries.filter {
       _.result == key
     }.foreach {

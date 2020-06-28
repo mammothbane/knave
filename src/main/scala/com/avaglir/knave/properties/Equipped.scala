@@ -30,6 +30,6 @@ class Equipped(parent: Entity, slots: Set[_ <: GearSlot]) extends Property[Entit
 
 object Equipped {
   case class Equip(gearSlot: GearSlot, equippable: Equippable)
-  def equip(eq: Equippable) = Message(Symbol("equip"), Some(Equip(eq.slot, eq)))
-  def equipped              = Message(Symbol("equipped"), None)
+  def equip(eq: Equippable): Message[Equip] = Message(Symbol("equip"), Some(Equip(eq.slot, eq)))
+  def equipped: Message[Nothing]            = Message(Symbol("equipped"), None)
 }

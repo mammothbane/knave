@@ -32,7 +32,7 @@ case class Polygon(points: IntVec*) {
 
   private lazy val (const, mul) = precompute(0, points.length - 1, List.empty, List.empty)
 
-  def contains(point: IntVec) = {
+  def contains(point: IntVec): Boolean = {
     @tailrec
     def inside(
         i: Int,
@@ -75,5 +75,4 @@ object Polygon {
 
     Polygon(pbfs(pts.head, (elem: IntVec) => elem.adjacent.intersect(pts)): _*)
   }
-
 }

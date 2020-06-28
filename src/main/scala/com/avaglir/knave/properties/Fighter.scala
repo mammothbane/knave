@@ -11,7 +11,7 @@ class Fighter(
 
   import Fighter._
 
-  var curHealth = maxHealth
+  var curHealth: Int = maxHealth
 
   override def name: String = "fighter"
 
@@ -27,6 +27,6 @@ class Fighter(
 object Fighter extends Random {
   case class Stats(health: (Int, Int), accuracy: UnitClampedFloat)
 
-  def stats                  = Message(Symbol("stats"), None)
-  def combat(other: Fighter) = Message(Symbol("combat"), Some(other))
+  def stats: Message[Nothing]                  = Message(Symbol("stats"), None)
+  def combat(other: Fighter): Message[Fighter] = Message(Symbol("combat"), Some(other))
 }

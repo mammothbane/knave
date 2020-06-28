@@ -48,10 +48,12 @@ class Lru[K, V](
     val now = System.currentTimeMillis
     lastEvict = now
 
-    lru.filter { case (_, time) => now - time > expiration.get }.unzip._1.foreach { key =>
-      lru.remove(key)
-      vals.remove(key)
-    }
+    lru
+      .filter { case (_, time) => now - time > expiration.get }
+      .keys
+      .foreach { key =>
+        lru.remove(key)
+        vals.remove(key)
+      }
   }
-
 }

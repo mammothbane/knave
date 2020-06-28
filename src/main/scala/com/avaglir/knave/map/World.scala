@@ -4,8 +4,8 @@ import com.avaglir.knave.util._
 import simplex.SimplexNoise
 
 object World {
-  var large = SimplexNoise()
-  var small = SimplexNoise()
+  var large: SimplexNoise = SimplexNoise()
+  var small: SimplexNoise = SimplexNoise()
 
   private val smallScale = 13.1
   private val largeScale = 30
@@ -14,12 +14,12 @@ object World {
   private val largeWeight = 0.6
 
   private val totalScale = 500
-  private val ctrMag     = math.sqrt(totalScale / 2 * totalScale / 2 + totalScale / 2 * totalScale / 2)
+  private val ctrMag = math.sqrt(totalScale / 2 * totalScale / 2 + totalScale / 2 * totalScale / 2)
 
   private val smallFalloff = 0.96
   private val largeFalloff = 0.04
-  private val smallRadius  = smallFalloff * ctrMag
-  private val largeRadius  = largeFalloff * ctrMag
+  private val smallRadius = smallFalloff * ctrMag
+  private val largeRadius = largeFalloff * ctrMag
 
   val DIMENS = 4096
 
@@ -32,8 +32,8 @@ object World {
     ): Float = apply(x.toFloat / scale, y.toFloat / scale)
 
   def apply(x: Float, y: Float): Float = {
-    val dx      = (x - 0.5) * totalScale
-    val dy      = (y - 0.5) * totalScale
+    val dx = (x - 0.5) * totalScale
+    val dy = (y - 0.5) * totalScale
     val ctrDist = math.sqrt(dx * dx + dy * dy)
 
     val sm = if (ctrDist > smallRadius) 1 - (ctrDist - smallRadius) / (ctrMag - smallRadius) else 1

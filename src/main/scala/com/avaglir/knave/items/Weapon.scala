@@ -33,7 +33,7 @@ object Weapon {
 
   sealed trait WeaponClass {
     def name: String
-    def stdRange: Int  = 1
+    def stdRange: Int = 1
     def stdDamage: Int = 1
     def dType: DamageType
   }
@@ -42,42 +42,42 @@ object Weapon {
     val all = Set(Sword, Spear, Axe, Trident, Bow, Dagger, Club)
 
     case object Sword extends WeaponClass {
-      val name  = "sword";
-      val dType = DamageType.Slash
+      val name = "sword"
+      val dType: DamageType = DamageType.Slash
     }
 
     case object Spear extends WeaponClass {
-      val name              = "spear";
-      override val stdRange = 2;
-      val dType             = DamageType.Pierce
+      val name = "spear"
+      override val stdRange = 2
+      val dType: DamageType = DamageType.Pierce
     }
 
     case object Axe extends WeaponClass {
-      val name               = "axe";
-      override val stdDamage = 2;
-      val dType              = DamageType.Crush
+      val name = "axe"
+      override val stdDamage = 2
+      val dType: DamageType = DamageType.Crush
     }
 
     case object Trident extends WeaponClass {
-      val name              = "trident";
-      override val stdRange = 2;
-      val dType             = DamageType.Pierce
+      val name = "trident"
+      override val stdRange = 2
+      val dType: DamageType = DamageType.Pierce
     }
 
     case object Bow extends WeaponClass {
-      val name              = "bow";
-      override val stdRange = 10;
-      val dType             = DamageType.Pierce
+      val name = "bow"
+      override val stdRange = 10
+      val dType: DamageType = DamageType.Pierce
     }
 
     case object Dagger extends WeaponClass {
-      val name  = "dagger";
-      val dType = DamageType.Pierce
+      val name = "dagger"
+      val dType: DamageType = DamageType.Pierce
     }
 
     case object Club extends WeaponClass {
-      val name  = "club";
-      val dType = DamageType.Crush
+      val name = "club"
+      val dType: DamageType = DamageType.Crush
     }
 
   }
@@ -91,17 +91,17 @@ object Weapon {
     val all = Set(Pierce, Crush, Slash)
 
     case object Pierce extends DamageType {
-      val name      = "piercing"
+      val name = "piercing"
       val strengths = Set(ArmorType.Leather, ArmorType.Mail)
     }
 
     case object Crush extends DamageType {
-      val name      = "crush"
+      val name = "crush"
       val strengths = Set(ArmorType.Plate)
     }
 
     case object Slash extends DamageType {
-      val name      = "slash"
+      val name = "slash"
       val strengths = Set(ArmorType.Cloth, ArmorType.Leather)
     }
 

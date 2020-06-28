@@ -1,7 +1,7 @@
 package com.avaglir.knave
 
 import scala.annotation.tailrec
-import scala.collection.{mutable, GenTraversable}
+import scala.collection.mutable
 
 package object util {
   type IntVec = Vector2[Int]
@@ -202,11 +202,10 @@ package object util {
     def extents: Vector2[Int] = Vector2(a.length, a.head.length)
   }
 
-  implicit class genTExt[W](a: GenTraversable[W]) {
+  implicit class genTExt[W](a: Iterable[W]) {
 
-    def cartesianProduct[Z](other: GenTraversable[Z]): GenTraversable[(W, Z)] =
+    def cartesianProduct[Z](other: Iterable[Z]): Iterable[(W, Z)] =
       a.flatMap(elem => other.map(inner => (elem, inner)))
-
   }
 
   @inline def maxOf[T: Ordering](args: T*): T = args.max

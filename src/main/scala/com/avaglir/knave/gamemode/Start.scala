@@ -26,16 +26,16 @@ object Start extends GameMode {
 
   val mainColor = c"#15d34e"
 
-  val kCenter = Vector2(
+  val kCenter: Vector2[Int] = Vector2(
     KNAVE.split('\n').maxBy {
       _.length
     }.length,
     KNAVE.split('\n').length,
   ).half
 
-  val offset = (Knave.displays(Symbol("main")).center - kCenter) + Vector2.UP[Int] * 1
+  val offset: Vector2[Int] = (Knave.displays(Symbol("main")).center - kCenter) + Vector2.UP[Int] * 1
 
-  val menu = Menu(
+  val menu: Menu = Menu(
     mutable.ListBuffer(Entry("New", Symbol("new")), Entry("Load", Symbol("load"), enabled = false)),
     "=>".colorize(c"#1b58d3"),
   )

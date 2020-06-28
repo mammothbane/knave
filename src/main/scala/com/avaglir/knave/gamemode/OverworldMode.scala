@@ -10,8 +10,8 @@ import com.avaglir.knave.{input, Knave}
 import org.scalajs.dom.KeyboardEvent
 
 object OverworldMode extends GameMode with Random {
-  val main                      = Knave.displays(Symbol("main"))
-  val status                    = Knave.displays(Symbol("status"))
+  val main: Display = Knave.displays(Symbol("main"))
+  val status: Display = Knave.displays(Symbol("status"))
   var obs: Option[Vector2[Int]] = None
 
   override def enter(): Unit = {
@@ -48,11 +48,11 @@ object OverworldMode extends GameMode with Random {
   private def screenOrigin =
     (Player.loc - main.extents.half).clamp(Vector2.ZERO[Int], Vector2.UNIT[Int] * Chunk.TILE_DIMENS)
 
-  val waterBlue = HSL(Color.BLUE.hue, 0.3f, 0.07f)
+  val waterBlue: HSL = HSL(Color.BLUE.hue, 0.3f, 0.07f)
 
   override def render(): Unit = {
     val tiles = Overworld.render(Player.loc, main.extents)
-    val seen  = Overworld.seen(Player.loc, main.extents)
+    val seen = Overworld.seen(Player.loc, main.extents)
 
     val inWater = tiles(main.extents.half) == Tile.WATER
 
@@ -87,7 +87,7 @@ object OverworldMode extends GameMode with Random {
 
     val elems = Player.message(Equipped.equipped)("armored").asInstanceOf[Map[GearSlot, Equippable]]
     val stats = Player.message(Fighter.stats)("fighter").asInstanceOf[Fighter.Stats]
-    val armor = elems.unzip._2.map {
+    val armor = elems.values.map {
       case x: Armor => x.baseArmor
       case _        => 0
     }.sum
@@ -128,7 +128,7 @@ object OverworldMode extends GameMode with Random {
     }
 
     seen.foreach { vec =>
-      val rt   = tiles(vec).repr
+      val rt = tiles(vec).repr
       val repr = RenderTile(rt.char, rt.fg.darker, rt.bg.darker, rt.debug)
 
       repr.draw(main, vec)
@@ -152,5 +152,4 @@ object OverworldMode extends GameMode with Random {
 
     Player.draw(main, main.center)
   }
-
 }

@@ -109,8 +109,8 @@ object Color {
   private val matchRegex = "#([0-9a-f]{2})([0-9a-f]{2})([0-9a-f]{2})".r
 
   def apply(s: String): RGB = {
-    val matchRegex(r, g, b)         = s
-    val (red :: green :: blue :: _) = List(r, g, b).map(Integer.parseInt(_, 16) % 256)
+    val matchRegex(r, g, b)       = s
+    val red :: green :: blue :: _ = List(r, g, b).map(Integer.parseInt(_, 16) % 256)
     println(red, green, blue)
 
     RGB(red, green, blue)

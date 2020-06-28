@@ -16,13 +16,13 @@ case class Nation(
 sealed abstract class NationClass(val size: Int)
 
 object NationClass {
-  case object Barony  extends NationClass(1)
-  case object County  extends NationClass(2)
-  case object Duchy   extends NationClass(3)
+  case object Barony extends NationClass(1)
+  case object County extends NationClass(2)
+  case object Duchy extends NationClass(3)
   case object Kingdom extends NationClass(4)
-  case object Empire  extends NationClass(5)
+  case object Empire extends NationClass(5)
 
-  def apply(size: Int) =
+  def apply(size: Int): NationClass =
     size match {
       case 1 => Barony
       case 2 => County
@@ -109,7 +109,7 @@ object Nation extends Random {
       val sz = lm.area + candidate.map {
         _.area
       }.sum - remainingArea
-      val szComponent       = if (sz <= 0) 0 else sz
+      val szComponent = if (sz <= 0) 0 else sz
       val distanceComponent = candidate.map(elem => (elem.center - lm.center).magnitude).sum
 
       (distanceComponent * distanceComponent * distanceComponent * distanceComponent + szComponent / 20).toFloat

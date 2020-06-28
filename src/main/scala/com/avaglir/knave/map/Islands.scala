@@ -6,9 +6,9 @@ import scala.collection.mutable
 
 object Islands {
   val threshold = 0.36
-  val SCALE     = 8
-  val DIMENS    = World.DIMENS / SCALE
-  val bounds    = Vector2.UNIT[Int] * DIMENS
+  val SCALE = 8
+  val DIMENS: Int = World.DIMENS / SCALE
+  val bounds: Vector2[Int] = Vector2.UNIT[Int] * DIMENS
 
   implicit private def double2Int(d: Double): Int = d.toInt
 
@@ -31,7 +31,7 @@ object Islands {
 
   def allRes(resolution: Int): List[Set[Vector2[Int]]] = {
     val chunks = World.emit(resolution)
-    val out    = mutable.ListBuffer.empty[Set[Vector2[Int]]]
+    val out = mutable.ListBuffer.empty[Set[Vector2[Int]]]
 
     for {
       x <- 0 until resolution

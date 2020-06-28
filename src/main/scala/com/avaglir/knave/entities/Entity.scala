@@ -10,13 +10,13 @@ trait Entity extends GameObject {
 
   private val props = mutable.Map.empty[String, Property[_]]
 
-  def x = loc.x
-  def y = loc.y
+  def x: Int = loc.x
+  def y: Int = loc.y
 
-  def x_:(newX: Int) = this.loc = Vector2(newX, y)
-  def y_:(newY: Int) = this.loc = Vector2(x, newY)
+  def x_:(newX: Int): Unit = this.loc = Vector2(newX, y)
+  def y_:(newY: Int): Unit = this.loc = Vector2(x, newY)
 
-  final def register(p: Property[_]) = props(p.name) = p
+  final def register(p: Property[_]): Unit = props(p.name) = p
 
   def message[T, U](m: Message[T]): Map[String, Any] =
     props.mapValues(prop => prop.message(m)).filter { case (_, elem) => elem != () }.toMap

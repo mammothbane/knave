@@ -7,5 +7,5 @@ trait GameObject {
 
   def displayPriority: Int = 0
 
-  def draw(display: Display, loc: IntVec) = repr.draw(display, loc)
+  def draw(display: Display, loc: IntVec): Unit = repr.draw(display, loc)
 }

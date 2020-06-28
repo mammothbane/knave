@@ -1,6 +1,6 @@
 package com.avaglir.knave.util
 
-import org.scalajs.dom.Event
+import org.scalajs.dom.{Event, Node}
 
 import scala.scalajs.js
 
@@ -20,11 +20,11 @@ class Display(
   private val display: rot.Display =
     new rot.Display(js.Dynamic.literal(width = width, height = height, spacing = spacing))
 
-  def clear() = display.clear()
+  def clear(): Unit = display.clear()
 
-  def container = display.container()
+  def container: Node = display.container()
 
-  def eventPosition(evt: Event) = {
+  def eventPosition(evt: Event): Vector2[Int] = {
     val pos = display.eventToPosition(evt)
     Vector2(pos._1, pos._2)
   }
@@ -34,10 +34,10 @@ class Display(
       ch: Char,
       fg: Color = Color.WHITE,
       bg: Color = Color.BLACK,
-    ) =
+    ): Unit =
     display.draw(v.x, v.y, new String(Array(ch)), fg.hex, bg.hex)
 
-  def inBounds(v: IntVec) = v.x < width && v.x >= 0 && v.y < height && v.y >= 0
+  def inBounds(v: IntVec): Boolean = v.x < width && v.x >= 0 && v.y < height && v.y >= 0
 
   def drawText(
       v: IntVec,
@@ -46,7 +46,7 @@ class Display(
       bg: Color = Color.BLACK,
       maxWidth: Option[Int] = None,
       trim: Boolean = true,
-    ) = {
+    ): Unit = {
     val pairs = text.split('\n').map { line =>
       val offset = if (!trim) line.takeWhile {
         _ == ' '
@@ -64,9 +64,9 @@ class Display(
     }
   }
 
-  def center = Vector2(width, height).half
+  def center: Vector2[Int] = Vector2(width, height).half
 
-  def extents = Vector2(width, height)
+  def extents: Vector2[Int] = Vector2(width, height)
 }
 
 object Display {

@@ -9,7 +9,7 @@ object Simplex {
       width: Int,
       height: Int,
       threshold: Double = 0.5,
-    ) =
+    ): Array[Array[Tile]] =
     (0 until width)
       .map { x =>
         (0 until height)

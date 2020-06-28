@@ -6,9 +6,14 @@ case class Vector2[@specialized(Int, Double, Float) T: Numeric](x: T, y: T) {
 
   @inline def unary_-(): Vector2[T] = map(num.negate)
 
-  @inline def +[V](other: Vector2[V])(implicit conv: V => T) = Vector2(x + other.x, y + other.y)
-  @inline def -[V](other: Vector2[V])(implicit conv: V => T) = Vector2(x - other.x, y - other.y)
-  @inline def *[V](factor: V)(implicit conv: V => T)         = map(elem => num.times(elem, factor))
+  @inline def +[V](other: Vector2[V])(implicit conv: V => T): Vector2[T] =
+    Vector2(x + other.x, y + other.y)
+
+  @inline def -[V](other: Vector2[V])(implicit conv: V => T): Vector2[T] =
+    Vector2(x - other.x, y - other.y)
+
+  @inline def *[V](factor: V)(implicit conv: V => T): Vector2[T] =
+    map(elem => num.times(elem, factor))
 
   @inline def /[V](factor: V)(implicit conv: V => T): Vector2[T] =
     num match {
@@ -16,9 +21,9 @@ case class Vector2[@specialized(Int, Double, Float) T: Numeric](x: T, y: T) {
       case n: Fractional[T] => map(elem => n.div(elem, factor))
     }
 
-  @inline def dot[V](other: Vector2[V])(implicit conv: V => T) = x * other.x + y * other.y
+  @inline def dot[V](other: Vector2[V])(implicit conv: V => T): T = x * other.x + y * other.y
 
-  @inline def half = this / (one + one)
+  @inline def half: Vector2[T] = this / (one + one)
 
   @inline def magnitude: Double = {
     val doubleX = x.toDouble
@@ -32,9 +37,9 @@ case class Vector2[@specialized(Int, Double, Float) T: Numeric](x: T, y: T) {
       _.toDouble
     } / magnitude
 
-  @inline def transpose = Vector2(y, x)
+  @inline def transpose: Vector2[T] = Vector2(y, x)
 
-  @inline def map[V: Numeric](fn: (T) => V): Vector2[V] = Vector2(fn(x), fn(y))
+  @inline def map[V: Numeric](fn: T => V): Vector2[V] = Vector2(fn(x), fn(y))
 
   @inline def as[V: Numeric](implicit conv: T => V): Vector2[V] = map(conv)
 

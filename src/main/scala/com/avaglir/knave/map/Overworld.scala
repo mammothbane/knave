@@ -2,6 +2,7 @@ package com.avaglir.knave.map
 
 import com.avaglir.knave.util._
 import org.scalajs.dom.document
+import org.scalajs.dom.raw.Element
 
 import scala.collection.mutable
 
@@ -11,10 +12,10 @@ import scala.collection.mutable
  */
 object Overworld {
   private val PRELOAD = 3
-  private val under   = PRELOAD / 2
-  private val over    = PRELOAD - PRELOAD / 2
-  val min             = Vector2(under, under)
-  val max             = Vector2.UNIT[Int] * (World.DIMENS - over)
+  private val under = PRELOAD / 2
+  private val over = PRELOAD - PRELOAD / 2
+  val min: Vector2[Int] = Vector2(under, under)
+  val max: Vector2[Int] = Vector2.UNIT[Int] * (World.DIMENS - over)
 
   private var location = Vector2.ZERO[Int]
 
@@ -23,9 +24,9 @@ object Overworld {
   }.toMap
 
   implicit private class vecExt(v: Vector2[Int]) {
-    def chunkCoords = v / Chunk.DIMENS
+    def chunkCoords: Vector2[Int] = v / Chunk.DIMENS
 
-    def tileCoords = v * Chunk.DIMENS
+    def tileCoords: Vector2[Int] = v * Chunk.DIMENS
   }
 
   /**
@@ -75,11 +76,11 @@ object Overworld {
     cached.get(location.chunkCoords)
 
   object debug {
-    val tile     = document.getElementById("tile")
-    val chunk    = document.getElementById("chunk")
-    val cacheMin = document.getElementById("cache-min")
-    val cacheMax = document.getElementById("cache-max")
-    val camera   = document.getElementById("camera")
+    val tile: Element = document.getElementById("tile")
+    val chunk: Element = document.getElementById("chunk")
+    val cacheMin: Element = document.getElementById("cache-min")
+    val cacheMax: Element = document.getElementById("cache-max")
+    val camera: Element = document.getElementById("camera")
   }
 
   /**
@@ -91,9 +92,9 @@ object Overworld {
    */
   def render(camera: Vector2[Int], dimens: Vector2[Int]): Array[Array[Tile]] = {
     val (cacheMin, cacheMax) = cacheExtent
-    val cam                  = camera.clamp(cacheMin.tileCoords, cacheMax.tileCoords)
+    val cam = camera.clamp(cacheMin.tileCoords, cacheMax.tileCoords)
 
-    val out          = Array.ofDim[Tile](dimens.x, dimens.y)
+    val out = Array.ofDim[Tile](dimens.x, dimens.y)
     val screenOrigin = cam - dimens / 2 // in tile coordinates
 
     (0 until dimens.x).cartesianProduct(0 until dimens.y).map(Vector2.apply[Int]).foreach { vec =>
@@ -103,7 +104,7 @@ object Overworld {
       }
       else {
         val targetChunk = chunkContaining(loc).get
-        val cnkCoords   = loc - targetChunk.location.tileCoords
+        val cnkCoords = loc - targetChunk.location.tileCoords
 
         out(vec.x)(vec.y) = targetChunk(cnkCoords)
       }
@@ -116,14 +117,14 @@ object Overworld {
     out
   }
 
-  val TILE_MAX = Vector2.UNIT[Int] * Chunk.TILE_DIMENS
+  val TILE_MAX: Vector2[Int] = Vector2.UNIT[Int] * Chunk.TILE_DIMENS
 
   /**
    * Build the set of seen locations at the given camera location and window dimensions.
    */
   def seen(camera: Vector2[Int], dimens: Vector2[Int]): Set[Vector2[Int]] = {
     val (cacheMin, cacheMax) = cacheExtent
-    val cam                  = camera.clamp(cacheMin.tileCoords, cacheMax.tileCoords)
+    val cam = camera.clamp(cacheMin.tileCoords, cacheMax.tileCoords)
 
     val screenOrigin = cam - dimens / 2 // in tile coordinates
 
@@ -138,7 +139,7 @@ object Overworld {
       }
     }
 
-    seenChunks.toSet.flatMap { (chunk: Chunk) =>
+    seenChunks.toSet.flatMap { chunk: Chunk =>
       val root = chunk.location
       chunk.remembered.map {
         _ + root.tileCoords - screenOrigin

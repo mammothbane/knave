@@ -175,9 +175,4 @@ object Knave extends Random {
     }
     currentMode.render()
   }
-
-  private val modeMap = Map[Symbol, GameMode](
-    Symbol("start")     -> Start,
-    Symbol("overworld") -> OverworldMode,
-  )
 }

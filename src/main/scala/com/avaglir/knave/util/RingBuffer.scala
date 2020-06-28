@@ -7,9 +7,9 @@ class RingBuffer[T: ClassTag](capacity: Int) {
   private var head = 0
   private var tail = 0
 
-  def isEmpty  = head == tail
-  def nonEmpty = head != tail
-  def isFull   = (tail - head + capacity) % capacity == 1
+  def isEmpty: Boolean  = head == tail
+  def nonEmpty: Boolean = head != tail
+  def isFull: Boolean   = (tail - head + capacity) % capacity == 1
 
   def size: Int = length
 
@@ -29,7 +29,10 @@ class RingBuffer[T: ClassTag](capacity: Int) {
   }
 
   def length: Int =
-    if (head >= tail) (head - tail + capacity) % capacity
-    else size - (tail - head)
-
+    if (head >= tail) {
+      (head - tail + capacity) % capacity
+    }
+    else {
+      size - (tail - head)
+    }
 }

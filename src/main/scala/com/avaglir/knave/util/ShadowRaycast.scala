@@ -23,5 +23,4 @@ object ShadowRaycast {
       val line = bresenhamLine(camera, elem)
       line.forall(checkVisibility)
     }
-
 }

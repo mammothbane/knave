@@ -11,16 +11,17 @@ case class Tile(
     debug: Boolean = false,
   ) extends GameObject {
 
-  def transparent = !opaque
+  def transparent: Boolean = !opaque
 
   override def toString: String = s"Tile('${repr.char}', pathable = $pathable, opaque = $opaque)"
 }
 
 object Tile {
-  val WALL = Tile("wall", RenderTile('#'), opaque = true)
+  val WALL: Tile = Tile("wall", RenderTile('#'), opaque = true)
 
-  val FLOOR =
+  val FLOOR: Tile =
     Tile("floor", RenderTile('.', fg = Color.BROWN, bg = Color.BROWN.darker), pathable = true)
 
-  val WATER = Tile("Water", RenderTile('~', fg = Color.WHITE.darker, bg = Color.BLUE.desaturated))
+  val WATER: Tile =
+    Tile("Water", RenderTile('~', fg = Color.WHITE.darker, bg = Color.BLUE.desaturated))
 }
