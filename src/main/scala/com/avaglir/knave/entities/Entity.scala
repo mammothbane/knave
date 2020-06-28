@@ -14,5 +14,5 @@ trait Entity extends GameObject {
 
   private val props = mutable.Map.empty[String, Property[_]]
   final def register(p: Property[_]) = props(p.name) = p
-  def message[T, U](m: Message[T]): Map[String, Any] = props.mapValues { prop => prop.message(m) }.filter { case (_, elem) => elem != Unit }.toMap
+  def message[T, U](m: Message[T]): Map[String, Any] = props.mapValues { prop => prop.message(m) }.filter { case (_, elem) => elem != () }.toMap
 }

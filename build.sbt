@@ -29,7 +29,6 @@ lazy val macros = (project in file("macros")).
     settings(
         scalacOptions ++= Seq(
             "-language:experimental.macros",
-            "-Ymacro-annotations",
         ),
         libraryDependencies ++= Seq(
             "org.scala-lang" % "scala-reflect" % "2.13.3"

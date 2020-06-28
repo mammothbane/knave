@@ -13,7 +13,7 @@ case class Landmass(sizeClass: IslandClass, tiles: Set[Vector2[Int]], name: Opti
   def print = sizeClass.withModifiers(adjective, name)
 }
 
-object Landmass extends Persist with Random {
+object Landmass extends Random {
   val ISLAND_THRESHOLD = 0.02
   val ISLE_THRESHOLD = 0.007
 
@@ -42,16 +42,6 @@ object Landmass extends Persist with Random {
   }
 
   lazy val all = continents ++ islands ++ isles ++ atolls
-
-  override def persist(): Map[Symbol, String] = Map(
-    'random -> seed.toString
-  )
-
-  override def restore(v: Map[Symbol, String]): Unit = {
-    setSeed(v('random).toDouble)
-  }
-
-  override def key: Symbol = 'landmass
 
   private def randNoun = nouns(random.int(0, nouns.length - 1)).titleCase
 

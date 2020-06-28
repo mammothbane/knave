@@ -9,7 +9,7 @@ import scala.collection.mutable
   * Effectively translates between World/Chunk coordinates and Tile coordinates. Everything in this file is in
   * Chunk coordinates unless otherwise stated.
   */
-object Overworld extends Persist {
+object Overworld {
   private val PRELOAD = 3
   private val under = PRELOAD / 2
   private val over = PRELOAD - PRELOAD / 2
@@ -137,15 +137,4 @@ object Overworld extends Persist {
       case None =>
     }
   }
-
-  import com.avaglir.knave.util.storage.Pickling._
-  import prickle._
-  override def persist(): Map[Symbol, String] = Map(
-    'location -> Pickle.intoString(location)
-  )
-
-  override def restore(v: Map[Symbol, String]): Unit = {
-    location = Unpickle[Vector2[Int]].fromString(v('location)).get
-  }
-  override def key: Symbol = 'overworld
 }

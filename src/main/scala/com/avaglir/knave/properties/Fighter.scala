@@ -20,19 +20,9 @@ class Fighter(
   }
 }
 
-object Fighter extends Persist with Random {
+object Fighter extends Random {
   case class Stats(health: (Int, Int), accuracy: UnitClampedFloat)
 
   def stats = Message('stats, None)
   def combat(other: Fighter) = Message('combat, Some(other))
-
-  import com.avaglir.knave.util.storage.Pickling._
-  import prickle._
-  override def persist(): Map[Symbol, String] = Map(
-    'random -> Pickle.intoString(seed)
-  )
-  override def restore(v: Map[Symbol, String]): Unit = {
-    this.setSeed(Unpickle[Double].fromString(v('random)).get)
-  }
-  override def key: Symbol = 'fighter
 }

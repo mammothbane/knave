@@ -3,7 +3,7 @@ package com.avaglir.knave.map
 import com.avaglir.knave.util._
 import simplex.SimplexNoise
 
-object World extends Persist {
+object World {
   var large = SimplexNoise()
   var small = SimplexNoise()
 
@@ -27,8 +27,6 @@ object World extends Persist {
   def apply(x: Int, y: Int, scale: Int): Float = apply(x.toFloat/scale, y.toFloat/scale)
 
   def apply(x: Float, y: Float): Float = {
-//    println(s"retrieving at $x, $y")
-
     val dx = (x - 0.5) * totalScale
     val dy = (y - 0.5) * totalScale
     val ctrDist = math.sqrt(dx * dx + dy * dy)
@@ -65,17 +63,4 @@ object World extends Persist {
       }
     }.toMap
   }
-
-  import com.avaglir.knave.util.storage.Pickling._
-  import prickle._
-  override def persist(): Map[Symbol, String] = Map(
-    'simplex_large -> Pickle.intoString(large),
-    'simplex_small -> Pickle.intoString(small)
-  )
-
-  override def restore(v: Map[Symbol, String]): Unit = {
-    large = Unpickle[SimplexNoise].fromString(v('simplex_large)).get
-    small = Unpickle[SimplexNoise].fromString(v('simplex_small)).get
-  }
-  override def key: Symbol = 'mapgen
 }

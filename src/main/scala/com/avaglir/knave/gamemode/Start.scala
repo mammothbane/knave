@@ -25,7 +25,7 @@ object Start extends GameMode {
   val kCenter = Vector2(KNAVE.split('\n').maxBy{ _.length }.length, KNAVE.split('\n').length).half
   val offset = (Knave.displays('main).center - kCenter) + Vector2.UP[Int] * 1
 
-  val menu = Menu(mutable.ListBuffer(Entry("New", 'new), Entry("Load", 'load, enabled = storage.hasSave)), "=>".colorize(c"#1b58d3"))
+  val menu = Menu(mutable.ListBuffer(Entry("New", 'new), Entry("Load", 'load, enabled = false)), "=>".colorize(c"#1b58d3"))
 
   override def enter(): Unit = {}
 

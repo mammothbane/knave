@@ -3,9 +3,9 @@ package rot
 import org.scalajs.dom.{Event, Node}
 
 import scala.scalajs.js
-import scala.scalajs.js.annotation.JSName
+import scala.scalajs.js.annotation.{JSGlobal, JSName}
 
-@JSName("ROT.Display")
+@JSGlobal("ROT.Display")
 @js.native
 class Display(opts: js.Object) extends js.Object {
   def clear(): Unit = js.native

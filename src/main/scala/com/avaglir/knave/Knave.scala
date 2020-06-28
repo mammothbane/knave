@@ -7,11 +7,8 @@ import com.avaglir.knave.util._
 import org.scalajs.dom._
 import org.scalajs.dom.ext.KeyCode
 import org.scalajs.dom.html.Canvas
-import rot.RNGState
 
-import scala.scalajs.js.JSON
-
-object Knave extends Persist with Random {
+object Knave extends Random {
   val displays = Map(
     'main -> new Display(80, 24),
     'status -> new Display(20, 24),
@@ -137,16 +134,4 @@ object Knave extends Persist with Random {
     'start -> Start,
     'overworld -> OverworldMode
   )
-
-  override def persist(): Map[Symbol, String] = Map(
-    'rand_state -> JSON.stringify(random.getState()),
-    'game_mode -> modeMap.find { _._2 == currentMode }.get.toString
-  )
-
-  override def restore(v: Map[Symbol, String]): Unit = {
-    random.setState(JSON.parse(v('rand_state)).asInstanceOf[RNGState])
-    currentMode = modeMap(Symbol(v('game_mode)))
-  }
-
-  override val key: Symbol = 'knave_root
 }

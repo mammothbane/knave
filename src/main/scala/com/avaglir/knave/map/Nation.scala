@@ -26,7 +26,7 @@ object NationClass {
   }
 }
 
-object Nation extends Persist with Random {
+object Nation extends Random {
   private lazy val stateCount = random.int(Landmass.all.size/3, 2*Landmass.all.size/3)
 
   private val standard = NationClass.County
@@ -88,16 +88,6 @@ object Nation extends Persist with Random {
         Nation(lms.toSet, name, NationClass(stateClasses(idx)), random.uniform().toFloat)
     }.toSet
   }
-
-  override def persist(): Map[Symbol, String] = Map(
-    'random -> seed.toString
-  )
-
-  override def restore(v: Map[Symbol, String]): Unit = {
-    setSeed(v('random).toDouble)
-  }
-
-  override def key: Symbol = 'nation
 
   private val names = Set(
     "Arstotzka", "Atlantis", "Gondor", "Beleriand", "Londor", "Londo", "Vanu", "Chadbourne", "Ancelstierre", "Belisaere",

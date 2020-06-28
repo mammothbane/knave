@@ -26,7 +26,6 @@ object Chunk {
   /**
     * Get the chunk at the given Chunk coordinates.
     */
-  @cache(25, None)
   def apply(location: Vector2[Int]): Chunk = {
     assert(location.componentsClamped(Vector2.UNIT[Int] * World.DIMENS))
     val tiles = Array.ofDim[Tile](DIMENS, DIMENS)
