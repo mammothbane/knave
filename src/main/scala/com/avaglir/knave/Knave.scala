@@ -10,9 +10,9 @@ import org.scalajs.dom.html.Canvas
 
 object Knave extends Random {
     val displays = Map(
-        'main -> new Display(80, 24),
-        'status -> new Display(20, 24),
-        'messages -> new Display(101, 6)
+        Symbol("main") -> new Display(80, 24),
+        Symbol("status") -> new Display(20, 24),
+        Symbol("messages") -> new Display(101, 6)
     )
 
     private var currentMode: GameMode = Start
@@ -146,7 +146,7 @@ object Knave extends Random {
     }
 
     private val modeMap = Map[Symbol, GameMode](
-        'start -> Start,
-        'overworld -> OverworldMode
+        Symbol("start") -> Start,
+        Symbol("overworld") -> OverworldMode
     )
 }

@@ -2,30 +2,21 @@ package com.avaglir.knave.util
 
 sealed abstract class Color {
     def red: Int
-
     def green: Int
-
     def blue: Int
 
     def hue: UnitClampedFloat
-
     def saturation: UnitClampedFloat
-
     def luminance: UnitClampedFloat
 
     lazy val hex: String = "#" + bytesToHex(Array(red.toByte, green.toByte, blue.toByte))
 
-    def hsl = HSL(hue, saturation, luminance)
-
-    def rgb = RGB(red, green, blue)
-
-    def darker = HSL(hue, saturation, UnitClampedFloat(luminance.value / 2))
-
-    def lighter = HSL(hue, saturation, UnitClampedFloat((luminance.value + 1f) / 2))
-
-    def desaturated = HSL(hue, UnitClampedFloat(saturation.value / 2), luminance)
-
-    def saturated = HSL(hue, UnitClampedFloat((saturation.value + 1f) / 2), luminance)
+    def hsl: HSL = HSL(hue, saturation, luminance)
+    def rgb: RGB = RGB(red, green, blue)
+    def darker: HSL = HSL(hue, saturation, UnitClampedFloat(luminance.value / 2))
+    def lighter: HSL = HSL(hue, saturation, UnitClampedFloat((luminance.value + 1f) / 2))
+    def desaturated: HSL = HSL(hue, UnitClampedFloat(saturation.value / 2), luminance)
+    def saturated: HSL = HSL(hue, UnitClampedFloat((saturation.value + 1f) / 2), luminance)
 }
 
 case class RGB(red: Int, green: Int, blue: Int) extends Color {
@@ -88,14 +79,16 @@ case class HSL(hue: UnitClampedFloat, saturation: UnitClampedFloat, luminance: U
 }
 
 object Color {
-    val WHITE = RGB(0xff, 0xff, 0xff)
-    val BLACK = RGB(0, 0, 0)
-    val RED = RGB(0xff, 0, 0)
-    val GREEN = RGB(0, 0xff, 0)
-    val BLUE = RGB(0, 0, 0xff)
-    val YELLOW = RGB(0xff, 0xff, 0)
-    val CYAN = RGB(0, 0xff, 0xff)
-    val MAGENTA = RGB(0xff, 0, 0xff)
+    val WHITE: RGB = RGB(0xff, 0xff, 0xff)
+    val BLACK: RGB = RGB(0, 0, 0)
+    val RED: RGB = RGB(0xff, 0, 0)
+    val GREEN: RGB = RGB(0, 0xff, 0)
+    val BLUE: RGB = RGB(0, 0, 0xff)
+    val YELLOW: RGB = RGB(0xff, 0xff, 0)
+    val CYAN: RGB = RGB(0, 0xff, 0xff)
+    val MAGENTA: RGB = RGB(0xff, 0, 0xff)
+
+    val BROWN: RGB = Color("#89764e")
 
     private val matchRegex = "#([0-9a-f]{2})([0-9a-f]{2})([0-9a-f]{2})".r
 
@@ -106,6 +99,4 @@ object Color {
 
         RGB(red, green, blue)
     }
-
-    val BROWN = Color("#89764e")
 }

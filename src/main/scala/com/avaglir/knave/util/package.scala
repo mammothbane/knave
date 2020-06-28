@@ -103,7 +103,7 @@ package object util {
     }
 
     // found here: https://github.com/raboof/astar/blob/master/src/main/scala/Astar.scala
-    def aStar[S](init: S, expand: S => Set[S], h: S => Float, value: S => Float) = {
+    def aStar[S](init: S, expand: S => Set[S], h: S => Float, value: S => Float): S = {
         @tailrec
         def search(unexpanded: Set[S], best: S, seen: Set[S]): S =
             unexpanded.toList.map(s => (s, h(s))).sortBy { case (_, heur) => -heur }.headOption match {
@@ -188,9 +188,9 @@ package object util {
     }
 
     implicit class ary2dExt[T](a: Array[Array[T]]) {
-        def apply(x: IntVec) = a(x.x)(x.y)
+        def apply(x: IntVec): T = a(x.x)(x.y)
 
-        def extents = Vector2(a.length, a.head.length)
+        def extents: Vector2[Int] = Vector2(a.length, a.head.length)
     }
 
     implicit class genTExt[W](a: GenTraversable[W]) {
@@ -202,7 +202,7 @@ package object util {
 
     @inline def minOf[T: Ordering](args: T*): T = args.min
 
-    val hexArray = "0123456789abcdef".toCharArray
+    val hexArray: Array[Char] = "0123456789abcdef".toCharArray
 
     @inline def bytesToHex(bytes: Array[Byte], debug: Boolean = false): String = {
         val hexChars = new Array[Char](bytes.length * 2)
@@ -225,7 +225,7 @@ package object util {
     }
 
     implicit class floatExt(f: Float) {
-        def unitClamped = UnitClampedFloat(f)
+        def unitClamped: UnitClampedFloat = UnitClampedFloat(f)
     }
 
     implicit class strCtxExt(s: StringContext) {
