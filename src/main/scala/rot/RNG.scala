@@ -10,23 +10,25 @@ object RNG extends RNG {}
 
 @js.native
 trait RNG extends js.Object {
-  def getSeed(): Double = js.native
-  def setSeed(s: Double): Unit = js.native
+    def getSeed(): Double = js.native
 
-  def getState(): js.Dynamic = js.native
-  def setState(s: js.Dynamic): Unit = js.native
+    def setSeed(s: Double): Unit = js.native
 
-  @JSName("getUniform")
-  def uniform(): Double = js.native
+    def getState(): js.Dynamic = js.native
 
-  @JSName("getUniformInt")
-  def int(lower: Int, upper: Int): Int = js.native
+    def setState(s: js.Dynamic): Unit = js.native
 
-  @JSName("getNormal")
-  def normal(): Double = js.native
+    @JSName("getUniform")
+    def uniform(): Double = js.native
 
-  @JSName("getPercentage")
-  def percent(): Int = js.native
+    @JSName("getUniformInt")
+    def int(lower: Int, upper: Int): Int = js.native
 
-  override def clone(): RNG = js.native
+    @JSName("getNormal")
+    def normal(): Double = js.native
+
+    @JSName("getPercentage")
+    def percent(): Int = js.native
+
+    override def clone(): RNG = js.native
 }
